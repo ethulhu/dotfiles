@@ -1,0 +1,12 @@
+#!/bin/sh
+
+host="${1}"
+
+[ ! "${host}" ] && \
+	echo 'usage: prometheus-query <host> <query>' && \
+	exit 1
+shift
+
+set -eux
+
+curl --get --data-urlencode "query=$@" "http://${host}:9090/api/v1/query"
