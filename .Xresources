@@ -1,0 +1,8 @@
+URxvt.background:  Black
+URxvt.foreground:  White
+URxvt.scrollBar:   False
+
+URxvt.underlineURLs:   True
+! URxvt.url-launcher:    /usr/bin/firefox
+! URxvt.perl-ext-common: default,matcher
+! URxvt.matcher.button:  1
