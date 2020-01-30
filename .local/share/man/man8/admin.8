@@ -1,0 +1,17 @@
+.TH ADMIN 8 "January 2020" "Dotfiles" "Eth's Dotfiles Manual"
+.SH NAME
+admin \- high-level system administration utility
+.SH SYNOPSIS
+.B admin
+.IR cmd
+[\fIargs\fR]
+.SH DESCRIPTION
+.PP
+A high-level platform-indepentent system administration utility.
+For example, \fBadmin list-disks\fR will list attached disks using
+.BR diskutil (8)
+on macOS and
+.BR lsblk (8)
+on Linux.
+.PP
+For a full list of what exists on your platform, run it on that platform with no arguments.

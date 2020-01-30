@@ -1,0 +1,113 @@
+#!/usr/bin/env python3
+"""high-level system administration utility."""
+
+from os import path
+import platform
+import re
+
+import cmd
+
+debian = cmd.command_if(platform.system() == 'Linux')
+macos = cmd.command_if(platform.system() == 'Darwin')
+
+
+# commands.
+
+@macos
+def update():
+    """update various package managers on the machine."""
+    print('updating Homebrew…')
+    cmd.run(['brew', 'update'])
+    print('updating Ruby gems…')
+    cmd.run(['gem', 'update'])
+
+@macos
+def list_disks():
+    """list currently attached physical disks."""
+    cmd.run(['diskutil', 'list'])
+
+
+@macos
+def format_disk(format: str, name: str, disk: str, mbr=False):
+    """formats a disk, giving it a name, optionally with MBR partitions."""
+    cmd.run(['diskutil', 'eraseDisk', format, name] +
+            (['MBR'] if mbr else []) + [disk])
+
+
+@macos
+def list_installed_packages():
+    """lists current deliberately installed packages (not dependencies)."""
+    cmd.run(['brew', 'leaves'])
+
+
+@debian
+def list_disks():
+    """list currently attached physical disks."""
+    cmd.run(['lsblk'])
+
+
+@debian
+def list_installed_packages():
+    """lists current deliberately installed packages (not dependencies)."""
+    cmd.run(['apt-mark', 'showmanual'])
+
+
+@debian
+@cmd.must_be_root
+def change_hostname(hostname: str):
+    cmd.run(['hostnamectl', 'set-hostname', hostname])
+
+
+@debian
+@cmd.must_be_root
+def change_username(from_username: str, to_username: str):
+    cmd.run(['usermod', '-l', to_username, from_username])
+    cmd.run(['groupmod', '-n', to_username, from_username])
+
+
+@debian
+def list_encrypted_disks():
+    """list current LUKS-encrypted disks."""
+    with open('/etc/crypttab') as f:
+        lines = [l for l in f.readlines() if l and not l.startswith('#')]
+
+    hex = r'[0-9a-fA-F]'
+    has_uuid = re.compile(fr'\bUUID=({hex}{{8}}-{hex}{{4}}-{hex}{{4}}-{hex}{{4}}-{hex}{{12}})\b')
+    for line in lines:
+        match = has_uuid.search(line)
+        if not match:
+            raise Exception('/etc/crypttab has non-UUID-based disks')
+        uuid = match.group(1)
+        print(f'/dev/disk/by-uuid/{uuid}')
+
+
+@debian
+@cmd.must_be_root
+def list_disk_passwords(disk: str):
+    """list the disk encryption slots for a given disk, e.g. /dev/sda5."""
+    cmd.run(['cryptsetup', 'luksDump', disk])
+
+
+@debian
+@cmd.must_be_root
+def add_disk_password(disk: str):
+    """add a disk-encryption password to a given disk, e.g. /dev/sda5."""
+    cmd.run(['cryptsetup', 'luksAddKey', disk])
+
+
+@debian
+@cmd.must_be_root
+def remove_disk_password(disk: str):
+    """remove a disk-encryption password from a given disk, e.g. /dev/sda5."""
+    cmd.run(['cryptsetup', 'luksRemoveKey', disk])
+
+
+@debian
+@cmd.must_be_root
+def list_ports():
+    """list open ports and their host processes."""
+    cmd.run(['netstat', '-tulpn'])
+
+
+if __name__ == '__main__':
+    cmd.build_and_run_cli()
