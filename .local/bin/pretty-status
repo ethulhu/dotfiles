@@ -1,0 +1,109 @@
+#!/usr/bin/env python3
+
+import datetime
+import socket
+import sys
+
+import netifaces
+
+from typing import List, Tuple
+
+DAYS = {
+    1: 'M',
+    2: 'T',
+    3: 'W',
+    4: 'B',
+    5: 'F',
+    6: 'H',
+    7: 'S',
+}
+
+CLOCKS = [
+    '🕛', '🕧',
+    '🕐', '🕜',
+    '🕑', '🕝',
+    '🕒', '🕞',
+    '🕓', '🕟',
+    '🕔', '🕠',
+    '🕕', '🕡',
+    '🕖', '🕢',
+    '🕗', '🕣',
+    '🕘', '🕤',
+    '🕙', '🕥',
+    '🕚', '🕦',
+]
+
+now = datetime.datetime.now()
+
+
+def clock_emoji(instant: datetime.datetime = now) -> str:
+    time = instant.time()
+    idx = (time.hour % 12) * 2
+    if time.minute >= 30:
+        idx += 1
+    return CLOCKS[idx]
+
+
+def week_and_day(instant: datetime.datetime = now) -> Tuple[str, str]:
+    year, week, day = instant.date().isocalendar()
+    return week, DAYS[day]
+
+
+def fractional_time(instant: datetime.datetime = now) -> str:
+    time = instant.time()
+    fraction = time.minute // 6
+    return f'{time.hour}.{fraction}'
+
+
+def battery_percent() -> str:
+    with open('/sys/class/power_supply/BAT0/capacity') as f:
+        percent = f.read().strip()
+    return percent
+
+
+def is_battery_charging() -> bool:
+    with open('/sys/class/power_supply/BAT0/status') as f:
+        status = f.read().strip()
+    return status == 'Charging'
+
+
+def is_wifi_connected() -> bool:
+    with open('/sys/class/net/wlp2s0/operstate') as f:
+        status = f.read().strip()
+    return status == 'up'
+
+
+def lan_ip_addrs() -> List[str]:
+    def flatten(xss): return (x for xs in xss for x in xs)
+
+    def conns(links, kind): return flatten(
+        link[kind] for link in links if kind in link)
+
+    def addrs(conns): return [conn['addr'] for conn in conns]
+    links = [netifaces.ifaddresses(link) for link in netifaces.interfaces()]
+
+    ipv4 = addrs(conns(links, netifaces.AF_INET))
+
+    def is_lan(ip): return ip.startswith('10.') or ip.startswith('192.168.')
+
+    return [ip for ip in ipv4 if is_lan(ip)]
+
+
+if __name__ == '__main__':
+    if len(sys.argv) != 2 or sys.argv[1] not in ['tmux', 'dwm']:
+        print('usage: pretty-status <tmux|dwm>')
+        sys.exit(1)
+
+    if sys.argv[1] == 'tmux':
+        week, day = week_and_day()
+        lan_ip = lan_ip_addrs()
+        host = socket.gethostname().split('.')[0]
+        if lan_ip:
+            host = f'{host} \ {lan_ip[0]}'
+        print(f' {host} | {week} {day} | {fractional_time()} ')
+
+    if sys.argv[1] == 'dwm':
+        charging = '▲' if is_battery_charging() else '▼'
+        wifi = 'up' if is_wifi_connected() else 'down'
+        print(
+            f' 📶: {wifi} | 🔋: {charging} {battery_percent()}% | {clock_emoji()}: {fractional_time()} ')
