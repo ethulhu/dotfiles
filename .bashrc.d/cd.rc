@@ -1,0 +1,9 @@
+cd() {
+	if [ -z "${1}" ]; then
+		cd ~
+	elif [ -e "${1}" -a ! -d "${1}" ]; then
+		command cd "${1%/*}"
+	else
+		command cd "${1}"
+	fi
+}

@@ -1,0 +1,10 @@
+cat() {
+	# if there's a second parameter, leave it alone.
+	if [ "${2}" ]; then
+		command cat "$@"
+	elif [ -d "${1}" ]; then
+		ll "${1}"
+	else
+		command cat "$@"
+	fi
+}

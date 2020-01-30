@@ -1,0 +1,9 @@
+PROMPT_COMMAND=__prompt_command
+__prompt_command() {
+	local EXIT="$?"
+	if [ $EXIT = 0 ]; then
+		PS1="\h \w > "
+	else
+		PS1="\h \w ! > "
+	fi
+}

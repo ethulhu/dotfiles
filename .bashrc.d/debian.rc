@@ -1,0 +1,15 @@
+if [ "$(uname -s)" = "Linux" ]; then
+	
+	export PATH=~/bin/debian:${PATH}
+
+	# set variable identifying the chroot you work in (used in the prompt below).
+	if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
+	    debian_chroot=$(cat /etc/debian_chroot)
+	fi
+
+	# for reasons, wpa_cli is only added to root's PATH,
+	# but can actually be used by any member of group netdev.
+	if getent group netdev > /dev/null; then
+		alias wpa_cli='/usr/sbin/wpa_cli'
+	fi
+fi
