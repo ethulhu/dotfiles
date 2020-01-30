@@ -1,0 +1,12 @@
+#!/bin/sh
+#
+# Links:
+# - https://en.wikipedia.org/wiki/EPUB
+# - https://www.thoughtco.com/create-epub-file-from-html-and-xml-3467282
+#
+# Related: https://en.wikipedia.org/wiki/MHTML
+
+find . -iname .DS_Store -delete
+rm "$1"
+zip -0 -X "$1" mimetype
+zip -9 -X -r "$1" META-INF/ OEBPS/
