@@ -1,0 +1,12 @@
+#!/bin/sh
+
+remote="${1}"
+
+[ ! "${remote}" ] && \
+	echo 'usage: git hub <remote>' && \
+	exit 1
+
+set -eux
+
+git remote add origin "git@github.com:${remote}"
+git push -u origin master
