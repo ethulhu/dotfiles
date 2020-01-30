@@ -2,14 +2,19 @@
 
 readonly dotfiles_dir="${HOME}/.dotfiles"
 
+[ ! "${1}" ] && \
+  echo 'usage: dotfiles-clone <remote-repo>' && \
+  exit 1
+
 [ -d "${dotfiles_dir}" ] && \
   echo '~/.dotfiles already exists' && \
   exit 1
 
-set -eux
+remote="${1}"
 
-git init --bare "${dotfiles_dir}"
+git clone --bare "${remote}" "${dotfiles_dir}"
 
 alias dotfiles="git --git-dir=${dotfiles_dir} --work-tree=${HOME}"
 
 dotfiles config --local status.showUntrackedFiles no
+dotfiles checkout

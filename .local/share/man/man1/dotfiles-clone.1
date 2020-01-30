@@ -1,0 +1,17 @@
+.TH DOTFILES-CLONE 1 "January 2020" "Dotfiles" "Eth's Dotfiles Manual"
+.SH NAME
+dotfiles-clone \- clone an existing dotfiles repository
+.SH SYNOPSIS
+.B dotfiles-clone
+.I remote-repo
+.SH DESCRIPTION
+.PP
+Clones a remote repo to initialize the
+.BR dotfiles (1)
+system on the machine.
+.PP
+It clones the \fIremote-repo\fR into \fB~/.dotfiles\fR as a bare repo, configures it, and checks its contents out into the user's \fBHOME\fR directory.
+.SH EXAMPLE
+$ dotfiles-clone git@github.com/ethulhu/dotfiles
+.SH SEE ALSO
+.BR dotfiles (1)
