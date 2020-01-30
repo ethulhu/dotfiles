@@ -1,0 +1,15 @@
+#!/bin/sh
+
+if [ "$(uname -s)" != "Linux" ]; then
+	echo "this binary only works with Linux"
+	exit 1
+fi
+
+if [ ! "${1}" ]; then
+	echo "usage: set-random-wallpapers <path-to-directory>"
+	exit 1
+fi
+
+WALLPAPERS="${1}"
+
+feh --bg-scale "$(find "${WALLPAPERS}" -type f | shuf | head -n1)"

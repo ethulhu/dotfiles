@@ -1,0 +1,8 @@
+#!/bin/sh
+
+if [ "$(uname -s)" != "Linux" ]; then
+	echo "this binary only works with Linux"
+	exit 1
+fi
+
+systemctl reboot
