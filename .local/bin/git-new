@@ -1,0 +1,23 @@
+#!/bin/sh
+
+set -eu
+
+new_repo=""
+if [ ${#} = 1 ]; then
+	new_repo="${HOME}/src/${1}"
+	if [ -d "${new_repo}" ]; then
+		echo "directory ${new_repo} exists"
+		exit 1
+	fi
+
+	mkdir "${new_repo}"
+	cd "${new_repo}"
+fi
+
+git init
+git commit --allow-empty -m 'initial commit'
+
+if [ "${new_repo}" ]; then
+	echo
+	echo "created ${new_repo}"
+fi
