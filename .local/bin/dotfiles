@@ -1,0 +1,13 @@
+#!/bin/sh
+#
+# a dotfiles management tool,
+# from https://www.atlassian.com/git/tutorials/dotfiles.
+
+MAYBE_CMD="dotfiles-${1}"
+
+if command -v "${MAYBE_CMD}" >/dev/null
+then
+  command "${MAYBE_CMD}"
+else
+  git --git-dir="${HOME}/.dotfiles/" --work-tree="${HOME}" "$@"
+fi

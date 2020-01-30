@@ -1,0 +1,5 @@
+#!/bin/sh
+
+set -eu
+
+GIT_DIR="${HOME}/.dotfiles" tig
