@@ -1,0 +1,9 @@
+*.o
+.DS_Store
+._*
+.config/fish/fish_variables
+.git-outstanding.ignore
+.local/share/fish/fish_history
+.local/share/fish/generated_completions
+.vim/.netrwhist
+__pycache__

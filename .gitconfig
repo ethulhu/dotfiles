@@ -1,0 +1,34 @@
+[user]
+	email = eth@ethulhu.co.uk
+	name = Ethel Morgan
+
+[push]
+	default = simple
+
+[status]
+	showUntrackedFiles = all
+
+[merge]
+	conflictstyle = diff3
+
+[core]
+	excludesfile = ~/.gitignore
+
+[alias]
+	amend-commit = commit --amend
+	pop = stash pop
+	uncommit = reset --soft HEAD^
+	unstage = reset HEAD
+
+	# typos.
+	ads = add
+	dd = add
+	dif = diff
+	pish = push
+	puh = push
+	puhs = push
+	s = status
+	sttaus = status
+	sttus = status
+	tatus = status
+	upll = pull
