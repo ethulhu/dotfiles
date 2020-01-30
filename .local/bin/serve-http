@@ -1,0 +1,23 @@
+#!/usr/bin/env python3
+"""serve the current directory over HTTP."""
+
+import argparse
+import http.server
+import socketserver
+
+# https://docs.python.org/3/library/http.server.html
+
+Handler = http.server.SimpleHTTPRequestHandler
+
+Handler.extensions_map['.mjs'] = 'application/javascript'
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--port', default=8080, type=int,
+                        help='port to listen on.')
+    args = parser.parse_args()
+
+    with socketserver.TCPServer(('127.0.0.1', args.port), Handler) as httpd:
+        print('http://localhost:' + str(args.port))
+        httpd.serve_forever()
