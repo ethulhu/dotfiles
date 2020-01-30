@@ -83,6 +83,7 @@ let g:comments = {
 	\ 'tmux':      { 'left': '#' },
 	\ 'vim':       { 'left': '"' },
 	\ 'xml':       { 'left': '<!--', 'right': '-->' },
+	\ 'xdefaults': { 'left': '!' },
 	\ }
 function! Comment()
 	let line_number = line('.')
