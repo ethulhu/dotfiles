@@ -1,0 +1,174 @@
+.TH MAN-HOWTO 7 "January 2020" "Dotfiles" "Eth's Dotfiles Manual"
+.SH NAME
+man-howto \- a short howto on writing manpages
+.SH DESCRIPTION
+.SS Manual sections
+.TP
+.B 1 User commands
+For example,
+.BR git (1).
+.TP
+.B 2 System calls
+For example,
+.BR open (2).
+.TP
+.B 3 Library calls
+For example,
+.BR printf (3).
+.TP
+.B 4 Special files and drivers
+For example,
+.BR null (4).
+.TP
+.B 5 File formats and configuration files
+For example,
+.BR rsyncd.conf (5).
+.TP
+.B 6 Games
+This also exists.
+.TP
+.B 7 Miscellaneous
+For example,
+.BR man-howto (7).
+.TP
+.B 8 Administration & root-only commands
+For example,
+.BR fdisk (8).
+.\"
+.SS Headings
+.TP
+.B NAME
+The name of the manpage, and a short description (also used for \fBman \-k\fR).
+.TP
+.B SYNOPSIS
+For commands, a brief summary of the command's args.
+.TP
+.B DESCRIPTION
+A long description of the command or subject at hand.
+.TP
+.B OPTIONS
+For commands, a list of possible options and flags.
+.TP
+.B ENVIRONMENT
+Any important related environment variables.
+.TP
+.B FILES
+Any important related files.
+.TP
+.B NOTES
+Miscellaneous notes.
+.TP
+.B BUGS
+Known bugs.
+.TP
+.B EXAMPLE / EXAMPLES
+One or more worked examples.
+.TP
+.B SEE ALSO
+A list of related manpages.
+.\"
+.SS Syntax
+.PP
+A given line is either just text, or starts with some command.
+For example,
+.PP
+.RS
+.nf
+I am just a line of text,
+\&.B but I am bold.
+.fi
+.RE
+.PP
+Some statements have semantic meaning, such as,
+.PP
+.RS
+.TP
+\fB\&.TH\fR \fIname section date source manual\fR
+(only name and section are required)
+.TP
+\fB\&.SH\fR \fISECTION\fR
+.TP
+\fB\&.SS\fR \fISubsection\fR
+.RE
+\"
+.SS In-line formatting
+.PP
+It is also possible to perform some formatting in-line, for example,
+.PP
+.RS
+A normal line of text \\fBwith bold\\fR in the middle.
+.RE
+.SS Code snippets
+.PP
+One can do code examples using \fB\&.nf\fR and \fB\&.fi\fR,
+.PP
+.RS
+.nf
+\&.PP
+The config file:
+\&.PP
+\&.RS
+\&.nf
+meow {
+  purr = mew
+}
+\&.fi
+\&.RE
+.fi
+.RE
+.SS Command list
+.TS
+l l
+---
+l l.
+Command	Meaning
+\&.PP	New Paragraph
+\&.TP	Tab Paragraph
+\&.IP	Indented Paragraph
+\&.RS	Relative Indent Start
+\&.RE	Relative Indent End
+\&.TS	Table Start
+\&.TE	Table End
+\&.nf	Turn off paragraphs
+\&.fi	Turn on paragraphs
+\&.B	All of the line is bold.
+\&.BR	The first word of the line is bold, the rest are normal.
+\&.I	All of the line is italic (underline).
+\&.IR	The first word of the line is italic, the rest are normal.
+\&.\\"	Comment, useful for spacing long sections
+.TE
+.\"
+.SH NOTES
+Because \fBtroff\fR started life as a typesetter, \fB\-\fR on its own is a hyphen, and \fB\\-\fR is a tack or minus.
+So, \fBin-line\fR is OK, but it is always \fBrm \\-rf\fR or \fBcurl \\-\\-verbose\fR.
+.\"
+.SH EXAMPLE
+.nf
+\&.TH meow 1 "December 2019" Cat "Cat Owner's Manual"
+\&.SH NAME
+meow \\- make cute noises
+\&.SH SYNOPSIS
+\&.B meow
+[\\fB\\-n\\fR \\fITIMES\\fR]
+\&.SH DESCRIPTION
+\&.B meow
+nyans a given number of times.
+\&.SH EXAMPLE
+\&.\\" turn paragraph mode off.
+\&.nf
+$ meow -n 3
+meow meow meow
+\&.\\" turn paragraph mode back on.
+\&.fi
+\&.\\"
+\&.SH SEE ALSO
+\&.BR meow (7),
+\&.BR woof (1)
+.fi
+.\"
+.SH LINKS
+https://liw.fi/manpages/
+.\"
+.SH SEE ALSO
+.BR man (1),
+.BR man-pages (7)
