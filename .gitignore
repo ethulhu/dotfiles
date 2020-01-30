@@ -1,9 +1,32 @@
+*.kbx
+*.key
 *.o
 .DS_Store
 ._*
-.config/fish/fish_variables
 .git-outstanding.ignore
-.local/share/fish/fish_history
-.local/share/fish/generated_completions
-.vim/.netrwhist
 __pycache__
+*netrc
+
+# home-dir things.
+/.*_history
+/.CFUserTextEncoding
+/.Trash
+/.cache
+/.cargo
+/.config/fish/fish_variables
+/.cups
+/.gem
+/.gnupg
+/.lesshst
+/.local/share/fish/fish_history
+/.local/share/fish/generated_completions
+/.mu/log
+/.rustup
+/.ssh
+/.vim/.netrwhist
+/.viminfo
+/.w3m/cookie
+/.w3m/history
+
+# dotfiles-specific.
+/.dotfiles
