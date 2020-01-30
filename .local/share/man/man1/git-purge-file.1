@@ -1,0 +1,12 @@
+.TH GIT-PURGE-FILE 1 "January 2020" "Dotfiles" "Eth's Dotfiles Manual"
+.SH NAME
+git-purge-file \- remove a file from all revisions of a Git repository
+.SH SYNOPSIS
+.B git purge-file
+.I path/to/file
+.SH DESCRIPTION
+Removes a file from ALL revisions from the current Git repository.
+.SH NOTES
+If the file has moved within the repository history, you will need to purge all paths it has been at.
+.SH SEE ALSO
+.BR git (1)

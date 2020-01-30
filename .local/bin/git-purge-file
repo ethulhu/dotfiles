@@ -1,0 +1,13 @@
+#!/bin/sh
+#
+# from https://help.github.com/en/github/authenticating-to-github/removing-sensitive-data-from-a-repository.
+
+file="${1}"
+
+[ ! "${file}" ] && echo "usage: git purge-file <path/to/file>" && exit 1
+
+set -eux
+
+git filter-branch --force --index-filter \
+	"git rm --cached --ignore-unmatch ${file}" \
+	--prune-empty --tag-name-filter cat -- --all
