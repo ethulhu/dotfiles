@@ -1,0 +1,148 @@
+#!/usr/bin/env python3
+"""high-level yubikey control utility.
+
+much of this is taken from @lizthegrey@twitter.com, amongst others:
+https://gist.github.com/lizthegrey/9c21673f33186a9cc775464afbdce820
+
+TODO: add proper macOS support:
+https://evilmartians.com/chronicles/stick-with-security-yubikey-ssh-gnupg-macos
+"""
+
+from os import path
+import argparse
+import base64
+import hashlib
+import platform
+import shutil
+import textwrap
+
+import cmd
+
+debian = cmd.command_if(platform.system() == 'Linux')
+
+# helpers.
+
+
+def zbase32encode(hash):
+    b32_alphabet = b'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567'
+    z32_alphabet = b'ybndrfg8ejkmcpqxot1uwisza345h769'
+    mapping = dict(zip(b32_alphabet, z32_alphabet))
+
+    base32_encoded = base64.b32encode(hash)
+    out = [mapping[byte] for byte in base32_encoded]
+    return bytes(out).decode('utf-8')
+
+# types.
+
+
+def Email(value: str) -> str:
+    if len(value.split('@')) != 2:
+        raise argparse.ArgumentTypeError(f'{value} is not an email address')
+    return value
+
+# commands.
+
+
+@debian
+def show_packages():
+    """show the packages needed to run the GPG SSH client."""
+    print('sudo apt install gpg pinentry-curses scdaemon pcscd')
+
+
+@cmd.command
+def initialize_yubikey():
+    """initialize a new Yubikey with good defaults."""
+    yubikey_commands = [
+        'ykman config usb --disable otp',
+    ]
+    for command in yubikey_commands:
+        cmd.run(command.split())
+
+    openpgp_commands = [
+        'ykman openpgp reset',
+        'ykman openpgp set-touch aut on',
+        'ykman openpgp set-touch sig on',
+        'ykman openpgp set-touch enc on',
+    ]
+    for command in openpgp_commands:
+        cmd.run(command.split())
+
+    gpg_commands = [
+        'gpg --card-status',
+        'gpg --change-pin',
+    ]
+    for command in gpg_commands:
+        cmd.run(command.split())
+
+    if input('generate GPG key? [y/N] ') == 'y':
+        print(textwrap.dedent('''
+        =============================================
+        '''))
+        generate_new_gpg_key()
+
+
+@cmd.command
+def generate_new_gpg_key():
+    """generate a new GPG key onthe attached Yubikey."""
+    print(textwrap.dedent('''
+        run:
+
+        > admin
+        > generate
+
+        then fill in the blanks when prompted.
+        
+        =============================================
+    ''').strip())
+
+    cmd.run(['gpg', '--card-edit'])
+
+
+@cmd.command
+def export_ssh_key(id: Email):
+    """fetch & show the SSH key for a given GPG key."""
+    cmd.run(['gpg', '--locate-keys', id])
+    cmd.run(['gpg', '--export-ssh-key', id])
+
+
+@cmd.command
+def export_gpg_wkd_key(id: Email):
+    """exports a given GPG key in a WKD-compatible way."""
+    username = id.split('@')[0]
+    hash = hashlib.sha1(username.encode('utf-8'))
+    encoded = zbase32encode(hash.digest())
+
+    cmd.run(['gpg', '--output', encoded, '--export-options',
+             'export-minimal', '--export', id])
+    print(encoded)
+
+
+@cmd.command
+def setup_gpg_agent():
+    """add config to ~/.gnupg/gpg-agent.conf and ~/.bashrc."""
+    with open(path.expanduser('~/.gnupg/gpg-agent.conf'), 'a') as f:
+        # add a new-line if the file already has stuff
+        if f.tell() != 0:
+            print('', file=f)
+
+        print(textwrap.dedent(f'''
+            # added by yubikeyctl.
+            pinentry-program {shutil.which('pinentry-curses')}
+            enable-ssh-support
+        ''').strip(), file=f)
+
+    with open(path.expanduser('~/.bashrc'), 'a') as f:
+        # add a new-line if the file already has stuff
+        if f.tell() != 0:
+            print('', file=f)
+
+        print(textwrap.dedent('''
+            # added by yubikeyctl.
+            export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+            export GPG_TTY=$(tty)
+            gpg-connect-agent updatestartuptty /bye >/dev/null
+        ''').strip(), file=f)
+
+
+if __name__ == '__main__':
+    cmd.build_and_run_cli()
