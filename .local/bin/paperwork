@@ -1,0 +1,21 @@
+#!/usr/bin/env python3
+"""high-level paperwork utility."""
+
+from os import path
+import argparse
+
+import cmd
+
+from typing import List
+
+
+@cmd.command
+def monochrome(files: List[cmd.ReadableFilePath]):
+    for file in files:
+        new_file = path.splitext(file)[0] + '.png'
+        cmd.run(['convert', '-monochrome', file, new_file])
+        cmd.run(['optipng', new_file])
+
+
+if __name__ == '__main__':
+    cmd.build_and_run_cli()
