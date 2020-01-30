@@ -1,0 +1,57 @@
+#!/bin/sh
+#
+# show outstanding Git actions.
+
+set -eu
+
+usage() {
+        cat  <<EOF > /dev/stderr
+usage: git outstanding [<options>]
+
+    -v                    be verbose
+    -h                    show help
+
+EOF
+}
+
+while getopts 'hv' flag; do
+	case "${flag}" in
+		v)
+			set -x
+			;;
+		h)
+			usage
+			exit 1
+			;;
+		*)
+			usage
+			exit 1
+			;;
+	esac
+done
+
+readonly uncommitted='Changes\ to\ be\ committed:'
+readonly unstaged='Changes\ not\ staged\ for\ commit:'
+readonly untracked='Untracked\ files:'
+
+find . -type d -name .git | while read git_dir; do
+	repo="$(dirname "${git_dir}")"
+	if [ -f "${repo}/.git-outstanding.ignore" ]; then
+		continue
+	fi
+
+	status="$(git -C "${repo}" status)"
+	if echo "${status}" | grep -q 'nothing to commit, working tree clean'; then
+		continue
+	elif echo "${status}" | grep -q -E "(${uncommitted}|${unstaged}|${untracked})"; then
+		echo "${repo}"
+		if echo "${status}" | grep -q -E "(${uncommitted}|${unstaged})"; then
+			echo "\tchanges to be committed."
+		fi
+		if echo "${status}" | grep -q -E "(${untracked})"; then
+			echo '\tuntracked files.'
+		fi
+	else
+		echo "error: unknown status for repo ${repo}" > /dev/stderr
+	fi
+done

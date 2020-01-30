@@ -1,0 +1,22 @@
+.TH GIT-OUTSTANDING 1 "January 2020" "Dotfiles" "Eth's Dotfiles Manual"
+.SH NAME
+git-outstanding \- show outstanding Git actions
+.SH SYNOPSIS
+.B git outstanding
+[\fB\-hv\fR]
+.SH DESCRIPTION
+Lists Git repositories under the current working directory with outstanding changes, such as unsubmitted changes or untracked files.
+.SH OPTIONS
+.TP
+.B -h
+Help, prints usage information.
+.TP
+.B -v
+Verbose, prints out all steps of the process.
+.SH FILES
+.SS Ignore file
+If a file
+.I .git-outstanding.ignore
+is put in the root of a checked-out Git repository, the repository will be ignored.
+.SH SEE ALSO
+.BR git (1)
