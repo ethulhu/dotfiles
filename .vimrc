@@ -73,15 +73,16 @@ nnoremap F :FormatCode<CR>
 
 " Comment & Uncomment comment/uncomment individual and ranges of lines.
 let g:comments = {
-	\ 'c':      { 'left': '/*', 'right': '*/' },
-	\ 'cpp':    { 'left': '//' },
-	\ 'go':     { 'left': '//' },
-	\ 'html':   { 'left': '<!--', 'right': '-->' },
-	\ 'python': { 'left': '#' },
-	\ 'sh':     { 'left': '#' },
-	\ 'tmux':   { 'left': '#' },
-	\ 'vim':    { 'left': '"' },
-	\ 'xml':    { 'left': '<!--', 'right': '-->' },
+	\ 'c':         { 'left': '/*', 'right': '*/' },
+	\ 'cpp':       { 'left': '//' },
+	\ 'gitconfig': { 'left': '#' },
+	\ 'go':        { 'left': '//' },
+	\ 'html':      { 'left': '<!--', 'right': '-->' },
+	\ 'python':    { 'left': '#' },
+	\ 'sh':        { 'left': '#' },
+	\ 'tmux':      { 'left': '#' },
+	\ 'vim':       { 'left': '"' },
+	\ 'xml':       { 'left': '<!--', 'right': '-->' },
 	\ }
 function! Comment()
 	let line_number = line('.')
@@ -105,7 +106,7 @@ function! Uncomment()
 
 		let line = getline(line_number)
 		if has_key(comment, 'left')
-			let line = substitute(line, '^\s*' . comment['left'] . '\ \?', '', '')
+			let line = substitute(line, '^\(\s*\)' . comment['left'] . '\ \?', '\1', '')
 		endif
 		if has_key(comment, 'right')
 			let line = substitute(line, '\ \?' . comment['right'] . '$', '', '')
