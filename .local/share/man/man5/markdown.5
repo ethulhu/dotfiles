@@ -1,0 +1,37 @@
+.TH MARKDOWN 5 "February 2020" "Dotfiles" "Eth's Dotfiles Manual"
+.SH NAME
+markdown \- a short howto on writing Markdown
+.SH DESCRIPTION
+.SS Horizontal lines / hrules
+.PP
+To create an \fB<hr />\fR, use either \fB***\fR, \fB---\fR, or \fB___\fR on its own line.
+.SS Links
+.PP
+Links are of the form:
+.PP
+.RS
+.nf
+\fB[\fItext\fB](\fIhttps://example.com\fR \fB"\fIoptional tooltip / alt-text\fB")\fR
+.fi
+.RE
+.SS Images
+.PP
+Images are similar to links, and are of the form:
+.PP
+.RS
+.nf
+\fB![\fIimage title\fB](\fI/path/to/image.png\fR \fB"\fIdescription text\fB")\fR
+.fi
+.RE
+.PP
+To make images into links, you can put an image as the link's text:
+.PP
+.RS
+.nf
+\fB[![\fIimage title\fB](\fI/path/to/image.png\fR \fB"\fIdescription text\fB")](\fIhttps://example.com/fullsize.png\fB)\fR
+.fi
+.RE
+.SH NOTES
+There are many "flavors" of Markdown, which may come with flavor-specific extensions, such as syntax highlighting or tables.
+.SH LINKS
+https://daringfireball.net/projects/markdown/
