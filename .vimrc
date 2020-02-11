@@ -78,6 +78,7 @@ let g:comments = {
 	\ 'gitconfig': { 'left': '#' },
 	\ 'go':        { 'left': '//' },
 	\ 'html':      { 'left': '<!--', 'right': '-->' },
+	\ 'make':      { 'left': '#' },
 	\ 'python':    { 'left': '#' },
 	\ 'sh':        { 'left': '#' },
 	\ 'tmux':      { 'left': '#' },
