@@ -1,0 +1,61 @@
+.TH MAKEFILE 5 "February 2020" "Dotfiles" "Eth's Dotfiles Manual"
+.SH NAME
+makefile \- a short howto on writing Makefiles
+.SH DESCRIPTION
+.SS Patterns
+TODO: PATSUBST and friends.
+.SS Automatic variables
+.PP
+There are a number of magic built-in variables, such as \fB$@\fR (the target) and \fB$<\fR (the first source file).
+.PP
+With implicit / pattern-matched rules, one can also use the "stem" of a target with \fB$*\fR, e.g. for a rule \fBbuild/%: src/%.thrust\fR and a file \fBsrc/foo.thrust\fR, \fB$*\fR is \fBfoo\fR.
+.PP
+.TS
+l l
+---
+l l.
+Variable	Meaning
+$@	The name of the target.
+$*	The stem of the target.
+$<	The name of the first prerequisite.
+$^	The names of all of the prerequisites.
+$?	The names of all prerequisites newer than the target.
+$(@D)	The dirname of the target.
+$(@F)	The basename of the target.
+$(<D)	The dirname of the first prerequisite.
+$(<F)	The basename of the first prerequisite.
+$(^D)	The dirnames of all the prerequisites.
+$(^F)	The basenames of all the prerequisites.
+$(?D)	The dirnames of all the prerequisites newer than the target.
+$(?F)	The basenames of all the prerequisites newer than the target.
+.TE
+.SS Phony targets
+.PP
+There is a magic target called \fB.PHONY\fR, which marks targets as not being files, such as \fBall\fR or \fBclean\fR.
+For example:
+.PP
+.RS
+.nf
+\&.PHONY: all clean
+\fi
+.RE
+.SH NOTES
+This document is written for GNU Make, so not everything will work in e.g. BSD Make.
+.SH EXAMPLE
+.SS Simple Makefile
+.nf
+CC     = gcc
+CFLAGS = -I.
+
+foo: foo.o bar.o 
+	$(CC) -o $@ $^
+
+%.o: %.c 
+	$(CC) -c -o $@ $< $(CFLAGS)
+.fi
+.\"
+.SH LINKS
+https://www.cs.colby.edu/maxwell/courses/tutorials/maketutor/
+.\"
+.SH SEE ALSO
+.BR make (1)
