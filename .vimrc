@@ -20,6 +20,7 @@ autocmd! BufRead,BufNewFile *.grim,*.mail,*.txt setlocal breakindent lbr
 let mapleader=','
 map <space>w <C-W><C-W>
 map ; :
+map Y y$
 
 " write as root.
 command! W w !sudo tee % >/dev/null
@@ -73,18 +74,19 @@ nnoremap F :FormatCode<CR>
 
 " Comment & Uncomment comment/uncomment individual and ranges of lines.
 let g:comments = {
-	\ 'c':         { 'left': '/*', 'right': '*/' },
-	\ 'cpp':       { 'left': '//' },
-	\ 'gitconfig': { 'left': '#' },
-	\ 'go':        { 'left': '//' },
-	\ 'html':      { 'left': '<!--', 'right': '-->' },
-	\ 'make':      { 'left': '#' },
-	\ 'python':    { 'left': '#' },
-	\ 'sh':        { 'left': '#' },
-	\ 'tmux':      { 'left': '#' },
-	\ 'vim':       { 'left': '"' },
-	\ 'xml':       { 'left': '<!--', 'right': '-->' },
-	\ 'xdefaults': { 'left': '!' },
+	\ 'c':          { 'left': '/*', 'right': '*/' },
+	\ 'cpp':        { 'left': '//' },
+	\ 'gitconfig':  { 'left': '#' },
+	\ 'go':         { 'left': '//' },
+	\ 'html':       { 'left': '<!--', 'right': '-->' },
+	\ 'javascript': { 'left': '//' },
+	\ 'make':       { 'left': '#' },
+	\ 'python':     { 'left': '#' },
+	\ 'sh':         { 'left': '#' },
+	\ 'tmux':       { 'left': '#' },
+	\ 'vim':        { 'left': '"' },
+	\ 'xdefaults':  { 'left': '!' },
+	\ 'xml':        { 'left': '<!--', 'right': '-->' },
 	\ }
 function! Comment()
 	let line_number = line('.')
