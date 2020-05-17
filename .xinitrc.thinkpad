@@ -1,0 +1,42 @@
+# load .Xresources.
+xrdb -merge ~/.Xresources
+
+# set up keyboard and trackpad for colemak and natural scrolling.
+setxkbmap -layout us -variant colemak -option caps:escape
+
+TRACKPAD_ID="$(xinput list | grep Synaptics | sed 's/.*id=\([0-9]\+\).*/\1/')"
+if [ "${TRACKPAD_ID}" ]; then
+	xinput --set-int-prop "${TRACKPAD_ID}" "libinput Natural Scrolling Enabled" 8 1
+fi
+
+# wallpaper.
+while true; do
+	set-wallpaper ~/wallpapers
+	sleep 30s
+done &
+
+# statusbar.
+while true; do
+	xsetroot -name "$(pretty-status dwm)"
+	sleep 30s
+done &
+
+# listen to dbus "lock" events and lock the screen.
+xss-lock slock &
+
+# # lock screen after 5 minutes.
+# xset s 300
+
+# no beep.
+xset b off
+
+# redshift for London.
+redshift &
+
+# keep the PRIMARY and CLIPBOARD selections in sync.
+autocutsel -fork
+autocutsel -selection PRIMARY -fork
+
+xhost +si:localgroup:eth-xauthority
+
+exec dwm

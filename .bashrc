@@ -13,7 +13,7 @@ shopt -s globstar 2>/dev/null  # only exists from 4.0 onwards.
 
 
 # Go.
-export GOPATH='~/go'
+export GOPATH="${HOME}/.local/go"
 export PATH="${GOPATH}/bin:${PATH}"
 
 # Rust.
