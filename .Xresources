@@ -2,7 +2,7 @@ URxvt.scrollBar:  False
 URxvt.font: xft:monospace:size=10
 
 URxvt.underlineURLs:   True
-URxvt.url-launcher:    /usr/bin/firefox
+URxvt.url-launcher:    firefox
 URxvt.perl-ext-common: default,matcher
 URxvt.matcher.button:  1
 
