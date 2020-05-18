@@ -28,10 +28,12 @@
 	dad = add
 	dd = add
 	dif = diff
+	idff = diff
 	pish = push
 	puh = push
 	puhs = push
 	s = status
+	stauts = status
 	sttaus = status
 	sttus = status
 	tatus = status
