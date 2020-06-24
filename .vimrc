@@ -65,7 +65,7 @@ function! FormatCode()
 	elseif &filetype ==# 'xml'
 		%!tidy -xml -indent -quiet
 	elseif &filetype ==# 'html'
-		%!tidy -indent -quiet
+		%!tidy -indent -quiet --tidy-mark no
 	endif
 
 	:call cursor(line_number, 1)
