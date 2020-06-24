@@ -1,5 +1,7 @@
 #!/bin/sh
 
+readonly default_branch="latest"
+
 set -eu
 
 new_repo=""
@@ -15,6 +17,7 @@ if [ ${#} = 1 ]; then
 fi
 
 git init
+git checkout -b "${default_branch}"
 git commit --allow-empty -m 'initial commit'
 
 if [ "${new_repo}" ]; then
