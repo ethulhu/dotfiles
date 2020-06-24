@@ -17,6 +17,8 @@ set wildmenu
 
 autocmd! BufRead,BufNewFile *.grim,*.mail,*.txt setlocal breakindent lbr
 
+autocmd BufRead,BufNewFile *.svg set filetype=xml
+
 let mapleader=','
 map <space>w <C-W><C-W>
 map ; :
