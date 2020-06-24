@@ -89,6 +89,7 @@ let g:comments = {
 	\ 'vim':        { 'left': '"' },
 	\ 'xdefaults':  { 'left': '!' },
 	\ 'xml':        { 'left': '<!--', 'right': '-->' },
+	\ 'yaml':       { 'left': '#' },
 	\ }
 function! Comment()
 	let line_number = line('.')
