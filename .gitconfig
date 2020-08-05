@@ -26,6 +26,7 @@
 	# typos.
 	ads = add
 	ceckout = checkout
+	checkoutt = checkout
 	commid = commit
 	dad = add
 	dd = add
