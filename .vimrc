@@ -17,7 +17,7 @@ set wildmenu
 
 autocmd! BufRead,BufNewFile *.grim,*.mail,*.txt setlocal breakindent lbr
 
-autocmd BufRead,BufNewFile *.svg set filetype=xml
+autocmd! BufRead,BufNewFile *.svg set filetype=xml
 
 let mapleader=','
 map <space>w <C-W><C-W>
@@ -61,7 +61,7 @@ function! FormatCode()
 	elseif &filetype ==# 'python'
 		%!autopep8 -
 	elseif &filetype ==# 'rust'
-		%!rustfmt --emit stdout
+		%!rustfmt --edition 2018 --emit stdout
 	elseif &filetype ==# 'xml'
 		%!tidy -xml -indent -quiet
 	elseif &filetype ==# 'html'
@@ -84,6 +84,7 @@ let g:comments = {
 	\ 'javascript': { 'left': '//' },
 	\ 'make':       { 'left': '#' },
 	\ 'python':     { 'left': '#' },
+	\ 'rust':       { 'left': '//' },
 	\ 'sh':         { 'left': '#' },
 	\ 'tmux':       { 'left': '#' },
 	\ 'vim':        { 'left': '"' },
