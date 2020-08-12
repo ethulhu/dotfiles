@@ -41,3 +41,5 @@
 	sttus = status
 	tatus = status
 	upll = pull
+[init]
+	defaultBranch = latest
