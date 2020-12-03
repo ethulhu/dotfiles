@@ -15,8 +15,6 @@ set wildignore=*.a,*.aux,*.class,*.dll,*.exe,*.hi,*.o,*.obj,*.pdf,*.pyc,*.toc
 set wildmode=longest,list,full
 set wildmenu
 
-autocmd! BufRead,BufNewFile *.grim,*.mail,*.txt setlocal breakindent lbr
-
 autocmd! BufRead,BufNewFile *.svg set filetype=xml
 
 let mapleader=','
@@ -24,8 +22,13 @@ map <space>w <C-W><C-W>
 map ; :
 map Y y$
 
-" write as root.
-command! W w !sudo tee % >/dev/null
+
+function! SetOptionsByFiletype()
+	if &filetype ==# 'text'
+		setlocal breakindent lbr
+	endif
+endfunction
+autocmd! BufRead,BufNewFile * call SetOptionsByFiletype()
 
 
 " LoadTemplate loads a template from ~/.vim/templates on creating a new file.
@@ -74,6 +77,10 @@ command! FormatCode :call FormatCode()
 nnoremap F :FormatCode<CR>
 
 
+" Write as root.
+command! WriteSudo w !sudo tee % >/dev/null
+
+
 " Comment & Uncomment comment/uncomment individual and ranges of lines.
 let g:comments = {
 	\ 'c':          { 'left': '/*', 'right': '*/' },
@@ -83,6 +90,7 @@ let g:comments = {
 	\ 'html':       { 'left': '<!--', 'right': '-->' },
 	\ 'javascript': { 'left': '//' },
 	\ 'make':       { 'left': '#' },
+	\ 'ocaml':      { 'left': '(*', 'right': '*)' },
 	\ 'python':     { 'left': '#' },
 	\ 'rust':       { 'left': '//' },
 	\ 'sh':         { 'left': '#' },
