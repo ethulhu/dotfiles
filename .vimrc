@@ -23,9 +23,19 @@ map ; :
 map Y y$
 
 
+:highlight ExtraWhitespace ctermbg=red guibg=red
+
+" Show trailing whitespace and spaces before a tab:
+:match ExtraWhitespace /\s\+$\| \+\ze\t/
+
+
 function! SetOptionsByFiletype()
 	if &filetype ==# 'text'
 		setlocal breakindent lbr
+	elseif &filetype ==# 'ocaml'
+		setlocal tabstop=2 softtabstop=2 expandtab shiftwidth=2 smarttab
+	elseif &filetype ==# 'sh'
+		setlocal tabstop=2 softtabstop=2 expandtab shiftwidth=2 smarttab
 	endif
 endfunction
 autocmd! BufRead,BufNewFile * call SetOptionsByFiletype()
@@ -122,10 +132,10 @@ function! Uncomment()
 
 		let line = getline(line_number)
 		if has_key(comment, 'left')
-			let line = substitute(line, '^\(\s*\)' . comment['left'] . '\ \?', '\1', '')
+			let line = substitute(line, '^\(\s*\)' . escape(comment['left'], '*') . '\ \?', '\1', '')
 		endif
 		if has_key(comment, 'right')
-			let line = substitute(line, '\ \?' . comment['right'] . '$', '', '')
+			let line = substitute(line, '\ \?' . escape(comment['right'], '*') . '$', '', '')
 		endif
 		call setline(line_number, line)
 	endif
