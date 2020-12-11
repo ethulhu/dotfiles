@@ -1,6 +1,5 @@
 set fish_greeting ''
 
-
 # Go.
 set -x GOPATH ~/go
 set -x PATH $GOPATH/bin $PATH
@@ -34,3 +33,10 @@ end
 set -x EDITOR vim
 
 source ~/.config/aliases
+
+# OCaml / opam configuration.
+if [ -f ~/.opam/opam-init/init.fish ]
+	source ~/.opam/opam-init/init.fish
+
+	alias ocaml='rlwrap ocaml'
+end
