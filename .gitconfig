@@ -19,7 +19,11 @@
 
 [alias]
 	amend-commit = commit --amend
+	dir = rev-parse --show-toplevel
+	git = !git
 	pop = stash pop
+	pr = !gh pr
+	tig = !tig
 	uncommit = reset --soft HEAD^
 	unstage = reset HEAD
 
