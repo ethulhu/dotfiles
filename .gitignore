@@ -1,11 +1,12 @@
 *.kbx
 *.key
 *.o
+*.patch
+*netrc
 .DS_Store
 ._*
 .git-outstanding.ignore
 __pycache__
-*netrc
 
 # home-dir things.
 /.*_history
