@@ -15,7 +15,6 @@ set wildignore=*.a,*.aux,*.class,*.dll,*.exe,*.hi,*.o,*.obj,*.pdf,*.pyc,*.toc
 set wildmode=longest,list,full
 set wildmenu
 
-autocmd! BufRead,BufNewFile *.svg set filetype=xml
 
 let mapleader=','
 map <space>w <C-W><C-W>
@@ -29,13 +28,17 @@ map Y y$
 :match ExtraWhitespace /\s\+$\| \+\ze\t/
 
 
+autocmd! BufRead,BufNewFile *.svg setlocal filetype=xml
+autocmd! BufRead,BufNewFile dune,dune-project,dune-workspace,dune-workspace.* setlocal filetype=dune
+
+let g:options = {
+	\ 'ocaml': 'tabstop=2 softtabstop=2 expandtab shiftwidth=2 smarttab',
+	\ 'sh':    'tabstop=2 softtabstop=2 expandtab shiftwidth=2 smarttab',
+	\ 'text':  'breakindent lbr',
+	\ }
 function! SetOptionsByFiletype()
-	if &filetype ==# 'text'
-		setlocal breakindent lbr
-	elseif &filetype ==# 'ocaml'
-		setlocal tabstop=2 softtabstop=2 expandtab shiftwidth=2 smarttab
-	elseif &filetype ==# 'sh'
-		setlocal tabstop=2 softtabstop=2 expandtab shiftwidth=2 smarttab
+	if has_key(g:options, &filetype)
+		execute('setlocal ' . g:options[&filetype])
 	endif
 endfunction
 autocmd! BufRead,BufNewFile * call SetOptionsByFiletype()
@@ -64,24 +67,22 @@ autocmd! BufNewFile * call LoadTemplate()
 
 
 " FormatCode formats the current buffer with an appropriate formatter.
+let g:formatters = {
+	\ 'c':      'clang-format -assume-filename=% -style=file -fallback-style=google',
+	\ 'cpp':    'clang-format -assume-filename=% -style=file -fallback-style=google',
+	\ 'dune':   'dune format',
+	\ 'go':     'goimports',
+	\ 'html':   'tidy -indent -quiet --tidy-mark no',
+	\ 'python': 'autopep8 -',
+	\ 'rust':   'rustfmt --edition 2018 --emit stdout',
+	\ 'xml':    'tidy -indent -quiet -xml',
+	\ }
 function! FormatCode()
-	let line_number = line('.')
-
-	if &filetype ==# 'c' || &filetype ==# 'cpp'
-		%!clang-format -assume-filename=% -style=file -fallback-style=google
-	elseif &filetype ==# 'go'
-		%!goimports
-	elseif &filetype ==# 'python'
-		%!autopep8 -
-	elseif &filetype ==# 'rust'
-		%!rustfmt --edition 2018 --emit stdout
-	elseif &filetype ==# 'xml'
-		%!tidy -xml -indent -quiet
-	elseif &filetype ==# 'html'
-		%!tidy -indent -quiet --tidy-mark no
+	if has_key(g:formatters, &filetype)
+		let line_number = line('.')
+		execute('%!' . g:formatters[&filetype])
+		call cursor(line_number, 1)
 	endif
-
-	:call cursor(line_number, 1)
 endfunction
 command! FormatCode :call FormatCode()
 nnoremap F :FormatCode<CR>
