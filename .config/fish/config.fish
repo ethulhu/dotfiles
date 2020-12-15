@@ -1,8 +1,10 @@
 set fish_greeting ''
 
 # Go.
-set -x GOPATH ~/go
-set -x PATH $GOPATH/bin $PATH
+set -x GOPATH ~/.local/go
+if [ -d $GOPATH ]
+  set -x PATH $GOPATH/bin $PATH
+end
 
 # Rust.
 if [ -d ~/.cargo ]
@@ -22,10 +24,6 @@ case Linux
 	set -x SSH_AUTH_SOCK (gpgconf --list-dirs agent-ssh-socket)
 	set -x GPG_TTY (tty)
 	set -x PATH ~/.local/bin/debian $PATH
-
-	if [ -d ~/.local/go ]
-		set -x PATH ~/.local/go/bin $PATH
-	end
 
 	if getent group netdev >/dev/null
 		alias wpa_cli='/usr/sbin/wpa_cli'
