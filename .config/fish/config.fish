@@ -17,9 +17,11 @@ set -x PATH ~/.local/bin $PATH
 
 switch (uname -s)
 case Darwin
+  set -x PATH ~/.local/bin/macos $PATH
+
   set -l python_version (python3 --version | sed -E 's/.* ([[:digit:]]+\.[[:digit:]]+).*/\1/')
-	set -x PATH $HOME/Library/Python/$python_version/bin $PATH
-	set -x PYTHONPATH $HOME/.local/lib/python$python_version/site-packages $PYTHONPATH
+	set -x PATH ~/Library/Python/$python_version/bin $PATH
+	set -x PYTHONPATH ~/.local/lib/python$python_version/site-packages $PYTHONPATH
 case Linux
 	set -x SSH_AUTH_SOCK (gpgconf --list-dirs agent-ssh-socket)
 	set -x GPG_TTY (tty)

@@ -1,0 +1,39 @@
+#!/bin/sh
+
+set -eu
+
+readonly util="$(basename "${0}")"
+
+function subcommands() {
+  IFS=':'
+  find $PATH -maxdepth 1 -type f -iname "${util}-*" 2>/dev/null | while read binary; do
+    if [ -x "${binary}" ]; then
+      echo "${binary}" | sed "s/.*\/${util}-//"
+    fi
+  done | sort
+}
+
+if [ $# -eq 0 ]; then
+  echo 'Usage:'
+  echo "    ${util} <cmd> [args ...]"
+  echo
+  echo 'Synopsis:'
+  echo '    A grab bag of useful utility commands.'
+  echo
+  echo 'Available Commands:'
+  for binary in $(subcommands); do
+    echo "    ${binary}"
+  done
+  exit 1
+fi
+
+readonly subcommand="${1}"
+readonly maybe_cmd="${util}-${subcommand}"
+shift
+
+if command -v "${maybe_cmd}" >/dev/null; then
+  ${maybe_cmd} $@
+else
+  echo "Unknown subcommand: ${subcommand}"
+  exit 1
+fi
