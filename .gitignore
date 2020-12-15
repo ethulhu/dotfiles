@@ -27,11 +27,6 @@ __pycache__
 /.gem
 /.gnupg
 /.lesshst
-/.local/bin/pipenv*
-/.local/bin/virtualenv*
-/.local/lib/python3.7/site-packages/clonevirtualenv*
-/.local/lib/python3.7/site-packages/pipenv*
-/.local/lib/python3.7/site-packages/virtualenv*
 /.local/share/fish/fish_history
 /.local/share/fish/generated_completions
 /.local/share/luakit/*.db
