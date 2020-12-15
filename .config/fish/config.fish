@@ -1,5 +1,7 @@
 set fish_greeting ''
 
+# MANPATH is inferred from PATH, so ~/.local/bin implies ~/.local/share/man.
+
 # Go.
 set -x GOPATH ~/.local/go
 if [ -d $GOPATH ]
@@ -11,9 +13,7 @@ if [ -d ~/.cargo ]
 	set -x PATH ~/.cargo/bin $PATH
 end
 
-# MANPATH is inferred from PATH based on these.
-set -x PATH ~/bin $PATH
-set -x PATH ~/.local/bin $PATH
+set -x PATH ~/.local/bin ~/bin $PATH
 
 switch (uname -s)
 case Darwin
@@ -22,10 +22,12 @@ case Darwin
   set -l python_version (python3 --version | sed -E 's/.* ([[:digit:]]+\.[[:digit:]]+).*/\1/')
 	set -x PATH ~/Library/Python/$python_version/bin $PATH
 	set -x PYTHONPATH ~/.local/lib/python$python_version/site-packages $PYTHONPATH
+
 case Linux
+	set -x PATH ~/.local/bin/debian $PATH
+
 	set -x SSH_AUTH_SOCK (gpgconf --list-dirs agent-ssh-socket)
 	set -x GPG_TTY (tty)
-	set -x PATH ~/.local/bin/debian $PATH
 
 	if getent group netdev >/dev/null
 		alias wpa_cli='/usr/sbin/wpa_cli'
