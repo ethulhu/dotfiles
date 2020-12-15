@@ -1,0 +1,42 @@
+#!/bin/sh
+
+set -eu
+
+if [ "$#" -ne 1 ]; then
+  echo "Usage: "$(basename "${0}")" <branch>"
+  echo
+  echo 'Synopsis: Remove a branch, the origin version of that branch, and the'
+  echo '          corresponding worktree.'
+	exit 1
+fi
+
+function confirm() {
+  read -r -p "${1} [y/N] " ok && [ "${ok}" = 'y' -o "${ok}" = 'Y' ]
+}
+
+readonly git_dir="$(git rev-parse --show-toplevel)"
+if [ ! "${git_dir}" ]; then
+	exit 1
+fi
+
+readonly branch="${1}"
+if [ ! "$(git branch --list "${branch}")" ]; then
+  echo "Unknown branch: ${branch}"
+  exit 1
+fi
+
+readonly worktree_path="$(git branch --format='%(worktreepath)' --list "${branch}")"
+readonly remote="$(git config "branch.${branch}.remote")"
+
+[ "${worktree_path}" ] && \
+  confirm "Delete worktree: ${worktree_path} ?" && ( \
+  git worktree remove "${worktree_path}" || ( \
+    confirm 'Force ?' && \
+    git worktree remove --force "${worktree_path}"))
+
+[ "${remote}" = "origin" ] && \
+  confirm "Delete origin branch: ${branch} ?" && \
+  git push origin --delete "${branch}"
+
+confirm "Delete local branch: ${branch} ?" && \
+  git branch --delete --force "${branch}"
