@@ -1,13 +1,35 @@
 #!/bin/sh
-#
-# a dotfiles management tool,
-# from https://www.atlassian.com/git/tutorials/dotfiles.
 
-MAYBE_CMD="dotfiles-${1}"
+set -eu
 
-if command -v "${MAYBE_CMD}" >/dev/null
-then
-  command "${MAYBE_CMD}"
+function subcommands() {
+  for binary in $(binaries_matching_glob 'dotfiles-*'); do
+    echo "${binary}" | sed 's/.*\/dotfiles-//'
+  done | sort
+}
+
+if [ "$#" -eq 0 ]; then
+  echo 'Usage:'
+  echo "    $(basename "${0}") <cmd> [args ...]"
+  echo
+  echo 'Synopsis:'
+  echo '    A dotfiles management tool.'
+  echo
+  echo 'Available Commands:'
+  for binary in $(subcommands); do
+    echo "    ${binary}"
+  done
+  echo '    ... and all Git subcommands.'
+  echo
+  echo 'Links:'
+  echo '    https://www.atlassian.com/git/tutorials/dotfiles'
+  exit 1
+fi
+
+readonly maybe_cmd="dotfiles-${1}"
+
+if command -v "${maybe_cmd}" >/dev/null; then
+  command "${maybe_cmd}"
 else
   git --git-dir="${HOME}/.dotfiles/" --work-tree="${HOME}" "$@"
 fi
