@@ -1,0 +1,26 @@
+#!/bin/sh
+
+set -eu
+
+if [ "$#" -lt 1 ]; then
+	echo "Usage: ${0} <binary> [args...]"
+  echo
+  echo 'Synopsis: Run a binary relative to the Git root directory.'
+  echo
+  echo 'For example, to run a project-specific linter on a file foo.py from a'
+  echo 'directory below the project root:'
+  echo
+  echo '    $ git run tools/lint.py ./foo.py'
+	exit 1
+fi
+
+readonly bin="${1}"
+shift
+
+readonly git_dir="$(git dir)"
+if [ ! "${git_dir}" ]; then
+	# The above subshell gives us our error message.
+	exit 1
+fi
+
+"${git_dir}/${bin}" $@
