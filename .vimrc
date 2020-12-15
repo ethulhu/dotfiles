@@ -29,11 +29,13 @@ map Y y$
 
 
 autocmd! BufRead,BufNewFile *.fish setlocal filetype=fish
+autocmd! BufRead,BufNewFile *.nix setlocal filetype=nix
 autocmd! BufRead,BufNewFile *.svg setlocal filetype=xml
 autocmd! BufRead,BufNewFile dune,dune-project,dune-workspace,dune-workspace.* setlocal filetype=dune
 
 let g:options = {
 	\ 'fish':  'tabstop=2 softtabstop=2 expandtab shiftwidth=2 smarttab',
+	\ 'nix':   'tabstop=2 softtabstop=2 expandtab shiftwidth=2 smarttab',
 	\ 'ocaml': 'tabstop=2 softtabstop=2 expandtab shiftwidth=2 smarttab',
 	\ 'sh':    'tabstop=2 softtabstop=2 expandtab shiftwidth=2 smarttab',
 	\ 'text':  'breakindent lbr',
