@@ -21,24 +21,6 @@ def update():
     print('updating Ruby gems…')
     cmd.run(['gem', 'update'])
 
-@macos
-def list_disks():
-    """list currently attached physical disks."""
-    cmd.run(['diskutil', 'list'])
-
-
-@macos
-def format_disk(format: str, name: str, disk: str, mbr=False):
-    """formats a disk, giving it a name, optionally with MBR partitions."""
-    cmd.run(['diskutil', 'eraseDisk', format, name] +
-            (['MBR'] if mbr else []) + [disk])
-
-
-@macos
-def list_installed_packages():
-    """lists current deliberately installed packages (not dependencies)."""
-    cmd.run(['brew', 'leaves'])
-
 
 @debian
 def list_disks():
