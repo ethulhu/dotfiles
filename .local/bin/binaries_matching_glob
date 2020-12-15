@@ -1,0 +1,19 @@
+#!/bin/sh
+
+set -eu
+
+if [ "$#" -ne 1 ]; then
+  echo "Usage: $(basename "${0}") <glob>"
+  echo
+  echo "Synopsis: Find all commands matching the given glob in PATH."
+  exit 1
+fi
+
+readonly glob="${1}"
+
+IFS=':'
+find $PATH -maxdepth 1 -type f -iname "${glob}" 2>/dev/null | while read binary; do
+  if [ -x "${binary}" ]; then
+    echo "${binary}"
+  fi
+done
