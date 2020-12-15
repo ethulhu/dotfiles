@@ -31,6 +31,8 @@ case Linux
   end
 
   if [ -f /etc/debian_version ]
+    set -x PATH ~/.local/bin/debian $PATH
+
     set -x SSH_AUTH_SOCK (gpgconf --list-dirs agent-ssh-socket)
     set -x GPG_TTY (tty)
 

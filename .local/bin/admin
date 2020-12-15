@@ -23,18 +23,6 @@ def update():
 
 
 @debian
-def list_disks():
-    """list currently attached physical disks."""
-    cmd.run(['lsblk'])
-
-
-@debian
-def list_installed_packages():
-    """lists current deliberately installed packages (not dependencies)."""
-    cmd.run(['apt-mark', 'showmanual'])
-
-
-@debian
 @cmd.must_be_root
 def change_hostname(hostname: str):
     cmd.run(['hostnamectl', 'set-hostname', hostname])
