@@ -40,3 +40,13 @@ if [ -f ~/.opam/opam-init/init.fish ]
 
 	alias ocaml='rlwrap ocaml'
 end
+
+# Event handlers.
+function __on_fish_preexec --on-event fish_preexec
+  if command -v gpg-connect-agent >/dev/null
+    gpg-connect-agent updatestartuptty /bye >/dev/null
+  end
+end
+
+function __on_fish_postexec --on-event fish_postexec
+end
