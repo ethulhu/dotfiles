@@ -24,14 +24,16 @@ case Darwin
 	set -x PYTHONPATH ~/.local/lib/python$python_version/site-packages $PYTHONPATH
 
 case Linux
-	set -x PATH ~/.local/bin/debian $PATH
+	set -x PATH ~/.local/bin/linux $PATH
 
-	set -x SSH_AUTH_SOCK (gpgconf --list-dirs agent-ssh-socket)
-	set -x GPG_TTY (tty)
+  if [ -f /etc/debian_version ]
+    set -x SSH_AUTH_SOCK (gpgconf --list-dirs agent-ssh-socket)
+    set -x GPG_TTY (tty)
 
-	if getent group netdev >/dev/null
-		alias wpa_cli='/usr/sbin/wpa_cli'
-	end
+    if getent group netdev >/dev/null
+      alias wpa_cli='/usr/sbin/wpa_cli'
+    end
+  end
 end
 
 set -x EDITOR vim

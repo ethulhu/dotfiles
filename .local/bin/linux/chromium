@@ -1,9 +1,11 @@
 #!/bin/sh
 
+set -eu
+
 readonly chromium='/usr/bin/chromium'
 
 if [ "$(uname -n)" = 'chibi' ]; then
-	$chromium --force-device-scale-factor=1.5
+	"${chromium}" --force-device-scale-factor=1.5
 else
-	$chromium
+	"${chromium}"
 fi
