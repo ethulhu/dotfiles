@@ -1,0 +1,31 @@
+#!/bin/sh
+
+set -eu
+
+if [ "$#" -ne 2 ]
+then
+  echo "Usage: $(basename "${0}") <name> <number of megabytes>"
+  echo
+  echo "Synopsis: Create and mount a RAM-backed disk of a given size."
+	exit 1
+fi
+
+if [ ! "$(uname -s)" = 'Darwin' ]; then
+  echo "Unsupported OS: $(uname -s)"
+  exit 1
+fi
+
+readonly name="${1}"
+readonly megabytes="${2}"
+
+readonly blocks="$(echo "${megabytes} * 2048" | bc)"
+
+readonly device="$(hdiutil attach -nomount "ram://${blocks}" | sed -E -e 's/^[[:space:]]+//' -e 's/[[:space:]]+$//')"
+
+while [ ! -e "${device}" ]
+do
+  echo "Waiting for ${device}..."
+  sleep 1
+done
+
+diskutil erasevolume HFS+ "${name}" "${device}"
