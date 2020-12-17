@@ -105,6 +105,7 @@ let g:comments = {
 	\ 'html':       { 'left': '<!--', 'right': '-->' },
 	\ 'javascript': { 'left': '//' },
 	\ 'make':       { 'left': '#' },
+	\ 'nix':        { 'left': '#' },
 	\ 'ocaml':      { 'left': '(*', 'right': '*)' },
 	\ 'python':     { 'left': '#' },
 	\ 'rust':       { 'left': '//' },
