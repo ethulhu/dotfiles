@@ -55,7 +55,7 @@ end
 
 # Event handlers.
 function __on_fish_preexec --on-event fish_preexec
-  if command -v gpg-connect-agent >/dev/null
+  if command --quiet gpg-connect-agent
     gpg-connect-agent updatestartuptty /bye >/dev/null
   end
 end
