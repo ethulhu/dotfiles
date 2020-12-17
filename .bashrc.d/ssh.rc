@@ -1,4 +1,0 @@
-ssh() {
-	gpg-connect-agent updatestartuptty /bye > /dev/null
-	command ssh "$@"
-}
