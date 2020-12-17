@@ -71,7 +71,7 @@ if [ -d /nix/store ]
     end
 
     function path_of_package --argument-names package
-      nix-build '<nixpkgs>' --attr $package
+      nix-build --no-out-link '<nixpkgs>' --attr $package
     end
 
     set -l sqlite3 (path_of_package sqlite)/bin/sqlite3
