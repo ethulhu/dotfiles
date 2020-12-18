@@ -118,12 +118,14 @@ let g:comments = {
 	\ }
 function! Comment()
 	let line_number = line('.')
-	if has_key(g:comments, &filetype)
+	let line = getline(line_number)
+
+	if has_key(g:comments, &filetype) && line != ''
 		let comment = g:comments[&filetype]
 
 		let line = getline(line_number)
 		if has_key(comment, 'left')
-			let line = substitute(line, '\(\S\)', comment['left'] . '\ \1', '')
+			let line = substitute(line, '^\(\s*\)', '\1' . comment['left'] . ' ', '')
 		endif
 		if has_key(comment, 'right')
 			let line = substitute(line, '$', '\ ' . comment['right'], '')
