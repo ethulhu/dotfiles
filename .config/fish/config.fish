@@ -48,9 +48,19 @@ source ~/.config/aliases
 
 # OCaml / opam configuration.
 if [ -f ~/.opam/opam-init/init.fish ]
-	source ~/.opam/opam-init/init.fish
+  # source ~/.opam/opam-init/init.fish
 
-	alias ocaml='rlwrap ocaml'
+  # There is a bug in `opam env` that adds `.` to PATH.
+  # This is a workaround, and should be removed when opam > 2.0.7.
+  if isatty
+    set -gx OPAMNOENVNOTICE true;
+    function __opam_env_export_eval --on-event fish_prompt;
+      eval (opam env --shell=fish --readonly ^ /dev/null | sed 's/://g');
+    end
+  end
+	source ~/.opam/opam-init/variables.fish
+
+  alias ocaml='rlwrap ocaml'
 end
 
 # Event handlers.
