@@ -10,6 +10,7 @@ syntax off
 
 filetype plugin indent on
 
+
 " ignore object & binary files.
 set wildignore=*.a,*.aux,*.class,*.dll,*.exe,*.hi,*.o,*.obj,*.pdf,*.pyc,*.toc
 set wildmode=longest,list,full
@@ -22,30 +23,27 @@ map ; :
 map Y y$
 
 
-:highlight ExtraWhitespace ctermbg=red guibg=red
-
 " Show trailing whitespace and spaces before a tab:
-:match ExtraWhitespace /\s\+$\| \+\ze\t/
+highlight ExtraWhitespace ctermbg=red guibg=red
+match ExtraWhitespace /\s\+$\| \+\ze\t/
 
 
-autocmd! BufRead,BufNewFile *.fish setlocal filetype=fish
-autocmd! BufRead,BufNewFile *.nix setlocal filetype=nix
-autocmd! BufRead,BufNewFile *.svg setlocal filetype=xml
-autocmd! BufRead,BufNewFile dune,dune-project,dune-workspace,dune-workspace.* setlocal filetype=dune
+augroup set-filetype
+	autocmd!
+	autocmd BufRead,BufNewFile *.fish setlocal filetype=fish
+	autocmd BufRead,BufNewFile *.nix  setlocal filetype=nix
+	autocmd BufRead,BufNewFile *.svg  setlocal filetype=xml
+	autocmd BufRead,BufNewFile dune,dune-project,dune-workspace,dune-workspace.* setlocal filetype=dune
+augroup end
 
-let g:options = {
-	\ 'fish':  'tabstop=2 softtabstop=2 expandtab shiftwidth=2 smarttab',
-	\ 'nix':   'tabstop=2 softtabstop=2 expandtab shiftwidth=2 smarttab',
-	\ 'ocaml': 'tabstop=2 softtabstop=2 expandtab shiftwidth=2 smarttab',
-	\ 'sh':    'tabstop=2 softtabstop=2 expandtab shiftwidth=2 smarttab',
-	\ 'text':  'breakindent lbr',
-	\ }
-function! SetOptionsByFiletype()
-	if has_key(g:options, &filetype)
-		execute('setlocal ' . g:options[&filetype])
-	endif
-endfunction
-autocmd! BufRead,BufNewFile * call SetOptionsByFiletype()
+augroup settings-by-filetype
+	autocmd!
+	autocmd FileType fish   setlocal tabstop=2 softtabstop=2 expandtab shiftwidth=2 smarttab
+	autocmd FileType nix    setlocal tabstop=2 softtabstop=2 expandtab shiftwidth=2 smarttab
+	autocmd FileType ocaml  setlocal tabstop=2 softtabstop=2 expandtab shiftwidth=2 smarttab
+	autocmd FileType sh     setlocal tabstop=2 softtabstop=2 expandtab shiftwidth=2 smarttab
+	autocmd FileType text   setlocal breakindent lbr
+augroup end
 
 
 " LoadTemplate loads a template from ~/.vim/templates on creating a new file.
@@ -53,7 +51,7 @@ autocmd! BufRead,BufNewFile * call SetOptionsByFiletype()
 " - If there is a file ~/.vim/templates/foo.bar, it will load that.
 " - If there is a file ~/.vim/templates/bar, it will load that.
 " - Otherwise, it does nothing.
-function! LoadTemplate()
+function s:LoadTemplate()
         if filereadable(expand('~/.vim/templates/' . expand('%')))
                 r ~/.vim/templates/%
                 :0d
@@ -67,11 +65,11 @@ function! LoadTemplate()
                 endif
         endif
 endfunction
-autocmd! BufNewFile * call LoadTemplate()
+autocmd BufNewFile * call s:LoadTemplate()
 
 
 " FormatCode formats the current buffer with an appropriate formatter.
-let g:formatters = {
+let s:formatters = {
 	\ 'c':      'clang-format -assume-filename=% -style=file -fallback-style=google',
 	\ 'cpp':    'clang-format -assume-filename=% -style=file -fallback-style=google',
 	\ 'dune':   'dune format',
@@ -81,14 +79,14 @@ let g:formatters = {
 	\ 'rust':   'rustfmt --edition 2018 --emit stdout',
 	\ 'xml':    'tidy -indent -quiet -xml',
 	\ }
-function! FormatCode()
-	if has_key(g:formatters, &filetype)
+function s:FormatCode()
+	if has_key(s:formatters, &filetype)
 		let line_number = line('.')
-		execute('%!' . g:formatters[&filetype])
+		execute('%!' . s:formatters[&filetype])
 		call cursor(line_number, 1)
 	endif
 endfunction
-command! FormatCode :call FormatCode()
+command! FormatCode :call s:FormatCode()
 nnoremap F :FormatCode<CR>
 
 
@@ -97,7 +95,7 @@ command! WriteSudo w !sudo tee % >/dev/null
 
 
 " Comment & Uncomment comment/uncomment individual and ranges of lines.
-let g:comments = {
+let s:comments = {
 	\ 'c':          { 'left': '/*', 'right': '*/' },
 	\ 'cpp':        { 'left': '//' },
 	\ 'fish':       { 'left': '#' },
@@ -117,12 +115,12 @@ let g:comments = {
 	\ 'xml':        { 'left': '<!--', 'right': '-->' },
 	\ 'yaml':       { 'left': '#' },
 	\ }
-function! Comment()
+function s:Comment()
 	let line_number = line('.')
 	let line = getline(line_number)
 
-	if has_key(g:comments, &filetype) && line != ''
-		let comment = g:comments[&filetype]
+	if has_key(s:comments, &filetype) && line != ''
+		let comment = s:comments[&filetype]
 
 		let line = getline(line_number)
 		if has_key(comment, 'left')
@@ -134,10 +132,10 @@ function! Comment()
 		call setline(line_number, line)
 	endif
 endfunction
-function! Uncomment()
+function s:Uncomment()
 	let line_number = line('.')
-	if has_key(g:comments, &filetype)
-		let comment = g:comments[&filetype]
+	if has_key(s:comments, &filetype)
+		let comment = s:comments[&filetype]
 
 		let line = getline(line_number)
 		if has_key(comment, 'left')
@@ -149,9 +147,9 @@ function! Uncomment()
 		call setline(line_number, line)
 	endif
 endfunction
-command! Comment   :call Comment()
-command! Uncomment :call Uncomment()
-command! -range Comment   <line1>,<line2>call Comment()
-command! -range Uncomment <line1>,<line2>call Uncomment()
+command! Comment   :call s:Comment()
+command! Uncomment :call s:Uncomment()
+command! -range Comment   <line1>,<line2>call s:Comment()
+command! -range Uncomment <line1>,<line2>call s:Uncomment()
 map <leader>cc :Comment<CR>
 map <leader>cu :Uncomment<CR>
