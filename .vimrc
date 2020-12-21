@@ -52,18 +52,37 @@ augroup end
 " - If there is a file ~/.vim/templates/bar, it will load that.
 " - Otherwise, it does nothing.
 function s:LoadTemplate()
-        if filereadable(expand('~/.vim/templates/' . expand('%')))
-                r ~/.vim/templates/%
-                :0d
-        elseif filereadable(expand('~/.vim/templates/' . expand('%:e')))
-                r ~/.vim/templates/%:e
-                :0d
-		if &filetype ==# 'cs' || &filetype ==# 'java'
-                        %s/CLASSNAME/\=expand('%:t:r')/g
-		elseif &filetype ==# 'c' || &filetype ==# 'cpp'
-                        %s/HEADER/\=toupper(expand('%:t:r'))/g
-                endif
-        endif
+	let template_dirs = split(get(environ(), 'VIM_TEMPLATES', ''), ':') + [ '~/.vim/templates' ]
+
+	function ReadTemplate(path)
+		execute('r ' . a:path)
+		:0d
+
+		if search('HEADER') != 0
+			%s/HEADER/\=toupper(expand('%:t:r'))/g
+		endif
+		if search('CLASSNAME') != 0
+			%s/CLASSNAME/\=expand('%:t:r')/g
+		endif
+
+		if search('CURSOR') != 0
+			let [line, column] = searchpos('CURSOR')
+			call setline(line, substitute(getline(line), 'CURSOR', '', ''))
+			call cursor(line, column)
+			" TODO: maybe enable this?
+			" startinsert!
+		endif
+	endfunction
+
+	for dir in template_dirs
+		if filereadable(expand(dir . '/' . expand('%')))
+			call ReadTemplate(dir . '/' . expand('%'))
+			return
+		elseif filereadable(expand(dir . '/' . expand('%:e')))
+			call ReadTemplate(dir . '/' . expand('%:e'))
+			return
+		endif
+	endfor
 endfunction
 autocmd BufNewFile * call s:LoadTemplate()
 
