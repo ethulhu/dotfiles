@@ -26,20 +26,17 @@ case Darwin
 case Linux
 	set -x PATH ~/.local/bin/linux $PATH
 
-  if [ -d /nix/store ]
-    eval (direnv hook fish)
-  end
-
   if [ -f /etc/debian_version ]
     set -x PATH ~/.local/bin/debian $PATH
-
-    set -x SSH_AUTH_SOCK (gpgconf --list-dirs agent-ssh-socket)
-    set -x GPG_TTY (tty)
 
     if getent group netdev >/dev/null
       alias wpa_cli='/usr/sbin/wpa_cli'
     end
   end
+end
+
+if command -q direnv
+  eval (direnv hook fish)
 end
 
 set -x EDITOR vim
