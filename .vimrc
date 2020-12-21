@@ -100,6 +100,7 @@ command! WriteSudo w !sudo tee % >/dev/null
 let g:comments = {
 	\ 'c':          { 'left': '/*', 'right': '*/' },
 	\ 'cpp':        { 'left': '//' },
+	\ 'fish':       { 'left': '#' },
 	\ 'gitconfig':  { 'left': '#' },
 	\ 'go':         { 'left': '//' },
 	\ 'html':       { 'left': '<!--', 'right': '-->' },
