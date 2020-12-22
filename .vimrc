@@ -58,6 +58,9 @@ function s:LoadTemplate()
 		execute('r ' . a:path)
 		:0d
 
+		if search('DIRNAME') != 0
+			%s/DIRNAME/\=expand('%:p:h:t')/g
+		endif
 		if search('FILENAME_ALLCAPS') != 0
 			%s/FILENAME_ALLCAPS/\=toupper(expand('%:t:r'))/g
 		endif
