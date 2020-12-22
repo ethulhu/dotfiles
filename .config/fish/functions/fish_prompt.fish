@@ -23,11 +23,16 @@ function fish_prompt --description 'Write out the prompt'
     end
   end
 
+  set -l prompt_hostname
+  if set -q SSH_CLIENT; or ssh -q SSH_CONNECTION; or ssh -q SSH_TTY
+    set prompt_hostname "@$hostname"
+  end
+
   # Write pipestatus
   set -l prompt_status (__fish_print_pipestatus " [" "]" "|" (set_color $fish_color_status) (set_color --bold $fish_color_status) $last_pipestatus)
 
   echo -n -s \
-    (set_color $fish_color_user) $USER (set_color normal) ' ' \
+    $USER $prompt_hostname ' ' \
     (set_color $color_cwd) (prompt_pwd) (set_color normal) \
     (prompt_repo) (fish_vcs_prompt) (set_color normal) \
     $prompt_status $suffix ' '
