@@ -94,6 +94,7 @@ let s:formatters = {
 	\ 'dune':   'dune format',
 	\ 'go':     'goimports',
 	\ 'html':   'tidy -indent -quiet --tidy-mark no',
+	\ 'json':   'jq',
 	\ 'python': 'autopep8 -',
 	\ 'rust':   'rustfmt --edition 2018 --emit stdout',
 	\ 'xml':    'tidy -indent -quiet -xml',
