@@ -1,28 +1,34 @@
 function fish_prompt --description 'Write out the prompt'
-
-	set -l color_normal (set_color normal)
-	set -l color_cwd
-	set -l suffix
-
-	switch $USER
-	case root toor
-		if set -q fish_color_cwd_root
-			set color_cwd (set_color $fish_color_cwd_root)
-		else
-			set color_cwd (set_color $fish_color_cwd)
-		end
-		set suffix '#'
-	case '*'
-		set color_cwd (set_color $fish_color_cwd)
-		set suffix '>'
-	end
+  set -l last_pipestatus $pipestatus
 
 	if [ $TERM = "dumb" ]
 		return
 	end
-	if [ (tput colors) -eq 1 ]
-		echo -n -s "$USER "(prompt_pwd)"$suffix"
-	else
-		echo -n -s "$USER" ' ' "$color_cwd" (prompt_pwd) "$color_normal" "$suffix "
-	end
+
+	set -l color_cwd $fish_color_cwd
+	set -l suffix '>'
+
+  if contains -- $USER root toor
+    if set -q fish_color_cwd_root
+      set color_cwd $fish_color_cwd_root
+    end
+    set suffix '#'
+  end
+
+  function prompt_repo
+    if pwd | grep -q -E "^$HOME/src/.+"
+      echo -n ' ['
+      pwd | sed "s|^$HOME/src/\([^/]*\).*\$|\1|"
+      echo -n ']'
+    end
+  end
+
+  # Write pipestatus
+  set -l prompt_status (__fish_print_pipestatus " [" "]" "|" (set_color $fish_color_status) (set_color --bold $fish_color_status) $last_pipestatus)
+
+  echo -n -s \
+    (set_color $fish_color_user) $USER (set_color normal) ' ' \
+    (set_color $color_cwd) (prompt_pwd) (set_color normal) \
+    (prompt_repo) (fish_vcs_prompt) (set_color normal) \
+    $prompt_status $suffix ' '
 end
