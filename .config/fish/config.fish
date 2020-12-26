@@ -55,6 +55,16 @@ function __on_fish_postexec --on-event fish_postexec
 end
 
 
+# fish_prompt pre-computes.
+
+set -g prompt_user $USER
+set -g prompt_hostname
+if set -q SSH_CLIENT; or set -q SSH_CONNECTION; or set -q SSH_TTY
+  set -g prompt_user (set_color $fish_color_user) $USER (set_color normal)
+  set -g prompt_hostname '@' (set_color $fish_color_host_remote) $hostname (set_color normal)
+end
+
+
 # Per-OS configuration.
 
 set -l os (operating_system | string lower)
