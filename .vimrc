@@ -51,43 +51,43 @@ augroup end
 " - If there is a file ~/.vim/templates/foo.bar, it will load that.
 " - If there is a file ~/.vim/templates/bar, it will load that.
 " - Otherwise, it does nothing.
-function s:LoadTemplate()
+function s:LoadTemplate(path)
+	execute('r ' . a:path)
+	:0d
+
+	if search('DIRNAME') != 0
+		%s/DIRNAME/\=expand('%:p:h:t')/g
+	endif
+	if search('FILENAME_ALLCAPS') != 0
+		%s/FILENAME_ALLCAPS/\=toupper(expand('%:t:r'))/g
+	endif
+	if search('FILENAME') != 0
+		%s/FILENAME/\=expand('%:t:r')/g
+	endif
+
+	if search('CURSOR') != 0
+		let [line, column] = searchpos('CURSOR')
+		call setline(line, substitute(getline(line), 'CURSOR', '', ''))
+		call cursor(line, column)
+		" TODO: maybe enable this?
+		" startinsert!
+	endif
+endfunction
+function s:LoadTemplateFromFilename()
 	let template_dirs = split(get(environ(), 'VIM_TEMPLATES', ''), ':') + [ '~/.vim/templates' ]
 
-	function ReadTemplate(path)
-		execute('r ' . a:path)
-		:0d
-
-		if search('DIRNAME') != 0
-			%s/DIRNAME/\=expand('%:p:h:t')/g
-		endif
-		if search('FILENAME_ALLCAPS') != 0
-			%s/FILENAME_ALLCAPS/\=toupper(expand('%:t:r'))/g
-		endif
-		if search('FILENAME') != 0
-			%s/FILENAME/\=expand('%:t:r')/g
-		endif
-
-		if search('CURSOR') != 0
-			let [line, column] = searchpos('CURSOR')
-			call setline(line, substitute(getline(line), 'CURSOR', '', ''))
-			call cursor(line, column)
-			" TODO: maybe enable this?
-			" startinsert!
-		endif
-	endfunction
 
 	for dir in template_dirs
 		if filereadable(expand(dir . '/' . expand('%')))
-			call ReadTemplate(dir . '/' . expand('%'))
+			call s:LoadTemplate(dir . '/' . expand('%'))
 			return
 		elseif filereadable(expand(dir . '/' . expand('%:e')))
-			call ReadTemplate(dir . '/' . expand('%:e'))
+			call s:LoadTemplate(dir . '/' . expand('%:e'))
 			return
 		endif
 	endfor
 endfunction
-autocmd BufNewFile * call s:LoadTemplate()
+autocmd BufNewFile * call s:LoadTemplateFromFilename()
 
 
 " FormatCode formats the current buffer with an appropriate formatter.
