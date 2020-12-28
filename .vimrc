@@ -78,8 +78,8 @@ function s:LoadTemplateFromFilename()
 
 
 	for dir in template_dirs
-		if filereadable(expand(dir . '/' . expand('%')))
-			call s:LoadTemplate(dir . '/' . expand('%'))
+		if filereadable(expand(dir . '/' . expand('%:t')))
+			call s:LoadTemplate(dir . '/' . expand('%:t'))
 			return
 		elseif filereadable(expand(dir . '/' . expand('%:e')))
 			call s:LoadTemplate(dir . '/' . expand('%:e'))
