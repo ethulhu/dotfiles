@@ -7,7 +7,7 @@ function usage() {
   echo "    $(basename "${0}")"
   echo
   echo 'Synopsis:'
-  echo '    Lists currently deliberately installed packages (not dependencies).'
+  echo '    Update all updateables (Homebrew), install missing packages.'
 }
 
 if [ $# -eq 1 ] && [ "${1}" = '-h' ]; then
@@ -15,4 +15,8 @@ if [ $# -eq 1 ] && [ "${1}" = '-h' ]; then
   exit
 fi
 
-brew leaves
+brew update
+brew upgrade
+
+# Install any missing packages from ~/.Brewfile.
+brew bundle install --global

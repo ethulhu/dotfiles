@@ -33,6 +33,8 @@ augroup set-filetype
 	autocmd BufRead,BufNewFile *.fish setlocal filetype=fish
 	autocmd BufRead,BufNewFile *.nix  setlocal filetype=nix
 	autocmd BufRead,BufNewFile *.svg  setlocal filetype=xml
+
+	autocmd BufRead,BufNewFile .Brewfile,Brewfile setlocal filetype=ruby
 	autocmd BufRead,BufNewFile dune,dune-project,dune-workspace,dune-workspace.* setlocal filetype=dune
 augroup end
 
@@ -130,6 +132,7 @@ let s:comments = {
 	\ 'nix':        { 'left': '#' },
 	\ 'ocaml':      { 'left': '(*', 'right': '*)' },
 	\ 'python':     { 'left': '#' },
+	\ 'ruby':       { 'left': '#' },
 	\ 'rust':       { 'left': '//' },
 	\ 'sh':         { 'left': '#' },
 	\ 'tmux':       { 'left': '#' },
