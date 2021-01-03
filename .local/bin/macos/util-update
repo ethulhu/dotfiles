@@ -20,3 +20,11 @@ brew upgrade
 
 # Install any missing packages from ~/.Brewfile.
 brew bundle install --global
+
+# Python.
+pip3 install \
+  jinja2 \
+  markdown \
+  pip \
+  pyyaml \
+  --upgrade
