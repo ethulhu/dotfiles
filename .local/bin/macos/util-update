@@ -15,10 +15,15 @@ if [ $# -eq 1 ] && [ "${1}" = '-h' ]; then
   exit
 fi
 
+
+# Print updater commands as they happen.
+set -x
+
+# Homebrew.
 brew update
 brew upgrade
 
-# Install any missing packages from ~/.Brewfile.
+# Install any missing Homebrew packages from ~/.Brewfile.
 brew bundle install --global
 
 # Python.
