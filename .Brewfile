@@ -24,6 +24,7 @@ brew "pre-commit"
 brew "ripgrep"
 brew "tidy-html5"
 brew "tig"
+brew "tmux"
 brew "w3m"
 
 # These packages don't currently install on AArch64 macOS:
