@@ -30,6 +30,7 @@ brew bundle install --global
 pip3 install \
   jinja2 \
   markdown \
+  netifaces \
   pip \
   pyyaml \
   reuse \
