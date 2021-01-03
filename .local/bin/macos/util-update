@@ -27,4 +27,5 @@ pip3 install \
   markdown \
   pip \
   pyyaml \
+  reuse \
   --upgrade
