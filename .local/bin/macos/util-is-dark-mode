@@ -1,0 +1,6 @@
+#!/bin/sh
+
+set -eu
+
+# Printf "Dark" if dark, and errors if light.
+defaults read -g AppleInterfaceStyle >/dev/null 2>/dev/null

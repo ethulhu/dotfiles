@@ -1,0 +1,12 @@
+#!/bin/sh
+
+set -eu
+
+readonly network="$(networksetup -getairportnetwork en0)"
+
+if echo "${network}" | grep -q 'Current Wi-Fi Network: '; then
+  echo "${network}" | sed 's/^Current Wi-Fi Network: //'
+else
+  echo "${network}" 1>&2
+  exit 1
+fi
