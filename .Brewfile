@@ -26,6 +26,7 @@ brew "tidy-html5"
 brew "tig"
 brew "tmux"
 brew "w3m"
+brew "wget"
 
 # These packages don't currently install on AArch64 macOS:
 #
