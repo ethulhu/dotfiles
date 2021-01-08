@@ -11,7 +11,12 @@ syntax off
 filetype plugin indent on
 
 
-" ignore object & binary files.
+" Set the terminal-emulator tab title.
+set title
+" let &titlestring = "vim — " . expand("%:t")
+
+
+" Ignore object & binary files.
 set wildignore=*.a,*.aux,*.class,*.dll,*.exe,*.hi,*.o,*.obj,*.pdf,*.pyc,*.toc
 set wildmode=longest,list,full
 set wildmenu
