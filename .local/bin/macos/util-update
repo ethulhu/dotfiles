@@ -7,7 +7,7 @@ function usage() {
   echo "    $(basename "${0}")"
   echo
   echo 'Synopsis:'
-  echo '    Update all updateables (Homebrew), install missing packages.'
+  echo '    Update all updateables (Homebrew, Python, Go), install missing packages.'
 }
 
 if [ $# -eq 1 ] && [ "${1}" = '-h' ]; then
@@ -35,3 +35,6 @@ pip3 install \
   pyyaml \
   reuse \
   --upgrade
+
+# Go.
+go get golang.org/x/tools/cmd/goimports
