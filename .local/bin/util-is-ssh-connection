@@ -1,0 +1,15 @@
+#!/bin/sh
+
+set -eu
+
+function usage() {
+  echo "Usage: $(basename "${0}")"
+  echo
+  echo 'Synopsis: Return 0 if the current session is connected to via SSH.'
+}
+
+function is_set() {
+  declare -p "${1}" >/dev/null 2>/dev/null
+}
+
+is_set SSH_CLIENT || is_set SSH_CONNECTION || is_set SSH_TTY
