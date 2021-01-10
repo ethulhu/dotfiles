@@ -39,6 +39,7 @@ augroup set-filetype
 	autocmd BufRead,BufNewFile *.nix  setlocal filetype=nix
 	autocmd BufRead,BufNewFile *.svg  setlocal filetype=xml
 
+	autocmd BufRead,BufNewFile */.ssh/config*     setlocal filetype=sshconfig
 	autocmd BufRead,BufNewFile .Brewfile,Brewfile setlocal filetype=ruby
 	autocmd BufRead,BufNewFile dune,dune-project,dune-workspace,dune-workspace.* setlocal filetype=dune
 augroup end
@@ -140,6 +141,7 @@ let s:comments = {
 	\ 'ruby':       { 'left': '#' },
 	\ 'rust':       { 'left': '//' },
 	\ 'sh':         { 'left': '#' },
+	\ 'sshconfig':  { 'left': '#' },
 	\ 'tmux':       { 'left': '#' },
 	\ 'vim':        { 'left': '"' },
 	\ 'xdefaults':  { 'left': '!' },
