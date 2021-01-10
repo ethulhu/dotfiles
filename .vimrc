@@ -22,13 +22,28 @@ set wildmode=longest,list,full
 set wildmenu
 
 
-let mapleader=','
+" I find `,` easier to press than `\`.
+let mapleader = ','
+
+" Window movement with less "Emacs pinky".
 map <space>w <C-W><C-W>
+
+" #1 best quality-of-life improvement in the entire config.
 map ; :
+
+" Make `Y` behave like `D`.
 map Y y$
 
+" Yank / Paste / Delete, but with the system clipboard.
+map <leader>y "+y
+map <leader>p "+p
+map <leader>d "+d
 
-" Show trailing whitespace and spaces before a tab:
+" Write as root.
+command! WriteSudo w !sudo tee % >/dev/null
+
+
+" Show trailing whitespace and spaces before a tab.
 highlight ExtraWhitespace ctermbg=red guibg=red
 match ExtraWhitespace /\s\+$\| \+\ze\t/
 
@@ -119,10 +134,6 @@ function s:FormatCode()
 endfunction
 command! FormatCode :call s:FormatCode()
 nnoremap F :FormatCode<CR>
-
-
-" Write as root.
-command! WriteSudo w !sudo tee % >/dev/null
 
 
 " Comment & Uncomment comment/uncomment individual and ranges of lines.
