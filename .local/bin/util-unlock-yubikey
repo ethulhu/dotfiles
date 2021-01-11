@@ -1,0 +1,12 @@
+#!/bin/sh
+
+set -eu
+
+if ! gpg --card-status >/dev/null 2>/dev/null; then
+  echo "No Yubikey present"
+  exit 1
+fi
+
+readonly serial_number="$(gpg-connect-agent 'scd getinfo card_list' /bye | awk '/S SERIALNO/ { print $3 }')"
+
+gpg-connect-agent "scd checkpin ${serial_number}" /bye
