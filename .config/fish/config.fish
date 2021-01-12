@@ -54,6 +54,11 @@ function __on_fish_preexec --on-event fish_preexec
     gpg-connect-agent updatestartuptty /bye >/dev/null
   end
 end
+if set --query TMUX
+  function __update_variables_from_tmux --on-event fish_preexec
+    inherit_variables_from_tmux SSH_AUTH_SOCK SSH_CONNECTION
+  end
+end
 
 function __on_fish_postexec --on-event fish_postexec
 end
