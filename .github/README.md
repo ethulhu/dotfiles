@@ -6,6 +6,9 @@ Fish:
 
 ```sh
 $ git clone --bare git@github.com:ethulhu/dotfiles .dotfiles
+$ git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME config --local remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*'
+$ git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME fetch origin
+
 $ git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME checkout
 $ git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME config --local status.showUntrackedFiles no
 ```
@@ -14,6 +17,9 @@ Bash:
 
 ```sh
 $ git clone --bare git@github.com:ethulhu/dotfiles .dotfiles
+$ git --git-dir="${HOME}/.dotfiles/" --work-tree="${HOME}" config --local remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*'
+$ git --git-dir="${HOME}/.dotfiles/" --work-tree="${HOME}" fetch origin
+
 $ git --git-dir="${HOME}/.dotfiles/" --work-tree="${HOME}" checkout
 $ git --git-dir="${HOME}/.dotfiles/" --work-tree="${HOME}" config --local status.showUntrackedFiles no
 ```
