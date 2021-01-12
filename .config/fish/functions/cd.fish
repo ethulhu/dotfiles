@@ -1,4 +1,4 @@
-function cd --argument-names path
+function (basename (status filename) .fish) --wraps cd --argument-names path
 
   # Use fish's own `cd` wrapper if possible,
   # because it has features such as history.

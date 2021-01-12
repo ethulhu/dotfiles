@@ -1,4 +1,4 @@
-function make --description 'ascend the filesystem, looking for Makefiles'
+function (basename (status filename) .fish) --wraps make --description 'ascend the filesystem, looking for Makefiles'
   fish --private --command "
     while ! [ -f 'Makefile' -o -f 'makefile' -o (pwd) = $HOME -o (pwd) = '/' ]
       cd ..
