@@ -1,0 +1,17 @@
+#!/bin/sh
+
+set -eu
+
+if [ $# -ne 0 ]; then
+  echo "Usage: $(basename "${0}")"
+  echo
+  echo 'Summary: List all repos in the local store.'
+  exit 1
+fi
+
+
+readonly repo_dir="${HOME}/.config/repo"
+
+find "${repo_dir}" -depth 1 -type d | while read repo; do
+  basename "${repo}"
+done

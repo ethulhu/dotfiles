@@ -1,0 +1,30 @@
+#!/bin/sh
+
+set -eu
+
+readonly repo_dir="${HOME}/.config/repo"
+
+if [ $# -ne 2 ]; then
+  echo "Usage: $(basename "${0}") <url> <name>"
+  echo
+  echo 'Summary: Adds a repo to the local store from a remote url.'
+  exit 1
+fi
+
+readonly url="${1}"
+readonly git_dir="${repo_dir}/${2}"
+
+
+set -x
+
+# Close the repo.
+git clone --bare "${url}" "${git_dir}"
+
+
+# Fix up remote tracking.
+git --git-dir="${git_dir}" config --local remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*'
+git --git-dir="${git_dir}" fetch origin
+
+
+# Install pre-commit hooks.
+GIT_DIR="${git_dir}" pre-commit install --allow-missing-config

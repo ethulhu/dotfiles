@@ -1,0 +1,31 @@
+#!/bin/sh
+
+set -eu
+
+readonly repo_dir="${HOME}/.config/repo"
+
+if [ $# -ne 1 ]; then
+  echo "Usage: $(basename "${0}") <name>"
+  echo
+  echo 'Summary: Creates a new repo in the local store.'
+  exit 1
+fi
+
+readonly git_dir="${repo_dir}/${1}"
+
+
+set -x
+
+# Create the repo.
+git init --bare "${git_dir}"
+
+
+# Add the initial commit.
+readonly empty_tree="$(git --git-dir="${git_dir}" mktree </dev/null)"
+readonly initial_commit=$(git --git-dir="${git_dir}" commit-tree -m 'initial commit' "${empty_tree}")
+
+git --git-dir="${git_dir}" update-ref HEAD "${initial_commit}"
+
+
+# Install pre-commit hooks.
+GIT_DIR="${git_dir}" pre-commit install --allow-missing-config

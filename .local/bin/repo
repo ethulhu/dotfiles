@@ -1,0 +1,49 @@
+#!/bin/sh
+
+set -eu
+
+readonly wrapper="$(basename "${0}")"
+
+function subcommands() {
+  IFS=':'
+  find $PATH -maxdepth 1 -type f -iname "${wrapper}-*" 2>/dev/null | while read binary; do
+    if [ -x "${binary}" ]; then
+      echo "${binary}" | sed "s/.*\/${wrapper}-//"
+    fi
+  done | sort
+}
+
+function usage() {
+  echo 'Usage:'
+  echo "    ${wrapper} <cmd> [args ...]"
+  echo
+  echo 'Synopsis:'
+  echo '    A custom wrapper around git.'
+  echo
+  echo 'Available Commands:'
+  for binary in $(subcommands); do
+    echo "    ${binary}"
+  done
+}
+
+if [ $# -eq 0 ]; then
+  usage
+  exit 1
+fi
+
+readonly subcommand="${1}"
+
+if [ "${subcommand}" = 'help' ]; then
+  usage
+  exit
+fi
+
+readonly maybe_cmd="${wrapper}-${subcommand}"
+shift
+
+if command -v "${maybe_cmd}" >/dev/null; then
+  ${maybe_cmd} $@
+else
+  echo "${wrapper}: unknown subcommand: ${subcommand}"
+  exit 1
+fi

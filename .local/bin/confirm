@@ -1,0 +1,22 @@
+#!/bin/sh
+
+set -eu
+
+if [ $# -ne 1 ]; then
+  echo "Usage: $(basename "${0}") <question>"
+  echo
+  echo 'Example:'
+  echo '    $ if confirm "Delete everything?"; then echo rm -rf; fi'
+  echo '    Delete everything? [y/N] y'
+  echo '    rm -rf'
+  exit 1
+fi
+
+read -n 1 -r -p "${1} [y/N] " ok
+
+# If they pressed anything but Enter, do a newline.
+if [ "${ok}" ]; then
+  echo
+fi
+
+test "${ok}" = 'y' -o "${ok}" = 'Y'

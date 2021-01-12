@@ -1,0 +1,27 @@
+#!/bin/sh
+
+set -eu
+
+readonly repo_dir="${HOME}/.config/repo"
+
+if [ $# -ne 1 ]; then
+  echo "Usage: $(basename "${0}") <repo-name>"
+  echo
+  echo 'Summary: Remove a repo from the local store.'
+  exit 1
+fi
+
+readonly name="${1}"
+
+readonly worktrees="$(repo-list-worktrees "${name}")"
+
+if [ "${worktrees}" ]; then
+  echo "Repo ${name} has open worktrees:"
+  for worktree in ${worktrees}; do
+    echo "    ${worktree}"
+  done
+  exit 1
+fi
+
+confirm "Remove repo ${name} ?" &&
+  rm -rf "${repo_dir}/${name}"

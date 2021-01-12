@@ -1,0 +1,16 @@
+#!/bin/sh
+
+set -eu
+
+readonly repo_dir="${HOME}/.config/repo"
+
+if [ $# -ne 1 ]; then
+  echo "Usage: $(basename "${0}") <repo-name>"
+  echo
+  echo 'Summary: List open worktrees for a given repo.'
+  exit 1
+fi
+
+readonly name="${1}"
+
+git --git-dir="${repo_dir}/${name}" worktree list | awk '!/\(bare\)/ { print $1 }'
