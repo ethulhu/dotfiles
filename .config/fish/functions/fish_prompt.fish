@@ -16,11 +16,7 @@ function fish_prompt --description 'Write out the prompt'
   end
 
   function prompt_repo
-    if pwd | grep -q -E "^$HOME/src/.+"
-      echo -n ' ['
-      pwd | sed "s|^$HOME/src/\([^/]*\).*\$|\1|"
-      echo -n ']'
-    end
+    pwd | string replace --regex --filter "$HOME/src/([^/]*).*" ' [$1]'; or true
   end
 
   # Write pipestatus

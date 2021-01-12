@@ -21,10 +21,10 @@ if [ -f ~/.opam/opam-init/init.fish ]
 
   # There is a bug in `opam env` that adds `.` to PATH.
   # This is a workaround, and should be removed when opam > 2.0.7.
-  if isatty
+  if status is-interactive
     set -gx OPAMNOENVNOTICE true;
     function __opam_env_export_eval --on-event fish_prompt;
-      eval (opam env --shell=fish --readonly ^ /dev/null | sed 's/://g');
+      eval (opam env --shell=fish --readonly ^ /dev/null | string replace ':' '')
     end
   end
 	source ~/.opam/opam-init/variables.fish
