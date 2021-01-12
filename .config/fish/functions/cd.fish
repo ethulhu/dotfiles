@@ -9,11 +9,13 @@ function cd --argument-names path
       --fallback 'builtin cd'
   end
 
-  if [ ! $path ]
-    __builtin_cd ~
-  else if [ -f $path ]
+  if not status is-interactive
+    __builtin_cd $argv
+  end
+
+  if [ "$path" -a -f "$path" ]
     __builtin_cd (dirname $path)
   else
-    __builtin_cd $path
+    __builtin_cd $argv
   end
 end
