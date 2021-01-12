@@ -1,4 +1,4 @@
-function cd --description 'Convenience do-what-I-mean wrapper for cd' --argument-names path
+function cd --wraps cd --argument-names path
   if [ ! $path ]
     builtin cd ~
   else if [ -f $path ]
