@@ -1,9 +1,9 @@
-function cd --wraps cd --argument-names path
+function cd --argument-names path
   if [ ! $path ]
-    builtin cd ~
+    __builtin_cd ~
   else if [ -f $path ]
-    builtin cd (dirname $path)
+    __builtin_cd (dirname $path)
   else
-    builtin cd $path
+    __builtin_cd $path
   end
 end

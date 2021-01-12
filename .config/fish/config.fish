@@ -59,6 +59,19 @@ function __on_fish_postexec --on-event fish_postexec
 end
 
 
+# Builtin wrappers.
+
+# Use fish's own `cd` wrapper if possible,
+# because it has features such as history.
+if [ -f $__fish_data_dir/functions/cd.fish ]
+  cat $__fish_data_dir/functions/cd.fish \
+    | sed 's/^function cd /function __builtin_cd /' \
+    | source
+else
+  alias __builtin_cd 'builtin cd'
+end
+
+
 # fish_prompt pre-computes.
 
 set -g prompt_user $USER
