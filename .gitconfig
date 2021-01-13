@@ -45,6 +45,9 @@
 [init]
 	defaultBranch = latest
 
+[fetch]
+	prune = true
+
 [include]
 	path = ~/.gitconfig-local
 
