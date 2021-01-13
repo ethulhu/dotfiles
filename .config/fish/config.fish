@@ -24,7 +24,7 @@ if [ -f ~/.opam/opam-init/init.fish ]
   if status is-interactive
     set -gx OPAMNOENVNOTICE true;
     function __opam_env_export_eval --on-event fish_prompt;
-      eval (opam env --shell=fish --readonly ^ /dev/null | string replace ':' '')
+      opam env --shell=fish --readonly ^/dev/null | string replace ':' '' | source
     end
   end
 	source ~/.opam/opam-init/variables.fish
@@ -35,7 +35,7 @@ end
 set -x PATH ~/.local/bin ~/bin $PATH
 
 if command -q direnv
-  eval (direnv hook fish)
+  direnv hook fish | source
 end
 
 set -x EDITOR vim
