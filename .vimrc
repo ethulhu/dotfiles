@@ -69,6 +69,21 @@ augroup settings-by-filetype
 augroup end
 
 
+function s:MaybeMkdir(path)
+	if isdirectory(a:path)
+		return
+	endif
+
+	if confirm('Create directory ' . a:path . ' ?', "&Yes\n&No", 2) == 1
+		call mkdir(a:path, 'p')
+	endif
+endfunction
+augroup mkdir
+	autocmd!
+	autocmd BufWritePre * :call s:MaybeMkdir(expand('<afile>:p:h'))
+augroup end
+
+
 " LoadTemplate loads a template from ~/.vim/templates on creating a new file.
 " For a file foo.bar:
 " - If there is a file ~/.vim/templates/foo.bar, it will load that.
