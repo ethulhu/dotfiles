@@ -1,0 +1,44 @@
+#!/bin/sh
+
+set -eu
+
+readonly this="$(basename "${0}")"
+
+function usage() {
+  echo "Usage: ${this} <path/to/archive>"
+  echo
+  echo 'Summary: Extract an archive, for many types of archive.'
+}
+
+if [ $# -ne 1 ]; then
+  usage
+  exit 1
+fi
+
+readonly archive="${1}"
+
+if [ ! -f "${archive}" ]; then
+  echo "${this}: Not an archive file: ${archive}"
+  exit 1
+fi
+
+case "${archive}" in
+	*.7z)       7z x "${archive}"         ;;
+	*.Z)        uncompress "${archive}"   ;;
+	*.gz)       gunzip "${archive}"       ;;
+	*.jar)      unzip "${archive}"        ;;
+	*.rar)      unrar x "${archive}"      ;;
+	*.tar)      tar -xvf "${archive}"     ;;
+	*.tbz2)     tar -jxvf "${archive}"    ;;
+	*.tgz)      tar -xvf "${archive}"     ;;
+	*.zip)      unzip "${archive}"        ;;
+  *.bz2)      bunzip2 "${archive}"      ;;
+  *.tar.bz2)  tar -jxvf "${archive}"    ;;
+  *.tar.gz)   tar -zxvf "${archive}"    ;;
+
+	*)
+    echo "${this}: Unknown extension for archive: ${archive}"
+    exit 1
+    ;;
+
+esac
