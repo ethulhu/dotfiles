@@ -42,7 +42,7 @@ set -x EDITOR vim
 
 # CDPATH is used to expand non-absolute paths as well as $PWD,
 # e.g. `cd linux` -> `cd ~/src/linux`.
-set -x CDPATH ~/src . $CDPATH
+set -x CDPATH . ~/src
 
 source ~/.config/aliases
 
