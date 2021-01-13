@@ -1,0 +1,34 @@
+#!/bin/sh
+
+set -eu
+
+if [ $# -ne 1 ]; then
+  echo "Usage: $(basename "${0}") <name>"
+  echo
+  echo 'Summary: Fetches a repo from upstream.'
+  exit 1
+fi
+
+readonly query="${1}"
+
+
+case "${query}" in
+  @all)
+    repo-list
+    ;;
+
+  @https)
+    repo-list | while read name; do
+      if repo git "${name}" remote get-url origin | grep -q https://; then
+        echo "${name}"
+      fi
+    done
+    ;;
+
+  *)
+    echo "${query}"
+    ;;
+
+esac | while read name; do
+  repo git "${name}" fetch --all --prune
+done

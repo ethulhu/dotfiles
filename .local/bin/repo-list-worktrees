@@ -2,8 +2,6 @@
 
 set -eu
 
-readonly repo_dir="${HOME}/.config/repo"
-
 if [ $# -ne 1 ]; then
   echo "Usage: $(basename "${0}") <repo-name>"
   echo
@@ -11,6 +9,19 @@ if [ $# -ne 1 ]; then
   exit 1
 fi
 
-readonly name="${1}"
+readonly query="${1}"
 
-git --git-dir="${repo_dir}/${name}" worktree list | awk '!/\(bare\)/ { print $1 }'
+
+case "${query}" in
+  @all)
+    repo-list
+    ;;
+
+  *)
+    echo "${query}"
+    ;;
+
+esac | while read name; do
+  repo git "${name}" worktree list | awk '!/\(bare\)/ { print $1 }'
+done
+

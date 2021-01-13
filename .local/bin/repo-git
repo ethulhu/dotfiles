@@ -1,0 +1,19 @@
+#!/bin/sh
+
+set -eu
+
+readonly repo_dir="${HOME}/.config/repo"
+
+if [ $# -lt 2 ]; then
+  echo "Usage: $(basename "${0}") <name> <git-cmd> [args...]"
+  echo
+  echo 'Summary: Fetches a repo from upstream.'
+  exit 1
+fi
+
+readonly name="${1}"
+readonly cmd="${2}"
+shift
+shift
+
+git --git-dir="${repo_dir}/${name}" "${cmd}" $@

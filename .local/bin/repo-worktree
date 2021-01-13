@@ -2,8 +2,6 @@
 
 set -eu
 
-readonly repo_dir="${HOME}/.config/repo"
-
 if [ $# -lt 2 -o $# -gt 3 ]; then
   echo "Usage: $(basename "${0}") <repo-name> <path/to/worktree> [branch]"
   echo
@@ -15,8 +13,8 @@ readonly name="${1}"
 readonly path="${2}"
 
 if [ $# -eq 2 ]; then
-  git --git-dir="${repo_dir}/${name}" worktree add "${path}"
+  repo git "${name}" worktree add "${path}"
 else
   readonly branch="${3}"
-  git --git-dir="${repo_dir}/${name}" worktree add "${path}" "${branch}"
+  repo git "${name}" worktree add "${path}" "${branch}"
 fi
