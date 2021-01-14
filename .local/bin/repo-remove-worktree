@@ -2,16 +2,35 @@
 
 set -eu
 
-readonly repo_dir="${HOME}/.config/repo"
+readonly description='Remove a worktree from its repo.'
+readonly this="$(basename "${0}")"
+
+function usage() {
+  echo 'Usage:'
+  echo "    ${this} <path/to/worktree>"
+  echo
+  echo 'Description:'
+  echo "    ${description}"
+}
+
+case "$*" in
+  --help|-h)
+    usage
+    exit
+    ;;
+
+  --description)
+    echo "${description}"
+    exit
+    ;;
+esac
 
 if [ $# -ne 1 ]; then
-  echo "Usage: $(basename "${0}") <path/to/worktree>"
-  echo
-  echo 'Summary: Remove an worktree from its repo.'
+  usage
   exit 1
 fi
-
 readonly path="${1}"
+
 
 readonly git_dir="$(git -C "${path}" rev-parse --git-common-dir 2>/dev/null)"
 

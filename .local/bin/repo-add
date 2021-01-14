@@ -2,17 +2,38 @@
 
 set -eu
 
-readonly repo_dir="${HOME}/.config/repo"
+readonly description='Adds a repo to the local store from a remote url.'
+readonly this="$(basename "${0}")"
+
+function usage() {
+  echo 'Usage:'
+  echo "    ${this} <name> <git-url>"
+  echo
+  echo 'Description:'
+  echo "    ${description}"
+}
+
+case "$*" in
+  --help|-h)
+    usage
+    exit
+    ;;
+
+  --description)
+    echo "${description}"
+    exit
+    ;;
+esac
 
 if [ $# -ne 2 ]; then
-  echo "Usage: $(basename "${0}") <url> <name>"
-  echo
-  echo 'Summary: Adds a repo to the local store from a remote url.'
+  usage
   exit 1
 fi
-
 readonly url="${1}"
-readonly git_dir="${repo_dir}/${2}"
+readonly name="${2}"
+
+readonly repo_dir="${HOME}/.config/repo"
+readonly git_dir="${repo_dir}/${name}"
 
 
 set -x

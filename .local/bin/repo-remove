@@ -2,19 +2,36 @@
 
 set -eu
 
-readonly repo_dir="${HOME}/.config/repo"
+readonly description='Remove a repo from the local store.'
+readonly this="$(basename "${0}")"
+
+function usage() {
+  echo 'Usage:'
+  echo "    ${this} <name>"
+  echo
+  echo 'Description:'
+  echo "    ${description}"
+}
+
+case "$*" in
+  --help|-h)
+    usage
+    exit
+    ;;
+
+  --description)
+    echo "${description}"
+    exit
+    ;;
+esac
 
 if [ $# -ne 1 ]; then
-  echo "Usage: $(basename "${0}") <repo-name>"
-  echo
-  echo 'Summary: Remove a repo from the local store.'
+  usage
   exit 1
 fi
-
 readonly name="${1}"
 
 readonly worktrees="$(repo-list-worktrees "${name}")"
-
 if [ "${worktrees}" ]; then
   echo "Repo ${name} has open worktrees:"
   for worktree in ${worktrees}; do
@@ -23,5 +40,6 @@ if [ "${worktrees}" ]; then
   exit 1
 fi
 
+readonly repo_dir="${HOME}/.config/repo"
 confirm "Remove repo ${name} ?" &&
   rm -rf "${repo_dir}/${name}"

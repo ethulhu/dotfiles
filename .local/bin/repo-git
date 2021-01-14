@@ -2,18 +2,39 @@
 
 set -eu
 
-readonly repo_dir="${HOME}/.config/repo"
+readonly description='Runs a git command on a named repo.'
+readonly this="$(basename "${0}")"
+
+function usage() {
+  echo 'Usage:'
+  echo "    ${this} <name> <git-subcommand> [args...]"
+  echo
+  echo 'Description:'
+  echo "    ${description}"
+}
+
+case "$*" in
+  --help|-h)
+    usage
+    exit
+    ;;
+
+  --description)
+    echo "${description}"
+    exit
+    ;;
+esac
 
 if [ $# -lt 2 ]; then
-  echo "Usage: $(basename "${0}") <name> <git-cmd> [args...]"
-  echo
-  echo 'Summary: Fetches a repo from upstream.'
+  usage
   exit 1
 fi
-
 readonly name="${1}"
 readonly cmd="${2}"
 shift
 shift
+
+readonly repo_dir="${HOME}/.config/repo"
+
 
 git --git-dir="${repo_dir}/${name}" "${cmd}" $@

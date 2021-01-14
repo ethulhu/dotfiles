@@ -2,13 +2,33 @@
 
 set -eu
 
-if [ $# -ne 1 ]; then
-  echo "Usage: $(basename "${0}") <name>"
+readonly description='Fetches a repo from upstream.'
+readonly this="$(basename "${0}")"
+
+function usage() {
+  echo 'Usage:'
+  echo "    ${this} <name>"
   echo
-  echo 'Summary: Fetches a repo from upstream.'
+  echo 'Description:'
+  echo "    ${description}"
+}
+
+case "$*" in
+  --help|-h)
+    usage
+    exit
+    ;;
+
+  --description)
+    echo "${description}"
+    exit
+    ;;
+esac
+
+if [ $# -ne 1 ]; then
+  usage
   exit 1
 fi
-
 readonly query="${1}"
 
 

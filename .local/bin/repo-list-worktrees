@@ -2,13 +2,33 @@
 
 set -eu
 
-if [ $# -ne 1 ]; then
-  echo "Usage: $(basename "${0}") <repo-name>"
+readonly description='List open worktrees for a named repo.'
+readonly this="$(basename "${0}")"
+
+function usage() {
+  echo 'Usage:'
+  echo "    ${this} <name>"
   echo
-  echo 'Summary: List open worktrees for a given repo.'
+  echo 'Description:'
+  echo "    ${description}"
+}
+
+case "$*" in
+  --help|-h)
+    usage
+    exit
+    ;;
+
+  --description)
+    echo "${description}"
+    exit
+    ;;
+esac
+
+if [ $# -ne 1 ]; then
+  usage
   exit 1
 fi
-
 readonly query="${1}"
 
 

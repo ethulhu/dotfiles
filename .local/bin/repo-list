@@ -2,10 +2,31 @@
 
 set -eu
 
-if [ $# -ne 0 ]; then
-  echo "Usage: $(basename "${0}")"
+readonly description='List all repos in the local store.'
+readonly this="$(basename "${0}")"
+
+function usage() {
+  echo 'Usage:'
+  echo "    ${this}"
   echo
-  echo 'Summary: List all repos in the local store.'
+  echo 'Description:'
+  echo "    ${description}"
+}
+
+case "$*" in
+  --help|-h)
+    usage
+    exit
+    ;;
+
+  --description)
+    echo "${description}"
+    exit
+    ;;
+esac
+
+if [ $# -ne 0 ]; then
+  usage
   exit 1
 fi
 

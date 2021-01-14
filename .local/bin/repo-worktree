@@ -2,15 +2,36 @@
 
 set -eu
 
-if [ $# -lt 2 -o $# -gt 3 ]; then
-  echo "Usage: $(basename "${0}") <repo-name> <path/to/worktree> [branch]"
+readonly description='Adds a repo to the local store from a remote url.'
+readonly this="$(basename "${0}")"
+
+function usage() {
+  echo 'Usage:'
+  echo "    ${this} <repo-name> <path/to/worktree> [branch]"
   echo
-  echo 'Summary: Create a new worktree for a given repo.'
+  echo 'Description:'
+  echo "    ${description}"
+}
+
+case "$*" in
+  --help|-h)
+    usage
+    exit
+    ;;
+
+  --description)
+    echo "${description}"
+    exit
+    ;;
+esac
+
+if [ $# -lt 2 -o $# -gt 3 ]; then
+  usage
   exit 1
 fi
-
 readonly name="${1}"
 readonly path="${2}"
+
 
 if [ $# -eq 2 ]; then
   repo git "${name}" worktree add "${path}"

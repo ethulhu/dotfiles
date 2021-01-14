@@ -2,16 +2,37 @@
 
 set -eu
 
-readonly repo_dir="${HOME}/.config/repo"
+readonly description='Creates a new repo in the local store.'
+readonly this="$(basename "${0}")"
+
+function usage() {
+  echo 'Usage:'
+  echo "    ${this} <name>"
+  echo
+  echo 'Description:'
+  echo "    ${description}"
+}
+
+case "$*" in
+  --help|-h)
+    usage
+    exit
+    ;;
+
+  --description)
+    echo "${description}"
+    exit
+    ;;
+esac
 
 if [ $# -ne 1 ]; then
-  echo "Usage: $(basename "${0}") <name>"
-  echo
-  echo 'Summary: Creates a new repo in the local store.'
+  usage
   exit 1
 fi
+readonly name="${1}"
 
-readonly git_dir="${repo_dir}/${1}"
+readonly repo_dir="${HOME}/.config/repo"
+readonly git_dir="${repo_dir}/${name}"
 
 
 set -x
