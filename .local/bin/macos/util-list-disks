@@ -2,4 +2,32 @@
 
 set -eu
 
+readonly description='List attached disks.'
+readonly this="$(basename "${0}")"
+
+function usage() {
+  echo 'Usage:'
+  echo "    ${this}"
+  echo
+  echo 'Description:'
+  echo "    ${description}"
+}
+
+case "$*" in
+  --help|-h)
+    usage
+    exit
+    ;;
+
+  --description)
+    echo "${description}"
+    exit
+    ;;
+esac
+
+if [ $# -ne 0 ]; then
+  usage
+  exit 1
+fi
+
 diskutil list

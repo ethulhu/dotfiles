@@ -2,5 +2,34 @@
 
 set -eu
 
-# Printf "Dark" if dark, and errors if light.
+readonly description='Is Dark Mode enabled?'
+readonly this="$(basename "${0}")"
+
+function usage() {
+  echo 'Usage:'
+  echo "    ${this}"
+  echo
+  echo 'Description:'
+  echo "    ${description}"
+}
+
+case "$*" in
+  --help|-h)
+    usage
+    exit
+    ;;
+
+  --description)
+    echo "${description}"
+    exit
+    ;;
+esac
+
+if [ $# -ne 0 ]; then
+  usage
+  exit 1
+fi
+
+
+# Prints "Dark" if dark, and errors if light.
 defaults read -g AppleInterfaceStyle >/dev/null 2>/dev/null

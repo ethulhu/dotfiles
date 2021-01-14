@@ -2,19 +2,34 @@
 
 set -eu
 
-if [ "$#" -ne 2 ]
-then
-  echo "Usage: $(basename "${0}") <name> <number of megabytes>"
-  echo
-  echo "Synopsis: Create and mount a RAM-backed disk of a given size."
-	exit 1
-fi
+readonly description='Create & mount a ramdisk.'
+readonly this="$(basename "${0}")"
 
-if [ ! "$(uname -s)" = 'Darwin' ]; then
-  echo "Unsupported OS: $(uname -s)"
+function usage() {
+  echo 'Usage:'
+  echo "    ${this} <name> <number-of-megabytes>"
+  echo
+  echo 'Description:'
+  echo "    ${description}"
+}
+
+case "$*" in
+  --help|-h)
+    usage
+    exit
+    ;;
+
+  --description)
+    echo "${description}"
+    exit
+    ;;
+esac
+
+
+if [ $# -ne 2 ]; then
+  usage
   exit 1
 fi
-
 readonly name="${1}"
 readonly megabytes="${2}"
 

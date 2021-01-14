@@ -2,13 +2,29 @@
 
 set -eu
 
+readonly description='Extract an archive, for many types of archive.'
 readonly this="$(basename "${0}")"
 
 function usage() {
-  echo "Usage: ${this} <path/to/archive>"
+  echo 'Usage:'
+  echo "    ${this} <path/to/archive>"
   echo
-  echo 'Summary: Extract an archive, for many types of archive.'
+  echo 'Description:'
+  echo "    ${description}"
 }
+
+case "$*" in
+  --help|-h)
+    usage
+    exit
+    ;;
+
+  --description)
+    echo "${description}"
+    exit
+    ;;
+esac
+
 
 if [ $# -ne 1 ]; then
   usage

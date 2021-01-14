@@ -2,6 +2,35 @@
 
 set -eu
 
+readonly description='Print current wifi network.'
+readonly this="$(basename "${0}")"
+
+function usage() {
+  echo 'Usage:'
+  echo "    ${this}"
+  echo
+  echo 'Description:'
+  echo "    ${description}"
+}
+
+case "$*" in
+  --help|-h)
+    usage
+    exit
+    ;;
+
+  --description)
+    echo "${description}"
+    exit
+    ;;
+esac
+
+if [ $# -ne 0 ]; then
+  usage
+  exit 1
+fi
+
+
 readonly network="$(networksetup -getairportnetwork en0)"
 
 if echo "${network}" | grep -q 'Current Wi-Fi Network: '; then

@@ -2,15 +2,34 @@
 
 set -eu
 
+readonly description='Are we connected to a given wifi network?'
+readonly this="$(basename "${0}")"
+
 function usage() {
-  echo "Usage: $(basename "${0}") <wifi-SSID>"
+  echo 'Usage:'
+  echo "    ${this} <wifi-SSID>"
   echo
-  echo 'Synopsis: Return 0 if connected to the given wifi network, 1 otherwise.'
+  echo 'Description:'
+  echo "    ${description}"
 }
+
+case "$*" in
+  --help|-h)
+    usage
+    exit
+    ;;
+
+  --description)
+    echo "${description}"
+    exit
+    ;;
+esac
+
 
 if [ $# -ne 1 ]; then
   usage
   exit 1
 fi
+readonly network="${1}"
 
-networksetup -getairportnetwork en0 | grep -q "Current Wi-Fi Network: ${1}"
+networksetup -getairportnetwork en0 | grep -q "Current Wi-Fi Network: ${network}"

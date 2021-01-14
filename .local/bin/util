@@ -2,48 +2,117 @@
 
 set -eu
 
-readonly wrapper="$(basename "${0}")"
-
-function subcommands() {
-  IFS=':'
-  find $PATH -maxdepth 1 -type f -iname "${wrapper}-*" 2>/dev/null | while read binary; do
-    if [ -x "${binary}" ]; then
-      echo "${binary}" | sed "s/.*\/${wrapper}-//"
-    fi
-  done | sort
-}
+readonly description='A grab bag of useful utility commands.'
+readonly this="$(basename "${0}")"
 
 function usage() {
   echo 'Usage:'
-  echo "    ${wrapper} <cmd> [args ...]"
+  echo "    ${this} <cmd> [args ...]"
   echo
-  echo 'Synopsis:'
-  echo '    A grab bag of useful utility commands.'
+  echo 'Description:'
+  echo "    ${description}"
   echo
   echo 'Available Commands:'
-  for binary in $(subcommands); do
-    echo "    ${binary}"
-  done
+  for cmd in $(list_subcommands); do
+    echo "    ${cmd}|$(run_subcommand "${cmd}" --description)"
+  done | column -t -s'|'
 }
+
+function list_subcommands() {
+  (
+    # Builtin commands.
+    echo help
+
+    # Find commands from $PATH.
+    IFS=':'
+    find $PATH -maxdepth 1 -type f -iname "${this}-*" 2>/dev/null | while read binary; do
+      if [ -x "${binary}" ]; then
+        echo "${binary}" | sed "s/.*\/${this}-//"
+      fi
+    done
+  ) | sort
+}
+
+function run_subcommand() {
+  local subcommand="${1}"
+  shift
+  case "${subcommand}" in
+    help)
+      help $@
+      ;;
+
+    *)
+      local maybe_cmd="${this}-${subcommand}"
+      if command -v "${maybe_cmd}" >/dev/null; then
+        ${maybe_cmd} $@
+      else
+        echo "${this}: Unknown subcommand: ${subcommand}"
+        exit 1
+      fi
+  esac
+}
+
+
+# Builtin commands.
+
+readonly help_description='Show help about subcommands'
+function help_usage() {
+  echo 'Usage:'
+  echo "    ${this} help <cmd>"
+  echo
+  echo 'Description:'
+  echo "    ${help_description}"
+}
+function help() {
+  case "$*" in
+    --help|-h)
+      help_usage
+      exit
+      ;;
+
+    --description)
+      echo "${help_description}"
+      exit
+      ;;
+  esac
+
+  if [ $# -ne 1 ]; then
+    help_usage
+    exit 1
+  fi
+  run_subcommand "${1}" --help
+}
+
+
+# Main.
+
+case "$*" in
+  --help|-h)
+    usage
+    exit
+    ;;
+
+  --description)
+    echo "${description}"
+    exit
+    ;;
+
+  --list-subcommands)
+    list_subcommands
+    exit
+    ;;
+
+  --fish-completion)
+    for cmd in $(list_subcommands); do
+      echo "${cmd}\t$(run_subcommand "${cmd}" --description | sed 's/\.$//')"
+    done
+    exit
+    ;;
+esac
 
 if [ $# -eq 0 ]; then
   usage
   exit 1
 fi
 
-readonly subcommand="${1}"
-
-if [ "${subcommand}" = 'help' ]; then
-  usage
-  exit
-fi
-
-readonly maybe_cmd="${wrapper}-${subcommand}"
-shift
-
-if command -v "${maybe_cmd}" >/dev/null; then
-  ${maybe_cmd} $@
-else
-  echo "${wrapper}: unknown subcommand: ${subcommand}"
-  exit 1
-fi
+run_subcommand $@
