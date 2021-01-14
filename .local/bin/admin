@@ -13,14 +13,6 @@ macos = cmd.command_if(platform.system() == 'Darwin')
 
 # commands.
 
-@macos
-def update():
-    """update various package managers on the machine."""
-    print('updating Homebrew…')
-    cmd.run(['brew', 'update'])
-    print('updating Ruby gems…')
-    cmd.run(['gem', 'update'])
-
 
 @debian
 @cmd.must_be_root
