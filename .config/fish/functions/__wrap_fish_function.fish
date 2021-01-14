@@ -1,4 +1,6 @@
-function (basename (status filename) .fish) --description 'Load a fish function from a file, giving it a new name, falling back to an alias if the function file does not exist.'
+set -l function_name (basename (status filename) .fish)
+
+function $function_name --description 'Load a fish function from a file, giving it a new name, falling back to an alias if the function file does not exist.'
 
   argparse 'n/name=' 'p/path=' 'f/fallback=' -- $argv
   or return 1

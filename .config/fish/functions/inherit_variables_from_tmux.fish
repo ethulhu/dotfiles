@@ -1,4 +1,6 @@
-function (basename (status filename) .fish) --description 'Inherit environment variables from a tmux session.'
+set -l function_name (basename (status filename) .fish)
+
+function $function_name --description 'Inherit environment variables from a tmux session.'
 
   set -l variables (tmux show-environment)
 
