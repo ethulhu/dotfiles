@@ -38,6 +38,9 @@ map Y y$
 map <leader>y "+y
 map <leader>p "+p
 map <leader>d "+d
+map <leader>Y "+Y
+map <leader>P "+P
+map <leader>D "+D
 
 " Write as root.
 command! WriteSudo w !sudo tee % >/dev/null
