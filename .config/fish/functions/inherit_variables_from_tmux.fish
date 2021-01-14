@@ -6,7 +6,7 @@ function (basename (status filename) .fish) --description 'Inherit environment v
     if set -l variable (string replace --filter "$name=" '' -- $variables)
       set --export $name $variable
     else
-      set --unexport $name
+      set --erase $name
     end
   end
 end
