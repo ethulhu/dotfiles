@@ -6,5 +6,6 @@ import (
 
 func main() {
 	flag.Parse()
+
 	CURSOR
 }
