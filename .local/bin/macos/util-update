@@ -31,25 +31,52 @@ if [ $# -ne 0 ]; then
 fi
 
 
-# Print updater commands as they happen.
-set -x
+function command_exists() {
+  command -v "${1}" >/dev/null
+}
+function update() {
+  local name="${1}"
+  shift
 
-# Homebrew.
-brew update
-brew upgrade
+  if command_exists "${name}"; then
+    echo "Updating ${name}:"
+    while [ $# -gt 0 ]; do
+      echo "+ ${1}"
+      ${1}
+      shift
+    done
+  else
+    echo "Skipping ${name}."
+  fi
+  echo
+}
 
-# Install any missing Homebrew packages from ~/.Brewfile.
-brew bundle install --global
 
-# Python.
-pip3 install \
+update brew \
+  'brew update' \
+  'brew upgrade' \
+  'brew bundle install --global'
+
+
+readonly python_packages="
   jinja2 \
   markdown \
   netifaces \
   pip \
   pyyaml \
   reuse \
-  --upgrade
+"
+update pip3 \
+    "pip3 install ${python_packages} --upgrade"
 
-# Go.
-go get golang.org/x/tools/cmd/goimports
+
+update go \
+  'go get golang.org/x/tools/cmd/goimports'
+
+
+update opam \
+  'opam update' \
+  'opam upgrade'
+
+
+echo 'Done.'
