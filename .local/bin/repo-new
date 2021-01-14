@@ -31,9 +31,11 @@ if [ $# -ne 1 ]; then
 fi
 readonly name="${1}"
 
-readonly repo_dir="${HOME}/.config/repo"
-readonly git_dir="${repo_dir}/${name}"
 
+function __git() {
+  repo git "${name}" $@
+}
+readonly git_dir="$(repo info "${name}" git-dir)"
 
 set -x
 
@@ -42,10 +44,9 @@ git init --bare "${git_dir}"
 
 
 # Add the initial commit.
-readonly empty_tree="$(git --git-dir="${git_dir}" mktree </dev/null)"
-readonly initial_commit=$(git --git-dir="${git_dir}" commit-tree -m 'initial commit' "${empty_tree}")
-
-git --git-dir="${git_dir}" update-ref HEAD "${initial_commit}"
+readonly empty_tree="$(__git mktree </dev/null)"
+readonly initial_commit=$(__git commit-tree -m 'initial commit' "${empty_tree}")
+__git update-ref HEAD "${initial_commit}"
 
 
 # Install pre-commit hooks.

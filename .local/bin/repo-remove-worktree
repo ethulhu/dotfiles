@@ -33,23 +33,24 @@ readonly path="${1}"
 
 
 readonly git_dir="$(git -C "${path}" rev-parse --git-common-dir 2>/dev/null)"
-
 if [ ! "${git_dir}" ]; then
-  echo "Not a worktree: ${path}"
+  echo "${this}: Not a worktree: ${path}"
   exit 1
 fi
-
 readonly name="$(basename "${git_dir}")"
-
 readonly branch="$(git -C "${path}" branch --show-current)"
-readonly default_branch="$(basename "$(git --git-dir="${git_dir}" symbolic-ref HEAD)")"
 
-readonly remote="$(git --git-dir="${git_dir}" rev-parse --abbrev-ref "${branch}@{upstream}" 2>/dev/null)"
+function __git() {
+  repo git "${name}" $@
+}
+
+
+readonly default_branch="$(basename "$(__git symbolic-ref HEAD)")"
+readonly remote="$(__git rev-parse --abbrev-ref "${branch}@{upstream}" 2>/dev/null)"
 
 confirm "Remove worktree ${path} (repo ${name}, branch ${branch}) ?" && ( \
-  git --git-dir="${git_dir}" worktree remove "${path}" || ( \
-    confirm "Force ?" && git --git-dir="${git_dir}" worktree remove --force "${path}" ) )
-
+  __git worktree remove "${path}" || ( \
+    confirm "Force ?" && __git worktree remove --force "${path}" ) )
 
 if [ "${branch}" = "${default_branch}" ]; then
   exit
@@ -57,7 +58,7 @@ fi
 
 test "${remote}" && \
   confirm "Delete remove branch: ${branch} ?" && \
-    git push --delete "${branch}"
+    __git push --delete "${branch}"
 
 confirm "Delete local branch: ${branch} ?" && \
-  git --git-dir="${git_dir}" branch --delete --force "${branch}"
+  __git branch --delete --force "${branch}"

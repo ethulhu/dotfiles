@@ -31,7 +31,8 @@ if [ $# -ne 1 ]; then
 fi
 readonly name="${1}"
 
-readonly worktrees="$(repo-list-worktrees "${name}")"
+
+readonly worktrees="$(repo list-worktrees "${name}")"
 if [ "${worktrees}" ]; then
   echo "Repo ${name} has open worktrees:"
   for worktree in ${worktrees}; do
@@ -40,6 +41,5 @@ if [ "${worktrees}" ]; then
   exit 1
 fi
 
-readonly repo_dir="${HOME}/.config/repo"
 confirm "Remove repo ${name} ?" &&
-  rm -rf "${repo_dir}/${name}"
+  rm -rf "$(repo info "${name}" git-dir)"

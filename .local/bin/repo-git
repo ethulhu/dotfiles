@@ -34,7 +34,5 @@ readonly cmd="${2}"
 shift
 shift
 
-readonly repo_dir="${HOME}/.config/repo"
 
-
-git --git-dir="${repo_dir}/${name}" "${cmd}" $@
+git --git-dir="$(repo info "${name}" git-dir)" "${cmd}" $@

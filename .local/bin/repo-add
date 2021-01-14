@@ -32,9 +32,11 @@ fi
 readonly url="${1}"
 readonly name="${2}"
 
-readonly repo_dir="${HOME}/.config/repo"
-readonly git_dir="${repo_dir}/${name}"
 
+function __git() {
+  repo git "${name}" $@
+}
+readonly git_dir="$(repo info "${name}" git-dir)"
 
 set -x
 
@@ -43,8 +45,8 @@ git clone --bare "${url}" "${git_dir}"
 
 
 # Fix up remote tracking.
-git --git-dir="${git_dir}" config --local remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*'
-git --git-dir="${git_dir}" fetch --all
+__git config --local remote.origin.fetch '+refs/heads/*:refs/remotes/origin/*'
+__git fetch --all
 
 
 # Install pre-commit hooks.
