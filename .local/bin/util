@@ -104,7 +104,7 @@ case "$*" in
 
   --fish-completion)
     for cmd in $(list_subcommands); do
-      echo "${cmd}\t$(run_subcommand "${cmd}" --description | sed 's/\.$//')"
+      echo -e "${cmd}\t$(run_subcommand "${cmd}" --description | sed 's/\.$//')"
     done
     exit
     ;;
