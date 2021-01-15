@@ -2,12 +2,12 @@
 
 set -eu
 
-readonly description='List attached disks.'
+readonly description='Change the current hostname.'
 readonly this="$(basename "${0}")"
 
 function usage() {
   echo 'Usage:'
-  echo "    ${this}"
+  echo "    ${this} <new-hostname>"
   echo
   echo 'Description:'
   echo "    ${description}"
@@ -25,10 +25,15 @@ case "$*" in
     ;;
 esac
 
-if [ $# -ne 0 ]; then
+if [ $# -ne 1 ]; then
   usage
   exit 1
 fi
+readonly hostname="${1}"
 
 
-lsblk
+if [ "${USER}" != 'root' ]; then
+  echo "${this}: User must be root."
+fi
+
+hostnamectl set-hostname "${hostname}"

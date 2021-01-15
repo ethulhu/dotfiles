@@ -8,16 +8,9 @@ import re
 import cmd
 
 debian = cmd.command_if(platform.system() == 'Linux')
-macos = cmd.command_if(platform.system() == 'Darwin')
 
 
 # commands.
-
-
-@debian
-@cmd.must_be_root
-def change_hostname(hostname: str):
-    cmd.run(['hostnamectl', 'set-hostname', hostname])
 
 
 @debian
@@ -62,13 +55,6 @@ def add_disk_password(disk: str):
 def remove_disk_password(disk: str):
     """remove a disk-encryption password from a given disk, e.g. /dev/sda5."""
     cmd.run(['cryptsetup', 'luksRemoveKey', disk])
-
-
-@debian
-@cmd.must_be_root
-def list_ports():
-    """list open ports and their host processes."""
-    cmd.run(['netstat', '-tulpn'])
 
 
 if __name__ == '__main__':

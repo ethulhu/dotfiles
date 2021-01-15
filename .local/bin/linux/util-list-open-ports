@@ -2,7 +2,7 @@
 
 set -eu
 
-readonly description='List attached disks.'
+readonly description='List open ports and their host processes.'
 readonly this="$(basename "${0}")"
 
 function usage() {
@@ -31,4 +31,8 @@ if [ $# -ne 0 ]; then
 fi
 
 
-lsblk
+if [ "${USER}" != 'root' ]; then
+  echo "${this}: User must be root."
+fi
+
+netstat -tulpn
