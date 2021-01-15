@@ -15,10 +15,11 @@
 
 [alias]
 	amend-commit = commit --amend
-	dir = rev-parse --show-toplevel
+	dir = rev-parse --git-common-dir
 	git = !git
 	pop = stash pop
 	pr = !gh pr
+	root = rev-parse --show-toplevel
 	tig = !tig
 	uncommit = reset --soft HEAD^
 	unstage = reset HEAD
@@ -53,3 +54,7 @@
 
 [includeIf "gitdir:~/.dotfiles"]
 	path = ~/.gitconfig-dotfiles
+
+# `man tigrc` for more options.
+[tig]
+	main-view-date = relative
