@@ -149,14 +149,14 @@ let s:formatters = {
 	\ 'xml':    'tidy -indent -quiet -xml',
 	\ }
 function s:FormatCode()
-	let line_number = line('.')
+	let cursor_state = winsaveview()
 	if has_key(s:formatters, &filetype)
 		execute('%!' . s:formatters[&filetype])
 	else
 		" Removing trailing whitespace is a good fallback.
-		execute('%s/\s\+$//e')
+		%s/\s\+$//e
 	endif
-	call cursor(line_number, 1)
+	call winrestview(cursor_state)
 endfunction
 command! FormatCode :call s:FormatCode()
 nnoremap F :FormatCode<CR>
