@@ -92,6 +92,19 @@ augroup mkdir
 augroup end
 
 
+function s:MaybeAutoread(path, reason)
+	if a:reason ==# 'mode' || a:reason ==# 'time'
+		let v:fcs_choice = 'reload'
+	else
+		let v:fcs_choice = 'ask'
+	endif
+endfunction
+augroup autoread
+	autocmd!
+	autocmd FileChangedShell * :call s:MaybeAutoread(expand('<afile>:p'), v:fcs_reason)
+augroup end
+
+
 " LoadTemplate loads a template into the current buffer.
 function s:LoadTemplate(path)
 	execute('r ' . a:path)
