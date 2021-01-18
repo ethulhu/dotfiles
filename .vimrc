@@ -92,24 +92,14 @@ augroup mkdir
 augroup end
 
 
-" LoadTemplate loads a template from ~/.vim/templates on creating a new file.
-" For a file foo.bar:
-" - If there is a file ~/.vim/templates/foo.bar, it will load that.
-" - If there is a file ~/.vim/templates/bar, it will load that.
-" - Otherwise, it does nothing.
+" LoadTemplate loads a template into the current buffer.
 function s:LoadTemplate(path)
 	execute('r ' . a:path)
 	:0d
 
-	if search('DIRNAME') != 0
-		%s/DIRNAME/\=expand('%:p:h:t')/g
-	endif
-	if search('FILENAME_ALLCAPS') != 0
-		%s/FILENAME_ALLCAPS/\=toupper(expand('%:t:r'))/g
-	endif
-	if search('FILENAME') != 0
-		%s/FILENAME/\=expand('%:t:r')/g
-	endif
+	%s/DIRNAME/\=expand('%:p:h:t')/ge
+	%s/FILENAME_ALLCAPS/\=toupper(expand('%:t:r'))/ge
+	%s/FILENAME/\=expand('%:t:r')/ge
 
 	if search('CURSOR') != 0
 		let [line, column] = searchpos('CURSOR')
@@ -119,21 +109,25 @@ function s:LoadTemplate(path)
 		" startinsert!
 	endif
 endfunction
-function s:LoadTemplateFromFilename()
+function s:LoadTemplateByFilename(filename)
 	let template_dirs = split(get(environ(), 'VIM_TEMPLATES', ''), ':') + [ '~/.vim/templates' ]
-
-
 	for dir in template_dirs
-		if filereadable(expand(dir . '/' . expand('%:t')))
-			call s:LoadTemplate(dir . '/' . expand('%:t'))
+		" The expand() is required to expand characters like `~`.
+		let fullname = expand(dir . '/' . a:filename)
+		let extension = expand(dir . '/' . fnamemodify(a:filename, ':e'))
+		if filereadable(fullname)
+			call s:LoadTemplate(fullname)
 			return
-		elseif filereadable(expand(dir . '/' . expand('%:e')))
-			call s:LoadTemplate(dir . '/' . expand('%:e'))
+		elseif filereadable(extension)
+			call s:LoadTemplate(extension)
 			return
 		endif
 	endfor
 endfunction
-autocmd BufNewFile * call s:LoadTemplateFromFilename()
+augroup load-template
+	autocmd!
+	autocmd BufNewFile * call s:LoadTemplateByFilename(expand('<afile>:p:t'))
+augroup end
 
 
 " FormatCode formats the current buffer with an appropriate formatter.
