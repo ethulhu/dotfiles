@@ -71,6 +71,11 @@ augroup settings-by-filetype
 	autocmd FileType text   setlocal breakindent lbr
 augroup end
 
+augroup sigwinch-resize
+	autocmd!
+	autocmd VimResized * wincmd =
+augroup end
+
 
 function s:MaybeMkdir(path)
 	if isdirectory(a:path)
