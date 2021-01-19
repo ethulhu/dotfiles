@@ -2,7 +2,7 @@
 
 # Homebrew on AArch64 is in /opt/.
 if [ (uname -m) = 'arm64' ]
-  set --append PATH /opt/homebrew/bin
+  set --prepend PATH /opt/homebrew/bin
 end
 
 set --prepend PATH ~/.local/bin/macos
