@@ -1,7 +1,7 @@
-set -l function_name (basename (status filename) .fish)
+set --local function_name (basename (status filename) .fish)
 
 function $function_name --description 'Return the current Operating System.'
-  set -l uname (uname -s)
+  set --local uname (uname -s)
   switch $uname
     case Darwin
       echo 'macOS'

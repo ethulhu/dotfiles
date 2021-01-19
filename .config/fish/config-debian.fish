@@ -1,6 +1,6 @@
 # Debian-specific configuration.
 
-set -x PATH ~/.local/bin/linux $PATH
+set --prepend PATH ~/.local/bin/linux
 
 if getent group netdev >/dev/null
   alias wpa_cli='/usr/sbin/wpa_cli'

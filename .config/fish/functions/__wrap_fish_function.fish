@@ -1,4 +1,4 @@
-set -l function_name (basename (status filename) .fish)
+set --local function_name (basename (status filename) .fish)
 
 function $function_name --description 'Load a fish function from a file, giving it a new name, falling back to an alias if the function file does not exist.'
 

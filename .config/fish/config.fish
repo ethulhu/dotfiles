@@ -5,15 +5,11 @@ set fish_greeting ''
 # MANPATH is inferred from PATH, so ~/.local/bin implies ~/.local/share/man.
 
 # Go.
-set -x GOPATH ~/.local/go
-if [ -d $GOPATH ]
-  set -x PATH $GOPATH/bin $PATH
-end
+set --export GOPATH ~/.local/go
+set --prepend PATH $GOPATH/bin
 
 # Rust.
-if [ -d ~/.cargo ]
-	set -x PATH ~/.cargo/bin $PATH
-end
+set --prepend PATH ~/.cargo/bin
 
 # OCaml.
 if [ -f ~/.opam/opam-init/init.fish ]
@@ -22,7 +18,7 @@ if [ -f ~/.opam/opam-init/init.fish ]
   # There is a bug in `opam env` that adds `.` to PATH.
   # This is a workaround, and should be removed when opam > 2.0.7.
   if status is-interactive
-    set -gx OPAMNOENVNOTICE true;
+    set --global --export OPAMNOENVNOTICE true;
     function __opam_env_export_eval --on-event fish_prompt;
       opam env --shell=fish --readonly ^/dev/null | string replace ':' '' | source
     end
@@ -32,13 +28,13 @@ if [ -f ~/.opam/opam-init/init.fish ]
   alias ocaml='rlwrap ocaml'
 end
 
-set -x PATH ~/.local/bin ~/bin $PATH
+set --prepend PATH ~/.local/bin ~/bin
 
-if command -q direnv
+set --export EDITOR vim
+
+if command --quiet direnv
   direnv hook fish | source
 end
-
-set -x EDITOR vim
 
 # CDPATH is used to expand non-absolute paths as well as $PWD,
 # e.g. `cd linux` -> `cd ~/src/linux`.
@@ -67,7 +63,7 @@ end
 
 # Per-OS configuration.
 
-set -l os (operating_system | string lower)
+set --local os (operating_system | string lower)
 if [ -f ~/.config/fish/config-$os.fish ]
     source ~/.config/fish/config-$os.fish
 end

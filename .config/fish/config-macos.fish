@@ -1,12 +1,12 @@
 # macOS-specific configuration.
 
 # Homebrew on AArch64 is in /opt/.
-if [ -d /opt/homebrew/bin ]
-  set -x PATH /opt/homebrew/bin $PATH
+if [ (uname -m) = 'arm64' ]
+  set --append PATH /opt/homebrew/bin
 end
 
-set -x PATH ~/.local/bin/macos $PATH
+set --prepend PATH ~/.local/bin/macos
 
-set -l python_version (python3 --version | string match --regex '[[:digit:]]+\.[[:digit:]]+')
-set -x PATH ~/Library/Python/$python_version/bin $PATH
-set -x PYTHONPATH ~/.local/lib/python$python_version/site-packages $PYTHONPATH
+set --local python_version (python3 --version | string match --regex '[[:digit:]]+\.[[:digit:]]+')
+set --prepend --export PYTHONPATH ~/.local/lib/python$python_version/site-packages
+set --prepend PATH ~/Library/Python/$python_version/bin
