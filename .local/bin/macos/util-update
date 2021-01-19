@@ -42,7 +42,7 @@ function update() {
     echo "Updating ${name}:"
     while [ $# -gt 0 ]; do
       echo "+ ${1}"
-      ${1}
+      sh -c "${1}"
       shift
     done
   else
@@ -67,16 +67,16 @@ readonly python_packages="
   reuse \
 "
 update pip3 \
-    "pip3 install ${python_packages} --upgrade"
+  "pip3 install $(echo ${python_packages}) --upgrade"
 
 
 update go \
-  'go get golang.org/x/tools/cmd/goimports'
+  'go get -u golang.org/x/tools/cmd/goimports'
 
 
 update opam \
-  'opam update' \
-  'opam upgrade'
+  'opam update --all' \
+  'opam switch list --short | xargs -o -n1 opam upgrade --switch'
 
 
 echo 'Done.'
