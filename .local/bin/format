@@ -10,6 +10,7 @@ FORMATTERS = {
     'c':      ['clang-format', '-assume-filename=%', '-style=file', '-fallback-style=google'],
     'cpp':    ['clang-format', '-assume-filename=%', '-style=file', '-fallback-style=google'],
     'dune':   ['dune', 'format'],
+    'fish':   ['fish_indent'],
     'go':     ['goimports'],
     'html':   ['tidy', '-indent', '-quiet', '--tidy-mark', 'no'],
     'json':   ['jq'],

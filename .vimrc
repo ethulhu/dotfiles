@@ -64,7 +64,7 @@ augroup end
 
 augroup settings-by-filetype
 	autocmd!
-	autocmd FileType fish   setlocal tabstop=2 softtabstop=2 expandtab shiftwidth=2 smarttab
+	autocmd FileType fish   setlocal tabstop=4 softtabstop=4 expandtab shiftwidth=4 smarttab
 	autocmd FileType nix    setlocal tabstop=2 softtabstop=2 expandtab shiftwidth=2 smarttab
 	autocmd FileType ocaml  setlocal tabstop=2 softtabstop=2 expandtab shiftwidth=2 smarttab
 	autocmd FileType sh     setlocal tabstop=2 softtabstop=2 expandtab shiftwidth=2 smarttab
