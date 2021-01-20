@@ -77,7 +77,8 @@ augroup sigwinch-resize
 augroup end
 
 
-function s:MaybeFiletypeDetect()
+" MaybeDetectFiletype attempts to detect filetype of buffers with shebangs.
+function s:MaybeDetectFiletype()
 	if &filetype
 		return
 	endif
@@ -87,10 +88,11 @@ function s:MaybeFiletypeDetect()
 endfunction
 augroup filetype-detect
 	autocmd!
-	autocmd SafeState * :call s:MaybeFiletypeDetect()
+	autocmd SafeState * :call s:MaybeDetectFiletype()
 augroup end
 
 
+" MaybeMkdir asks to create the parent directories of new files if needed.
 function s:MaybeMkdir(path)
 	if isdirectory(a:path)
 		return
@@ -106,6 +108,7 @@ augroup mkdir
 augroup end
 
 
+" MaybeAutoread is like `:help autoread`, but only for minor changes.
 function s:MaybeAutoread(path, reason)
 	if a:reason ==# 'mode' || a:reason ==# 'time'
 		let v:fcs_choice = 'reload'
