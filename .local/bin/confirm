@@ -12,7 +12,25 @@ if [ $# -ne 1 ]; then
   exit 1
 fi
 
-read -n 1 -r -p "${1} [y/N] " ok
+
+readonly stdin='0'
+is_tty() {
+  test -t ${1}
+}
+read_single_char() {
+  if is_tty stdin; then
+    readonly tty_state="$(stty -g)"
+    stty -icanon min 1 time 0
+  fi
+  dd bs=1 count=1 2>/dev/null
+  if is_tty stdin; then
+    stty "${tty_state}"
+  fi
+}
+
+printf '%s [y/N] ' "${1}"
+ok="$(read_char)"
+readonly ok
 
 # If they pressed anything but Enter, do a newline.
 if [ "${ok}" ]; then
