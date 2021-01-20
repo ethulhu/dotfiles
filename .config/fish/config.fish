@@ -26,6 +26,7 @@ if [ -f ~/.opam/opam-init/init.fish ]
 	source ~/.opam/opam-init/variables.fish
 
   alias ocaml='rlwrap ocaml'
+  alias ml='ocaml'
 end
 
 set --prepend PATH ~/.local/bin ~/bin
