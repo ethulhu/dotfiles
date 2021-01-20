@@ -4,6 +4,17 @@
 	<meta charset='utf-8'>
 	<meta name='viewport' content='width=device-width, initial-scale=1.0'>
 
+	<!-- PWA WebApp stuff. -->
+	<link rel='apple-touch-icon' href='img/logo-grey-bg-180x180px.png'>
+	<link rel='apple-touch-startup-image' href='/path/to/launch-splash.png'>
+	<meta name='apple-mobile-web-app-capable' content='yes'>
+	<meta name='apple-mobile-web-app-status-bar-style' content='black-translucent'>
+	<meta name='apple-mobile-web-app-title' content='App Title'>
+	<meta name='mobile-web-app-capable' content='yes'>
+	<meta name='theme-color' content='#415364'>
+
+	<link rel='icon' href='/path/to/icon.png'>
+
 	<meta name='description' content=''>
 	<title></title>
 
