@@ -144,25 +144,9 @@ augroup end
 
 
 " FormatCode formats the current buffer with an appropriate formatter.
-let s:formatters = {
-	\ 'c':      'clang-format -assume-filename=% -style=file -fallback-style=google',
-	\ 'cpp':    'clang-format -assume-filename=% -style=file -fallback-style=google',
-	\ 'dune':   'dune format',
-	\ 'go':     'goimports',
-	\ 'html':   'tidy -indent -quiet --tidy-mark no',
-	\ 'json':   'jq',
-	\ 'python': 'autopep8 -',
-	\ 'rust':   'rustfmt --edition 2018 --emit stdout',
-	\ 'xml':    'tidy -indent -quiet -xml',
-	\ }
 function s:FormatCode()
 	let cursor_state = winsaveview()
-	if has_key(s:formatters, &filetype)
-		execute('%!' . s:formatters[&filetype])
-	else
-		" Removing trailing whitespace is a good fallback.
-		%s/\s\+$//e
-	endif
+	execute('%! format --filetype=' . &filetype)
 	call winrestview(cursor_state)
 endfunction
 command! FormatCode :call s:FormatCode()

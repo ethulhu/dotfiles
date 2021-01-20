@@ -1,0 +1,39 @@
+#!/usr/bin/env python3
+"""Format a file from stdin according to filetype."""
+
+import argparse
+import os
+import sys
+
+
+FORMATTERS = {
+    'c':      ['clang-format', '-assume-filename=%', '-style=file', '-fallback-style=google'],
+    'cpp':    ['clang-format', '-assume-filename=%', '-style=file', '-fallback-style=google'],
+    'dune':   ['dune', 'format'],
+    'go':     ['goimports'],
+    'html':   ['tidy', '-indent', '-quiet', '--tidy-mark', 'no'],
+    'json':   ['jq'],
+    'python': ['autopep8', '-'],
+    'rust':   ['rustfmt', '--edition', '2018', '--emit', 'stdout'],
+    'xml':    ['tidy', '-indent', '-quiet', '-xml'],
+}
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--filetype', type=str, required=True)
+
+    args = parser.parse_args()
+
+    if args.filetype in FORMATTERS:
+        formatter = FORMATTERS[args.filetype]
+        os.execvp(formatter[0], formatter)
+
+    else:
+        # Remove trailing whitespace as a fallback.
+        for line in sys.stdin:
+            print(line.rstrip())
+
+
+if __name__ == '__main__':
+    main()
