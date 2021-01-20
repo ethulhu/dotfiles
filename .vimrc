@@ -13,6 +13,10 @@ syntax off
 
 filetype plugin indent on
 
+" Enable the manpage viewer, via `:Man <name>`.
+runtime ftplugin/man.vim
+let g:ft_man_open_mode = 'vert'
+
 
 " Set the terminal-emulator tab title.
 set title
