@@ -14,6 +14,7 @@ FORMATTERS = {
     'go':     ['goimports'],
     'html':   ['tidy', '-indent', '-quiet', '--tidy-mark', 'no'],
     'json':   ['jq'],
+    'nix':    ['nixfmt'],
     'python': ['autopep8', '-'],
     'rust':   ['rustfmt', '--edition', '2018', '--emit', 'stdout'],
     'xml':    ['tidy', '-indent', '-quiet', '-xml'],
