@@ -5,7 +5,7 @@ set -eu
 readonly description='Creates a new repo in the local store.'
 readonly this="$(basename "${0}")"
 
-function usage() {
+usage() {
   echo 'Usage:'
   echo "    ${this} <name>"
   echo
@@ -32,7 +32,7 @@ fi
 readonly name="${1}"
 
 
-function __git() {
+__git() {
   repo git "${name}" $@
 }
 readonly git_dir="$(repo info "${name}" git-dir)"

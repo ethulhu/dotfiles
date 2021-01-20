@@ -5,7 +5,7 @@ set -eu
 readonly description='Adds a repo to the local store from a remote url.'
 readonly this="$(basename "${0}")"
 
-function usage() {
+usage() {
   echo 'Usage:'
   echo "    ${this} <repo-name> <path/to/worktree> [branch]"
   echo

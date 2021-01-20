@@ -10,7 +10,7 @@ if [ "$#" -ne 1 ]; then
 	exit 1
 fi
 
-function confirm() {
+confirm() {
   read -r -p "${1} [y/N] " ok && [ "${ok}" = 'y' -o "${ok}" = 'Y' ]
 }
 

@@ -2,7 +2,7 @@
 
 set -eu
 
-function subcommands() {
+subcommands() {
   for binary in $(binaries_matching_glob 'dotfiles-*'); do
     echo "${binary}" | sed 's/.*\/dotfiles-//'
   done | sort

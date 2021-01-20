@@ -5,7 +5,7 @@ set -eu
 readonly description='Remove a repo from the local store.'
 readonly this="$(basename "${0}")"
 
-function usage() {
+usage() {
   echo 'Usage:'
   echo "    ${this} <name>"
   echo

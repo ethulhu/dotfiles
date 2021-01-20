@@ -5,7 +5,7 @@ set -eu
 readonly description='List open ports and their host processes.'
 readonly this="$(basename "${0}")"
 
-function usage() {
+usage() {
   echo 'Usage:'
   echo "    ${this}"
   echo

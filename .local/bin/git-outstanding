@@ -46,10 +46,10 @@ find . -type d -name .git | while read git_dir; do
 	elif echo "${status}" | grep -q -E "(${uncommitted}|${unstaged}|${untracked})"; then
 		echo "${repo}"
 		if echo "${status}" | grep -q -E "(${uncommitted}|${unstaged})"; then
-			echo -e "\tchanges to be committed."
+			printf '\tchanges to be committed.\n'
 		fi
 		if echo "${status}" | grep -q -E "(${untracked})"; then
-			echo -e "\tuntracked files."
+			printf '\tuntracked files.\n'
 		fi
 	else
 		echo "error: unknown status for repo ${repo}" > /dev/stderr

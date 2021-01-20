@@ -5,7 +5,7 @@ set -eu
 readonly description='Is Dark Mode enabled?'
 readonly this="$(basename "${0}")"
 
-function usage() {
+usage() {
   echo 'Usage:'
   echo "    ${this}"
   echo

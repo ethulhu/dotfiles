@@ -5,7 +5,7 @@ set -eu
 readonly description='Extract an archive, for many types of archive.'
 readonly this="$(basename "${0}")"
 
-function usage() {
+usage() {
   echo 'Usage:'
   echo "    ${this} <path/to/archive>"
   echo

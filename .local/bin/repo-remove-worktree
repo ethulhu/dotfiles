@@ -5,7 +5,7 @@ set -eu
 readonly description='Remove a worktree from its repo.'
 readonly this="$(basename "${0}")"
 
-function usage() {
+usage() {
   echo 'Usage:'
   echo "    ${this} <path/to/worktree>"
   echo
@@ -40,7 +40,7 @@ fi
 readonly name="$(basename "${git_dir}")"
 readonly branch="$(git -C "${path}" branch --show-current)"
 
-function __git() {
+__git() {
   repo git "${name}" $@
 }
 

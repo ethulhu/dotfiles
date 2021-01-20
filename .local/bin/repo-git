@@ -5,7 +5,7 @@ set -eu
 readonly description='Runs a git command on a named repo.'
 readonly this="$(basename "${0}")"
 
-function usage() {
+usage() {
   echo 'Usage:'
   echo "    ${this} <name> <git-subcommand> [args...]"
   echo

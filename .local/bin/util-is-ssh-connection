@@ -5,7 +5,7 @@ set -eu
 readonly description='Is the current session is connected to via SSH?'
 readonly this="$(basename "${0}")"
 
-function usage() {
+usage() {
   echo 'Usage:'
   echo "    ${this}"
   echo
@@ -31,8 +31,4 @@ if [ $# -ne 0 ]; then
 fi
 
 
-function is_set() {
-  declare -p "${1}" >/dev/null 2>/dev/null
-}
-
-is_set SSH_CLIENT || is_set SSH_CONNECTION || is_set SSH_TTY
+env | grep -q -E '^(SSH_CLIENT|SSH_CONNECTION|SSH_TTY)='

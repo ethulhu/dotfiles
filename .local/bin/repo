@@ -5,7 +5,7 @@ set -eu
 readonly description='A custom wrapper around git.'
 readonly this="$(basename "${0}")"
 
-function usage() {
+usage() {
   echo 'Usage:'
   echo "    ${this} <cmd> [args ...]"
   echo
@@ -18,7 +18,7 @@ function usage() {
   done | column -t -s'|'
 }
 
-function list_subcommands() {
+list_subcommands() {
   (
     # Builtin commands.
     echo help
@@ -33,7 +33,7 @@ function list_subcommands() {
   ) | sort
 }
 
-function run_subcommand() {
+run_subcommand() {
   local subcommand="${1}"
   shift
   case "${subcommand}" in
@@ -56,14 +56,14 @@ function run_subcommand() {
 # Builtin commands.
 
 readonly help_description='Show help about subcommands'
-function help_usage() {
+help_usage() {
   echo 'Usage:'
   echo "    ${this} help <cmd>"
   echo
   echo 'Description:'
   echo "    ${help_description}"
 }
-function help() {
+help() {
   case "$*" in
     --help|-h)
       help_usage

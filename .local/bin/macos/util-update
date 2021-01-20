@@ -5,7 +5,7 @@ set -eu
 readonly description='Update all available package managers.'
 readonly this="$(basename "${0}")"
 
-function usage() {
+usage() {
   echo 'Usage:'
   echo "    ${this}"
   echo
@@ -31,10 +31,10 @@ if [ $# -ne 0 ]; then
 fi
 
 
-function command_exists() {
+command_exists() {
   command -v "${1}" >/dev/null
 }
-function update() {
+update() {
   local name="${1}"
   shift
 

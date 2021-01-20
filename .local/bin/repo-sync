@@ -5,7 +5,7 @@ set -eu
 readonly description='Fetches a repo from upstream.'
 readonly this="$(basename "${0}")"
 
-function usage() {
+usage() {
   echo 'Usage:'
   echo "    ${this} <name>"
   echo
