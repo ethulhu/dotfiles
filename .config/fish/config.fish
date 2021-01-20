@@ -13,20 +13,20 @@ set --prepend PATH ~/.cargo/bin
 
 # OCaml.
 if [ -f ~/.opam/opam-init/init.fish ]
-  # source ~/.opam/opam-init/init.fish
+    # source ~/.opam/opam-init/init.fish
 
-  # There is a bug in `opam env` that adds `.` to PATH.
-  # This is a workaround, and should be removed when opam > 2.0.7.
-  if status is-interactive
-    set --global --export OPAMNOENVNOTICE true;
-    function __opam_env_export_eval --on-event fish_prompt;
-      opam env --shell=fish --readonly ^/dev/null | string replace ':' '' | source
+    # There is a bug in `opam env` that adds `.` to PATH.
+    # This is a workaround, and should be removed when opam > 2.0.7.
+    if status is-interactive
+        set --global --export OPAMNOENVNOTICE true
+        function __opam_env_export_eval --on-event fish_prompt
+            opam env --shell=fish --readonly ^/dev/null | string replace ':' '' | source
+        end
     end
-  end
-	source ~/.opam/opam-init/variables.fish
+    source ~/.opam/opam-init/variables.fish
 
-  alias ocaml='rlwrap ocaml'
-  alias ml='ocaml'
+    alias ocaml='rlwrap ocaml'
+    alias ml='ocaml'
 end
 
 set --prepend PATH ~/.local/bin ~/bin
@@ -37,7 +37,7 @@ set --export EDITOR vim
 set --export LESS '-R'
 
 if command --quiet direnv
-  direnv hook fish | source
+    direnv hook fish | source
 end
 
 # CDPATH is used to expand non-absolute paths as well as $PWD,
@@ -45,20 +45,21 @@ end
 # If exported, other `cd` implementations might become noisy.
 set --global CDPATH . ~/src
 
+
 source ~/.config/aliases
 
 
 # Event handlers.
 
 function __on_fish_preexec --on-event fish_preexec
-  if command --quiet gpg-connect-agent
-    gpg-connect-agent updatestartuptty /bye >/dev/null
-  end
+    if command --quiet gpg-connect-agent
+        gpg-connect-agent updatestartuptty /bye >/dev/null
+    end
 end
 if set --query TMUX
-  function __update_variables_from_tmux --on-event fish_preexec
-    inherit_variables_from_tmux SSH_AUTH_SOCK SSH_CONNECTION
-  end
+    function __update_variables_from_tmux --on-event fish_preexec
+        inherit_variables_from_tmux SSH_AUTH_SOCK SSH_CONNECTION
+    end
 end
 
 function __on_fish_postexec --on-event fish_postexec
