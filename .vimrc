@@ -77,6 +77,20 @@ augroup sigwinch-resize
 augroup end
 
 
+function s:MaybeFiletypeDetect()
+	if &filetype
+		return
+	endif
+	if getline(1) =~# '^#!/'
+		filetype detect
+	endif
+endfunction
+augroup filetype-detect
+	autocmd!
+	autocmd SafeState * :call s:MaybeFiletypeDetect()
+augroup end
+
+
 function s:MaybeMkdir(path)
 	if isdirectory(a:path)
 		return
