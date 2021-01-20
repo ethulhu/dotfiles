@@ -6,6 +6,9 @@ set viminfo=""
 set encoding=utf-8
 set backspace=2
 
+set ignorecase
+set smartcase
+
 syntax off
 
 filetype plugin indent on
