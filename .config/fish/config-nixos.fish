@@ -2,28 +2,8 @@
 
 set --prepend PATH ~/.local/bin/linux
 
-function package --argument-names command package
-  if [ (count $argv) -ne 2 ]
-    echo 'Usage: '(status function)' <install|path> <package>'
-    echo
-    echo 'Summary: Install or show the path of a Nixpkgs package.'
-    return 1
-  end
-
-  switch $command
-    case install
-      set --local path (nix-build --no-out-link '<nixpkgs>' --attr $package)
-      if [ "$path" ]
-        set --append PATH $path/bin
-      end
-
-    case path
-      nix-build --no-out-link '<nixpkgs>' --attr $package
-
-    case '*'
-      echo (status function)": Unknown command: $command"
-  end
-end
+set --prepend fish_function_path ~/.config/fish/functions/nixos
+set --prepend fish_complete_path ~/.config/fish/completions/nixos
 
 function __fish_command_not_found_handler --on-event fish_command_not_found --argument-names command
   set -l db '/nix/var/nix/profiles/per-user/root/channels/nixos/programs.sqlite'
