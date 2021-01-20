@@ -33,6 +33,9 @@ set --prepend PATH ~/.local/bin ~/bin
 
 set --export EDITOR vim
 
+# Allow only color control codes through.
+set --export LESS '-R'
+
 if command --quiet direnv
   direnv hook fish | source
 end
