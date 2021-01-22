@@ -12,18 +12,36 @@ set --prepend PATH $GOPATH/bin
 set --prepend PATH ~/.cargo/bin
 
 # OCaml.
-if [ -f ~/.opam/opam-init/init.fish ]
-    # source ~/.opam/opam-init/init.fish
-
-    # There is a bug in `opam env` that adds `.` to PATH.
-    # This is a workaround, and should be removed when opam > 2.0.7.
+if command --quiet opam; and opam var prefix >/dev/null ^/dev/null
     if status is-interactive
+        # This stops `opam switch` telling us to reload the environment.
         set --global --export OPAMNOENVNOTICE true
-        function __opam_env_export_eval --on-event fish_prompt
-            opam env --shell=fish --readonly ^/dev/null | string replace ':' '' | source
+    end
+
+    function __update_opam_env --on-event fish_prompt
+        if not set --query OPAM_SWITCH_PREFIX; or [ (opam var prefix) != $OPAM_SWITCH_PREFIX ]
+            # Source everything except PATH.
+            opam env --shell=fish --readonly \
+                | string match --invert 'set -gx PATH *' \
+                | source
+
+            # In-place replace all paths matching $opam_root/*.
+            set --local opam_root (opam var root)
+            set --local opam_switch_bin "$OPAM_SWITCH_PREFIX/bin"
+            for i in (seq (count $PATH))
+                if string match --quiet -- "$opam_root/*" $PATH[$i]
+                    set PATH[$i] $opam_switch_bin
+                end
+            end
+
+            # If there were no pre-existing $opam_root/* matches, prepend it.
+            if not contains -- $opam_switch_bin $PATH
+                set --prepend PATH $opam_switch_bin
+            end
         end
     end
-    source ~/.opam/opam-init/variables.fish
+
+    __update_opam_env
 
     alias ocaml='rlwrap ocaml'
     alias ml='ocaml'
