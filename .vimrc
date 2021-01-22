@@ -1,27 +1,22 @@
-set nocompatible
-set shell=/bin/sh
-set secure
-set noswapfile
-set viminfo=""
 set encoding=utf-8
-set backspace=2
+set nocompatible
+set noswapfile
+set secure
+set shell=/bin/sh
 
 set ignorecase
 set smartcase
 
 syntax off
-
 filetype plugin indent on
 
-" Enable the manpage viewer, via `:Man <name>`.
-runtime ftplugin/man.vim
-let g:ft_man_open_mode = 'vert'
 
+" Makes backspace sensible. This is the default in modern vim, but left here
+" for compatibility in case of ancient vims. See `:help 'backspace'`.
+set backspace=2
 
 " Set the terminal-emulator tab title.
 set title
-" let &titlestring = "vim — " . expand("%:t")
-
 
 " Ignore object & binary files.
 set wildignore=*.a,*.aux,*.class,*.dll,*.exe,*.hi,*.o,*.obj,*.pdf,*.pyc,*.toc
@@ -48,6 +43,12 @@ map <leader>d "+d
 map <leader>Y "+Y
 map <leader>P "+P
 map <leader>D "+D
+
+
+" Enable the manpage viewer, via `:Man <name>`.
+runtime ftplugin/man.vim
+let g:ft_man_open_mode = 'vert'
+
 
 " Write as root.
 command! WriteSudo w !sudo tee % >/dev/null
