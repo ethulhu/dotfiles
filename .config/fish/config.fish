@@ -2,14 +2,25 @@
 
 set fish_greeting ''
 
-# MANPATH is inferred from PATH, so ~/.local/bin implies ~/.local/share/man.
-
-# Go.
+set --export EDITOR vim
 set --export GOPATH ~/.local/go
-set --prepend PATH $GOPATH/bin
 
-# Rust.
-set --prepend PATH ~/.cargo/bin
+# Allow only color control codes through.
+set --export LESS '-R'
+
+# CDPATH is used to expand non-absolute paths as well as $PWD,
+# e.g. `cd linux` -> `cd ~/src/linux`.
+# If exported, other `cd` implementations might become noisy.
+set --global CDPATH . ~/src
+
+
+# MANPATH is inferred from PATH, so ~/.local/bin implies ~/.local/share/man.
+set --global --path fish_user_paths \
+    ~/bin \
+    ~/.local/bin \
+    $GOPATH/bin \
+    ~/.cargo/bin
+
 
 # OCaml.
 if command --quiet opam; and opam var prefix >/dev/null ^/dev/null
@@ -18,50 +29,55 @@ if command --quiet opam; and opam var prefix >/dev/null ^/dev/null
         set --global --export OPAMNOENVNOTICE true
     end
 
-    function __update_opam_env --on-event fish_prompt
-        if not set --query OPAM_SWITCH_PREFIX; or [ (opam var prefix) != $OPAM_SWITCH_PREFIX ]
+    function __update_opam_env --on-event fish_preexec --on-event fish_postexec
+        if [ (opam var prefix) != "$OPAM_SWITCH_PREFIX" ]
             # Source everything except PATH.
             opam env --shell=fish --readonly \
                 | string match --invert 'set -gx PATH *' \
                 | source
 
-            # In-place replace all paths matching $opam_root/*.
-            set --local opam_root (opam var root)
-            set --local opam_switch_bin "$OPAM_SWITCH_PREFIX/bin"
-            for i in (seq (count $PATH))
-                if string match --quiet -- "$opam_root/*" $PATH[$i]
-                    set PATH[$i] $opam_switch_bin
-                end
-            end
-
-            # If there were no pre-existing $opam_root/* matches, prepend it.
-            if not contains -- $opam_switch_bin $PATH
-                set --prepend PATH $opam_switch_bin
-            end
+            # Trigger updating the PATH.
+            emit opam_switch_changed
         end
     end
 
+    function __update_opam_path --on-event opam_switch_changed
+        set --local opam_root (opam var root)
+        set --local new_switch_bin (opam var prefix)/bin
+
+        # Replace all paths matching $opam_root/*.
+        for path in $fish_user_paths
+            if string match --quiet -- "$opam_root/*" $path
+                set fish_user_paths[(contains --index -- $path $PATH)] $new_switch_bin
+            end
+        end
+
+        # If there were no pre-existing $opam_root/* matches, prepend it.
+        if not contains -- $new_switch_bin $fish_user_paths
+            set --prepend fish_user_paths $new_switch_bin
+        end
+    end
+
+    # Erase any opam switches in PATH from fish's caller (e.g. tmux).
+    set --local opam_root (opam var root)
+    for path in $PATH
+        if string match --quiet -- "$opam_root/*" $path
+            set --erase PATH[(contains --index -- $path $PATH)]
+        end
+    end
+
+    # Initial opam environment.
     __update_opam_env
+    __update_opam_path
 
     alias ocaml='rlwrap ocaml'
     alias ml='ocaml'
 end
 
-set --prepend PATH ~/.local/bin ~/bin
-
-set --export EDITOR vim
-
-# Allow only color control codes through.
-set --export LESS '-R'
 
 if command --quiet direnv
     direnv hook fish | source
 end
-
-# CDPATH is used to expand non-absolute paths as well as $PWD,
-# e.g. `cd linux` -> `cd ~/src/linux`.
-# If exported, other `cd` implementations might become noisy.
-set --global CDPATH . ~/src
 
 
 source ~/.config/aliases
