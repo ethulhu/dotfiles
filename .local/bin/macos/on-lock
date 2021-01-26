@@ -4,4 +4,4 @@ set -eu
 
 readonly epoch_seconds="$(date +%s)"
 
-echo "lock: ${epoch_seconds}" >> ~/.cache/macos-events
+echo "locked,${epoch_seconds}" >> ~/.cache/macos-events
