@@ -82,6 +82,7 @@ augroup end
 augroup sigwinch-resize
 	autocmd!
 	autocmd VimResized * wincmd =
+	autocmd WinNew     * wincmd =
 augroup end
 
 
