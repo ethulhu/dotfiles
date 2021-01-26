@@ -92,7 +92,11 @@ function s:MaybeDetectFiletype()
 		return
 	endif
 	if getline(1) =~# '^#!/'
-		filetype detect
+		if getline(1) =~# '^#!/usr/bin/env swift \?'
+			setlocal filetype=swift
+		else
+			filetype detect
+		endif
 	endif
 endfunction
 augroup filetype-detect
@@ -196,6 +200,7 @@ let s:comments = {
 	\ 'rust':       { 'left': '//' },
 	\ 'sh':         { 'left': '#' },
 	\ 'sshconfig':  { 'left': '#' },
+	\ 'swift':      { 'left': '//' },
 	\ 'tmux':       { 'left': '#' },
 	\ 'vim':        { 'left': '"' },
 	\ 'xdefaults':  { 'left': '!' },

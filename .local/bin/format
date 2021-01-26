@@ -17,6 +17,7 @@ FORMATTERS = {
     'nix':    ['nixfmt'],
     'python': ['autopep8', '-'],
     'rust':   ['rustfmt', '--edition', '2018', '--emit', 'stdout'],
+    'swift':  ['swift-format', 'format'],
     'xml':    ['tidy', '-indent', '-quiet', '-xml'],
 }
 
