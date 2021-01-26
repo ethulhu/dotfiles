@@ -79,4 +79,9 @@ update opam \
   'opam switch list --short | xargs -o -n1 opam upgrade --switch'
 
 
+update macos-events \
+  'macos-events print-plist > ~/Library/LaunchAgents/eth.macos-events.plist' \
+  'launchctl load ~/Library/LaunchAgents/eth.macos-events.plist'
+
+
 echo 'Done.'

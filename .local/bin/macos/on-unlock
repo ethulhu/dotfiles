@@ -1,0 +1,7 @@
+#!/bin/sh
+
+set -eu
+
+readonly epoch_seconds="$(date +%s)"
+
+echo "unlocked: ${epoch_seconds}" >> ~/.cache/macos-events

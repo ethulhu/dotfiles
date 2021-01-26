@@ -1,0 +1,110 @@
+#!/usr/bin/env swift -framework AppKit
+
+import Cocoa
+import Foundation
+
+//
+// Configuraton.
+
+let onLock = URL(
+  fileURLWithPath: ".local/bin/macos/on-lock",
+  relativeTo: FileManager.default.homeDirectoryForCurrentUser)
+
+let onUnlock = URL(
+  fileURLWithPath: ".local/bin/macos/on-unlock",
+  relativeTo: FileManager.default.homeDirectoryForCurrentUser)
+
+//
+// Utilities.
+
+let this = URL(fileURLWithPath: CommandLine.arguments[0]).lastPathComponent
+let thisPath = URL(fileURLWithPath: CommandLine.arguments[0]).absoluteURL.path
+
+func log(message: String) {
+  let line = "\(this): \(message)\n"
+  do {
+    try FileHandle.standardError.write(contentsOf: line.data(using: .utf8)!)
+  } catch {
+    print(line)
+  }
+}
+
+//
+// Subcommands.
+
+func listen() {
+  let notificationCenter = DistributedNotificationCenter.default()
+
+  notificationCenter.addObserver(
+    forName: .init("com.apple.screenIsLocked"), object: nil, queue: .main
+  ) {
+    _ in
+    log(message: "screen locked")
+    do {
+      try Process.run(onLock, arguments: [])
+    } catch {
+      log(message: "could not run `screen locked` command")
+    }
+  }
+
+  notificationCenter.addObserver(
+    forName: .init("com.apple.screenIsUnlocked"), object: nil, queue: .main
+  ) {
+    _ in
+    log(message: "screen unlocked")
+    do {
+      try Process.run(onUnlock, arguments: [])
+    } catch {
+      log(message: "could not run `screen unlocked` command")
+    }
+  }
+
+  RunLoop.main.run()
+}
+
+func printPlist() {
+  print(
+    """
+    <?xml version="1.0" encoding="UTF-8"?>
+    <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+    <plist version="1.0">
+    <dict>
+            <key>Label</key>
+            <string>eth.\(this)</string>
+
+            <key>ProgramArguments</key>
+            <array>
+                <string>\(thisPath)</string>
+                <string>listen</string>
+            </array>
+
+
+            <key>RunAtLoad</key>
+            <true/>
+
+            <key>KeepAlive</key>
+            <true/>
+    </dict>
+    </plist>
+    """)
+}
+
+//
+// Main.
+
+func usage() {
+  print("Usage: \(this) <listen|print-plist>")
+}
+
+if CommandLine.arguments.count != 2 {
+  usage()
+  exit(1)
+}
+
+switch CommandLine.arguments[1] {
+case "listen": listen()
+case "print-plist": printPlist()
+default:
+  usage()
+  exit(1)
+}
