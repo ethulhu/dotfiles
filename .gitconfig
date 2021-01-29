@@ -57,4 +57,13 @@
 
 # `man tigrc` for more options.
 [tig]
+	ignore-case = smart-case
 	main-view-date = relative
+
+[tig "bind"]
+	generic = J move-page-down
+	generic = K move-page-up
+
+	generic = g move-first-line
+	generic = G move-last-line
+	main    = G move-last-line
