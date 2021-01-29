@@ -10,10 +10,6 @@ if [ "$#" -ne 1 ]; then
 	exit 1
 fi
 
-confirm() {
-  read -r -p "${1} [y/N] " ok && [ "${ok}" = 'y' -o "${ok}" = 'Y' ]
-}
-
 readonly git_dir="$(git rev-parse --show-toplevel)"
 if [ ! "${git_dir}" ]; then
 	exit 1
