@@ -9,14 +9,17 @@ alias xargs='xargs -n1'
 
 alias gd='go doc'
 
-# machines.
+# Machines.
 alias irc='mosh irc'
 alias mail='mosh mail'
 
-# runtimes.
+# Runtimes.
 alias js='node --experimental-modules'
 alias py3='python3'
 alias py='python'
 
-# workaround for sslh.
+# Workaround for sslh.
 alias mosh='mosh --bind-server=any'
+
+# Open multiple files as vertical splits.
+alias vim='vim -O'
