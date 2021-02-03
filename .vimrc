@@ -66,9 +66,10 @@ match ExtraWhitespace /\s\+$\| \+\ze\t/
 
 augroup set-filetype
 	autocmd!
-	autocmd BufRead,BufNewFile *.fish setlocal filetype=fish
-	autocmd BufRead,BufNewFile *.nix  setlocal filetype=nix
-	autocmd BufRead,BufNewFile *.svg  setlocal filetype=xml
+	autocmd BufRead,BufNewFile *.fish   setlocal filetype=fish
+	autocmd BufRead,BufNewFile *.nix    setlocal filetype=nix
+	autocmd BufRead,BufNewFile *.svg    setlocal filetype=xml
+	autocmd BufRead,BufNewFile *.swift  setlocal filetype=swift
 
 	autocmd BufRead,BufNewFile */.ssh/config*     setlocal filetype=sshconfig
 	autocmd BufRead,BufNewFile .Brewfile,Brewfile setlocal filetype=ruby
