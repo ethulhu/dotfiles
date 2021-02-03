@@ -76,12 +76,23 @@ augroup set-filetype
 	autocmd BufRead,BufNewFile dune,dune-project,dune-workspace,dune-workspace.* setlocal filetype=dune
 augroup end
 
+function s:TabsAreSpaces(width)
+	let options = [
+		\ 'expandtab',
+		\ 'smarttab',
+		\ 'shiftwidth='  . a:width,
+		\ 'softtabstop=' . a:width,
+		\ 'tabstop='     . a:width,
+		\ ]
+	execute('setlocal ' . join(options, ' '))
+endfunction
 augroup settings-by-filetype
 	autocmd!
-	autocmd FileType fish   setlocal tabstop=4 softtabstop=4 expandtab shiftwidth=4 smarttab
-	autocmd FileType nix    setlocal tabstop=2 softtabstop=2 expandtab shiftwidth=2 smarttab
-	autocmd FileType ocaml  setlocal tabstop=2 softtabstop=2 expandtab shiftwidth=2 smarttab
-	autocmd FileType sh     setlocal tabstop=2 softtabstop=2 expandtab shiftwidth=2 smarttab
+	autocmd FileType fish   :call s:TabsAreSpaces(4)
+	autocmd FileType nix    :call s:TabsAreSpaces(2)
+	autocmd FileType ocaml  :call s:TabsAreSpaces(2)
+	autocmd FileType sh     :call s:TabsAreSpaces(2)
+
 	autocmd FileType text   setlocal breakindent lbr
 
 	autocmd FileType fish       setlocal commentstring=#\ %s
