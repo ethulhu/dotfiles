@@ -82,6 +82,11 @@ augroup settings-by-filetype
 	autocmd FileType ocaml  setlocal tabstop=2 softtabstop=2 expandtab shiftwidth=2 smarttab
 	autocmd FileType sh     setlocal tabstop=2 softtabstop=2 expandtab shiftwidth=2 smarttab
 	autocmd FileType text   setlocal breakindent lbr
+
+	autocmd FileType fish       setlocal commentstring=#\ %s
+	autocmd FileType nix        setlocal commentstring=#\ %s
+	autocmd FileType swift      setlocal commentstring=//\ %s
+	autocmd FileType xdefaults  setlocal commentstring=!\ %s
 augroup end
 
 augroup sigwinch-resize
@@ -188,61 +193,49 @@ command! FormatCode :call s:FormatCode()
 nnoremap F :FormatCode<CR>
 
 
+" Delete comment character when joining commented lines.
+set formatoptions+=j
+
 " Comment & Uncomment comment/uncomment individual and ranges of lines.
-let s:comments = {
-	\ 'c':          { 'left': '/*', 'right': '*/' },
-	\ 'cpp':        { 'left': '//' },
-	\ 'fish':       { 'left': '#' },
-	\ 'gitconfig':  { 'left': '#' },
-	\ 'go':         { 'left': '//' },
-	\ 'html':       { 'left': '<!--', 'right': '-->' },
-	\ 'javascript': { 'left': '//' },
-	\ 'make':       { 'left': '#' },
-	\ 'nix':        { 'left': '#' },
-	\ 'ocaml':      { 'left': '(*', 'right': '*)' },
-	\ 'python':     { 'left': '#' },
-	\ 'ruby':       { 'left': '#' },
-	\ 'rust':       { 'left': '//' },
-	\ 'sh':         { 'left': '#' },
-	\ 'sshconfig':  { 'left': '#' },
-	\ 'swift':      { 'left': '//' },
-	\ 'tmux':       { 'left': '#' },
-	\ 'vim':        { 'left': '"' },
-	\ 'xdefaults':  { 'left': '!' },
-	\ 'xml':        { 'left': '<!--', 'right': '-->' },
-	\ 'yaml':       { 'left': '#' },
-	\ }
+" See `:help commentstring` and `:help comments`.
+function s:CommentsFromCommentString()
+	let left  = substitute(&commentstring, '^\([^ \t]*\)\s*%s.*$', '\1', '')
+	let right = substitute(&commentstring, '^.*%s\s*\(.*\)$', '\1', '')
+	return [left, right]
+endfunction
 function s:Comment()
 	let line_number = line('.')
 	let line = getline(line_number)
-
-	if has_key(s:comments, &filetype) && line != ''
-		let comment = s:comments[&filetype]
-
-		let line = getline(line_number)
-		if has_key(comment, 'left')
-			let line = substitute(line, '^\(\s*\)', '\1' . comment['left'] . ' ', '')
-		endif
-		if has_key(comment, 'right')
-			let line = substitute(line, '$', '\ ' . comment['right'], '')
-		endif
-		call setline(line_number, line)
+	if line ==# ''
+		return
 	endif
+
+	let [left, right] = s:CommentsFromCommentString()
+	if left !=# ''
+		let line = substitute(line, '^\(\s*\)', '\1' . left . ' ', '')
+	endif
+	if right !=# ''
+		let line = substitute(line, '$', '\ ' . right, '')
+	endif
+
+	call setline(line_number, line)
 endfunction
 function s:Uncomment()
 	let line_number = line('.')
-	if has_key(s:comments, &filetype)
-		let comment = s:comments[&filetype]
-
-		let line = getline(line_number)
-		if has_key(comment, 'left')
-			let line = substitute(line, '^\(\s*\)' . escape(comment['left'], '*') . '\ \?', '\1', '')
-		endif
-		if has_key(comment, 'right')
-			let line = substitute(line, '\ \?' . escape(comment['right'], '*') . '$', '', '')
-		endif
-		call setline(line_number, line)
+	let line = getline(line_number)
+	if line ==# ''
+		return
 	endif
+
+	let [left, right] = s:CommentsFromCommentString()
+	if left !=# ''
+		let line = substitute(line, '^\(\s*\)' . escape(left, '*') . '\ \?', '\1', '')
+	endif
+	if right !=# ''
+		let line = substitute(line, '\ \?' . escape(right, '*') . '$', '', '')
+	endif
+
+	call setline(line_number, line)
 endfunction
 command! Comment   :call s:Comment()
 command! Uncomment :call s:Uncomment()
