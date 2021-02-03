@@ -4,6 +4,12 @@ set noswapfile
 set secure
 set shell=/bin/sh
 
+set backspace=2   " Make backspace work in Insert mode (see `:help 'backspace'`).
+set laststatus=2  " Always show the statusbar.
+set ruler         " Show the line & character in the status bar.
+set scrolloff=1   " Try to have one line of context when scrolling.
+set title         " Set the terminal-emulator tab title.
+
 set ignorecase
 set smartcase
 
@@ -11,12 +17,11 @@ syntax off
 filetype plugin indent on
 
 
-" Makes backspace sensible. This is the default in modern vim, but left here
-" for compatibility in case of ancient vims. See `:help 'backspace'`.
-set backspace=2
+" Load matchit.vim, but only if the user hasn't installed a newer version.
+if !exists('g:loaded_matchit') && findfile('plugin/matchit.vim', &rtp) ==# ''
+	runtime! macros/matchit.vim
+endif
 
-" Set the terminal-emulator tab title.
-set title
 
 " Ignore object & binary files.
 set wildignore=*.a,*.aux,*.class,*.dll,*.exe,*.hi,*.o,*.obj,*.pdf,*.pyc,*.toc
