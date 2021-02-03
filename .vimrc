@@ -68,6 +68,7 @@ augroup set-filetype
 	autocmd!
 	autocmd BufRead,BufNewFile *.fish   setlocal filetype=fish
 	autocmd BufRead,BufNewFile *.nix    setlocal filetype=nix
+	autocmd BufRead,BufNewFile *.scad   setlocal filetype=scad
 	autocmd BufRead,BufNewFile *.svg    setlocal filetype=xml
 	autocmd BufRead,BufNewFile *.swift  setlocal filetype=swift
 
@@ -92,11 +93,13 @@ augroup settings-by-filetype
 	autocmd FileType nix    :call s:TabsAreSpaces(2)
 	autocmd FileType ocaml  :call s:TabsAreSpaces(2)
 	autocmd FileType sh     :call s:TabsAreSpaces(2)
+	autocmd FileType scad   :call s:TabsAreSpaces(4)
 
 	autocmd FileType text   setlocal breakindent lbr
 
 	autocmd FileType fish       setlocal commentstring=#\ %s
 	autocmd FileType nix        setlocal commentstring=#\ %s
+	autocmd FileType scad       setlocal commentstring=//\ %s
 	autocmd FileType swift      setlocal commentstring=//\ %s
 	autocmd FileType xdefaults  setlocal commentstring=!\ %s
 augroup end
