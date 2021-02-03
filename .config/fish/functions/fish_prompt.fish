@@ -1,6 +1,4 @@
 function fish_prompt --description 'Write out the prompt'
-    set --local last_pipestatus $pipestatus
-
     if [ $TERM = 'dumb' ]
         return
     end
@@ -24,12 +22,9 @@ function fish_prompt --description 'Write out the prompt'
 
     set --local prompt_repo_name (string replace --regex --filter "$HOME/src/([^/]*).*" ' [$1]' $PWD; or true)
 
-    # Write pipestatus.
-    set --local prompt_status (__fish_print_pipestatus " [" "]" "|" (set_color $fish_color_status) (set_color --bold $fish_color_status) $last_pipestatus)
-
     echo -n -s \
         $prompt_user $prompt_hostname ' ' \
         (set_color $color_cwd) (prompt_pwd) (set_color normal) \
         $prompt_repo_name (fish_vcs_prompt) (set_color normal) \
-        $prompt_status $suffix ' '
+        $suffix ' '
 end

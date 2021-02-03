@@ -86,8 +86,9 @@ source ~/.config/aliases
 # Event handlers.
 
 function __on_fish_preexec --on-event fish_preexec
-    if command --quiet gpg-connect-agent
-        gpg-connect-agent updatestartuptty /bye >/dev/null
+    if [ "$argv" ]
+        __on_preexec $argv
+        set --global __preexec_ran
     end
 end
 if set --query TMUX
@@ -97,6 +98,11 @@ if set --query TMUX
 end
 
 function __on_fish_postexec --on-event fish_postexec
+    set --global __postexec_pipestatus $pipestatus
+    if set --query __preexec_ran
+        __on_postexec $argv
+    end
+    set --erase __preexec_ran
 end
 
 
