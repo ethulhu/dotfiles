@@ -1,5 +1,7 @@
+*.exe
 *.kbx
 *.key
+*.native
 *.o
 *.patch
 *netrc
