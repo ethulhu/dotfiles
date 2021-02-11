@@ -39,22 +39,22 @@ if [ ! -f "${archive}" ]; then
 fi
 
 case "${archive}" in
-	*.7z)       7z x "${archive}"         ;;
-	*.Z)        uncompress "${archive}"   ;;
-	*.gz)       gunzip "${archive}"       ;;
-	*.jar)      unzip "${archive}"        ;;
-	*.rar)      unrar x "${archive}"      ;;
-	*.tar)      tar -xvf "${archive}"     ;;
-	*.tbz2)     tar -jxvf "${archive}"    ;;
-	*.tgz)      tar -xvf "${archive}"     ;;
-	*.zip)      unzip "${archive}"        ;;
-  *.bz2)      bunzip2 "${archive}"      ;;
+  *.7z)       7z x "${archive}"         ;;
+  *.Z)        uncompress "${archive}"   ;;
+  *.jar)      unzip "${archive}"        ;;
+  *.rar)      unrar x "${archive}"      ;;
+  *.tar)      tar -xvf "${archive}"     ;;
+  *.tbz2)     tar -jxvf "${archive}"    ;;
+  *.tgz)      tar -xvf "${archive}"     ;;
+  *.zip)      unzip "${archive}"        ;;
   *.tar.bz2)  tar -jxvf "${archive}"    ;;
   *.tar.gz)   tar -zxvf "${archive}"    ;;
 
-	*)
+  *.gz)       gunzip "${archive}"       ;;
+  *.bz2)      bunzip2 "${archive}"      ;;
+
+  *)
     echo "${this}: Unknown extension for archive: ${archive}"
     exit 1
     ;;
-
 esac
