@@ -7,8 +7,8 @@ import sys
 
 
 FORMATTERS = {
-    'c':      ['clang-format', '-assume-filename=%', '-style=file', '-fallback-style=google'],
-    'cpp':    ['clang-format', '-assume-filename=%', '-style=file', '-fallback-style=google'],
+    'c':      ['clang-format', '-style=file', '-fallback-style=google'],
+    'cpp':    ['clang-format', '-style=file', '-fallback-style=google'],
     'dune':   ['dune', 'format'],
     'fish':   ['fish_indent'],
     'go':     ['goimports'],
@@ -25,11 +25,18 @@ FORMATTERS = {
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--filetype', type=str, required=True)
+    parser.add_argument('--filename', type=str, required=False)
 
     args = parser.parse_args()
 
+    print(args.filename)
+
     if args.filetype in FORMATTERS:
         formatter = FORMATTERS[args.filetype]
+
+        if args.filename and args.filetype in ('c', 'cpp'):
+            formatter.append(f'-assume-filename={args.filename}')
+
         os.execvp(formatter[0], formatter)
 
     else:

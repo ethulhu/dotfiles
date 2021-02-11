@@ -203,7 +203,7 @@ augroup end
 " FormatCode formats the current buffer with an appropriate formatter.
 function s:FormatCode()
 	let cursor_state = winsaveview()
-	execute('%! format --filetype=' . &filetype)
+	execute('%! format --filetype=' . &filetype . ' --filename=%')
 	call winrestview(cursor_state)
 endfunction
 command! FormatCode :call s:FormatCode()
