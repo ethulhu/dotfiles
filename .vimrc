@@ -67,6 +67,7 @@ match ExtraWhitespace /\s\+$\| \+\ze\t/
 augroup set-filetype
 	autocmd!
 	autocmd BufRead,BufNewFile *.fish   setlocal filetype=fish
+	autocmd BufRead,BufNewFile *.litmus setlocal filetype=litmus
 	autocmd BufRead,BufNewFile *.nix    setlocal filetype=nix
 	autocmd BufRead,BufNewFile *.scad   setlocal filetype=scad
 	autocmd BufRead,BufNewFile *.svg    setlocal filetype=xml
@@ -97,6 +98,7 @@ augroup settings-by-filetype
 
 	autocmd FileType text   setlocal breakindent lbr
 
+	autocmd FileType litmus     setlocal commentstring=(*%s*)
 	autocmd FileType fish       setlocal commentstring=#\ %s
 	autocmd FileType nix        setlocal commentstring=#\ %s
 	autocmd FileType scad       setlocal commentstring=//\ %s
