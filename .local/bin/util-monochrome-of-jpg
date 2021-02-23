@@ -1,0 +1,44 @@
+#!/bin/sh
+
+set -eu
+
+readonly description='Convert a JPG file to a monochrome png.'
+readonly this="$(basename "${0}")"
+
+usage() {
+  echo 'Usage:'
+  echo "    ${this} <path/to/JPG>"
+  echo
+  echo 'Description:'
+  echo "    ${description}"
+}
+
+case "$*" in
+  --help|-h)
+    usage
+    exit
+    ;;
+
+  --description)
+    echo "${description}"
+    exit
+    ;;
+esac
+
+
+if [ $# -ne 1 ]; then
+  usage
+  exit 1
+fi
+
+readonly file="${1}"
+
+
+# This is .JPG because that's what my scanner produces.
+# TODO: Make this work with other file extensions.
+new_file="$(basename "${file}" .JPG).png"
+readonly new_file
+
+convert -monochrome "${file}" "${new_file}"
+
+optipng "${new_file}"
