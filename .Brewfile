@@ -21,6 +21,7 @@ brew "moreutils"
 brew "mosh"
 brew "mosquitto"
 brew "mpack"
+brew "mpv"
 brew "mu"
 brew "ninja"
 brew "node"
@@ -38,4 +39,3 @@ brew "wget"
 # These packages don't currently install on AArch64 macOS:
 #
 # brew "pandoc"
-# brew "mpv"
