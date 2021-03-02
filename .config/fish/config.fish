@@ -85,24 +85,44 @@ source ~/.config/aliases
 
 # Event handlers.
 
-function __on_fish_preexec --on-event fish_preexec
-    if [ "$argv" ]
+if fish_version_at_least 3.2.0
+    function __on_fish_preexec --on-event fish_preexec
         __on_preexec $argv
-        set --global __preexec_ran
+    end
+    function __on_fish_postexec --on-event fish_postexec
+        set --global __postexec_pipestatus $pipestatus
+        __on_postexec $argv
+    end
+else
+    # Workaround to stop these handlers running on fish_prompt as well.
+    function __on_fish_preexec --on-event fish_preexec
+        if [ "$argv" ]
+            __on_preexec $argv
+            set --global __preexec_ran
+        end
+    end
+    function __on_fish_postexec --on-event fish_postexec
+        set --global __postexec_pipestatus $pipestatus
+        if set --query __preexec_ran
+            __on_postexec $argv
+        end
+        set --erase __preexec_ran
     end
 end
+
 if set --query TMUX
     function __update_variables_from_tmux --on-event fish_preexec
         inherit_variables_from_tmux SSH_AUTH_SOCK SSH_CONNECTION
     end
 end
 
-function __on_fish_postexec --on-event fish_postexec
-    set --global __postexec_pipestatus $pipestatus
-    if set --query __preexec_ran
-        __on_postexec $argv
+
+# Backwards compatibility.
+
+if not fish_version_at_least 3.2.0
+    function fish_is_root_user
+        contains -- $USER root toor
     end
-    set --erase __preexec_ran
 end
 
 

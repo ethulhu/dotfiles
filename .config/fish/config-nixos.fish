@@ -5,6 +5,8 @@ set --prepend PATH ~/.local/bin/linux
 set --prepend fish_function_path ~/.config/fish/functions/nixos
 set --prepend fish_complete_path ~/.config/fish/completions/nixos
 
+# TODO: maybe rename to `fish_command_not_found` once everything is >= 3.2.0?
+
 function __fish_command_not_found_handler --on-event fish_command_not_found --argument-names command
     set -l db '/nix/var/nix/profiles/per-user/root/channels/nixos/programs.sqlite'
     if [ ! -f $db ]

@@ -1,4 +1,7 @@
-function fish_prompt --description 'Write out the prompt'
+set --local function_name (basename (status filename) .fish)
+
+function $function_name --description 'Write out the prompt'
+
     if [ $TERM = 'dumb' ]
         return
     end
@@ -6,7 +9,7 @@ function fish_prompt --description 'Write out the prompt'
     set --local color_cwd $fish_color_cwd
     set --local suffix '>'
 
-    if contains -- $USER root toor
+    if fish_is_root_user
         if set --query fish_color_cwd_root
             set color_cwd $fish_color_cwd_root
         end
