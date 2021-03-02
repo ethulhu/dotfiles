@@ -2,8 +2,6 @@ alias l='ls -1F'
 alias la='ls -1aF'
 alias ll='ls -lashF'
 
-alias rm='rm -i'
-
 alias mkdir='mkdir -p'
 alias xargs='xargs -n1'
 
