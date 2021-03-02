@@ -11,7 +11,7 @@ set --export LESS '-R'
 # CDPATH is used to expand non-absolute paths as well as $PWD,
 # e.g. `cd linux` -> `cd ~/src/linux`.
 # If exported, other `cd` implementations might become noisy.
-set --global CDPATH . ~/src
+set --global CDPATH . ~/src ~
 
 
 # MANPATH is inferred from PATH, so ~/.local/bin implies ~/.local/share/man.
