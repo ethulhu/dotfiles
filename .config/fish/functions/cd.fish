@@ -13,9 +13,7 @@ function $function_name --wraps cd --argument-names path
 
     if not status is-interactive
         __builtin_cd $argv
-    end
-
-    if [ "$path" -a -f "$path" ]
+    else if [ "$path" -a -f "$path" ]
         __builtin_cd (dirname $path)
     else
         __builtin_cd $argv
