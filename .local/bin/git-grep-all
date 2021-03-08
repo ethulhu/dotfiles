@@ -1,0 +1,43 @@
+#!/bin/sh
+
+set -eu
+
+# TODO: Support `--` separator.
+# For example:
+#   $ git grep-all -l foo -- tools/Makefile
+# Should expand to:
+#   $ git grep -l foo <commit> <commit> ... -- tools/Makefile
+
+
+readonly description='git-grep through all commits'
+readonly this="$(basename "${0}")"
+
+usage() {
+  echo 'Usage:'
+  echo "    ${this} [args] <pattern> [-- [args]]"
+  echo
+  echo 'Description:'
+  echo "    ${description}"
+}
+
+case "$*" in
+  --help|-h)
+    usage
+    exit
+    ;;
+
+  --description)
+    echo "${description}"
+    exit
+    ;;
+esac
+
+if [ $# -eq 0 ]; then
+  usage
+  exit 1
+fi
+
+all_commits="$(git rev-list --all)"
+readonly all_commits
+
+git grep $@ ${all_commits}
