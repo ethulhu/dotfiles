@@ -12,7 +12,7 @@ fi
 readonly glob="${1}"
 
 IFS=':'
-find $PATH -maxdepth 1 -type f -iname "${glob}" 2>/dev/null | while read binary; do
+find $PATH -maxdepth 1 -type f -iname "${glob}" 2>/dev/null | while read -r binary; do
   if [ -x "${binary}" ]; then
     echo "${binary}"
   fi
