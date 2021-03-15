@@ -22,57 +22,65 @@ set --global --path fish_user_paths \
     ~/.cargo/bin
 
 
-# OCaml.
-if command --quiet opam; and opam var prefix >/dev/null ^/dev/null
-    if status is-interactive
-        # This stops `opam switch` telling us to reload the environment.
-        set --global --export OPAMNOENVNOTICE true
-    end
-
-    function __update_opam_env --on-event fish_preexec --on-event fish_postexec
-        if [ (opam var prefix) != "$OPAM_SWITCH_PREFIX" ]
-            # Source everything except PATH.
-            opam env --shell=fish --readonly \
-                | string match --invert 'set -gx PATH *' \
-                | source
-
-            # Trigger updating the PATH.
-            emit opam_switch_changed
+# Set up OCaml if `opam` has been added to the PATH.
+function __set_up_opam --on-variable PATH
+    if command --quiet opam; and opam var prefix >/dev/null ^/dev/null
+        if set --query __opam_set_up
+            return
         end
-    end
+        set --global __opam_set_up true
 
-    function __update_opam_path --on-event opam_switch_changed
-        set --local opam_root (opam var root)
-        set --local new_switch_bin (opam var prefix)/bin
+        if status is-interactive
+            # This stops `opam switch` telling us to reload the environment.
+            set --global --export OPAMNOENVNOTICE true
+        end
 
-        # Replace all paths matching $opam_root/*.
-        for path in $fish_user_paths
-            if string match --quiet -- "$opam_root/*" $path
-                set fish_user_paths[(contains --index -- $path $PATH)] $new_switch_bin
+        function __update_opam_env --on-event fish_preexec --on-event fish_postexec
+            if [ (opam var prefix) != "$OPAM_SWITCH_PREFIX" ]
+                # Source everything except PATH.
+                opam env --shell=fish --readonly \
+                    | string match --invert 'set -gx PATH *' \
+                    | source
+
+                # Trigger updating the PATH.
+                emit opam_switch_changed
             end
         end
 
-        # If there were no pre-existing $opam_root/* matches, prepend it.
-        if not contains -- $new_switch_bin $fish_user_paths
-            set --prepend fish_user_paths $new_switch_bin
+        function __update_opam_path --on-event opam_switch_changed
+            set --local opam_root (opam var root)
+            set --local new_switch_bin (opam var prefix)/bin
+
+            # Replace all paths matching $opam_root/*.
+            for path in $fish_user_paths
+                if string match --quiet -- "$opam_root/*" $path
+                    set fish_user_paths[(contains --index -- $path $PATH)] $new_switch_bin
+                end
+            end
+
+            # If there were no pre-existing $opam_root/* matches, prepend it.
+            if not contains -- $new_switch_bin $fish_user_paths
+                set --prepend fish_user_paths $new_switch_bin
+            end
         end
-    end
 
-    # Erase any opam switches in PATH from fish's caller (e.g. tmux).
-    set --local opam_root (opam var root)
-    for path in $PATH
-        if string match --quiet -- "$opam_root/*" $path
-            set --erase PATH[(contains --index -- $path $PATH)]
+        # Erase any opam switches in PATH from fish's caller (e.g. tmux).
+        set --local opam_root (opam var root)
+        for path in $PATH
+            if string match --quiet -- "$opam_root/*" $path
+                set --erase PATH[(contains --index -- $path $PATH)]
+            end
         end
+
+        # Initial opam environment.
+        __update_opam_env
+        __update_opam_path
+
+        alias ocaml='rlwrap ocaml'
+        alias ml='ocaml'
     end
-
-    # Initial opam environment.
-    __update_opam_env
-    __update_opam_path
-
-    alias ocaml='rlwrap ocaml'
-    alias ml='ocaml'
 end
+__set_up_opam
 
 
 if command --quiet direnv
