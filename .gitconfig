@@ -55,6 +55,9 @@
 [includeIf "gitdir:~/.dotfiles"]
 	path = ~/.gitconfig-dotfiles
 
+[diff]
+	wsErrorHighlight = all
+
 # `man tigrc` for more options.
 [tig]
 	ignore-case = smart-case
