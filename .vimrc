@@ -96,7 +96,8 @@ augroup settings-by-filetype
 	autocmd FileType sh     :call s:TabsAreSpaces(2)
 	autocmd FileType scad   :call s:TabsAreSpaces(4)
 
-	autocmd FileType text   setlocal breakindent lbr
+	autocmd FileType text      setlocal breakindent lbr
+	autocmd FileType markdown  setlocal breakindent lbr
 
 	autocmd FileType litmus     setlocal commentstring=(*%s*)
 	autocmd FileType fish       setlocal commentstring=#\ %s
