@@ -91,10 +91,11 @@ endfunction
 augroup settings-by-filetype
 	autocmd!
 	autocmd FileType fish   :call s:TabsAreSpaces(4)
+	autocmd FileType html   :call s:TabsAreSpaces(2)
 	autocmd FileType nix    :call s:TabsAreSpaces(2)
 	autocmd FileType ocaml  :call s:TabsAreSpaces(2)
-	autocmd FileType sh     :call s:TabsAreSpaces(2)
 	autocmd FileType scad   :call s:TabsAreSpaces(4)
+	autocmd FileType sh     :call s:TabsAreSpaces(2)
 
 	autocmd FileType text      setlocal breakindent lbr
 	autocmd FileType markdown  setlocal breakindent lbr
