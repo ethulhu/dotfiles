@@ -29,8 +29,6 @@ def main():
 
     args = parser.parse_args()
 
-    print(args.filename)
-
     if args.filetype in FORMATTERS:
         formatter = FORMATTERS[args.filetype]
 
