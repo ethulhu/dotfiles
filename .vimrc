@@ -49,6 +49,9 @@ map <leader>Y "+Y
 map <leader>P "+P
 map <leader>D "+D
 
+" Say the current selection aloud.
+map S :w !say<CR>
+
 
 " Enable the manpage viewer, via `:Man <name>`.
 runtime ftplugin/man.vim
