@@ -28,6 +28,7 @@
 	ads = add
 	ceckout = checkout
 	checkoutt = checkout
+	comit = commit
 	commid = commit
 	dad = add
 	dd = add
