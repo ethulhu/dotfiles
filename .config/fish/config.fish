@@ -24,7 +24,7 @@ set --global --path fish_user_paths \
 
 # Set up OCaml if `opam` has been added to the PATH.
 function __set_up_opam --on-variable PATH
-    if command --quiet opam; and opam var prefix >/dev/null ^/dev/null
+    if command --quiet opam; and command opam var prefix >/dev/null ^/dev/null
         if set --query __opam_set_up
             return
         end
@@ -36,9 +36,9 @@ function __set_up_opam --on-variable PATH
         end
 
         function __update_opam_env --on-event fish_preexec --on-event fish_postexec
-            if [ (opam var prefix) != "$OPAM_SWITCH_PREFIX" ]
+            if [ (command opam var prefix) != "$OPAM_SWITCH_PREFIX" ]
                 # Source everything except PATH.
-                opam env --shell=fish --readonly \
+                command opam env --shell=fish --readonly \
                     | string match --invert 'set -gx PATH *' \
                     | source
 
@@ -48,8 +48,8 @@ function __set_up_opam --on-variable PATH
         end
 
         function __update_opam_path --on-event opam_switch_changed
-            set --local opam_root (opam var root)
-            set --local new_switch_bin (opam var prefix)/bin
+            set --local opam_root (command opam var root)
+            set --local new_switch_bin (command opam var prefix)/bin
 
             # Replace all paths matching $opam_root/*.
             for path in $fish_user_paths
@@ -65,7 +65,7 @@ function __set_up_opam --on-variable PATH
         end
 
         # Erase any opam switches in PATH from fish's caller (e.g. tmux).
-        set --local opam_root (opam var root)
+        set --local opam_root (command opam var root)
         for path in $PATH
             if string match --quiet -- "$opam_root/*" $path
                 set --erase PATH[(contains --index -- $path $PATH)]
@@ -78,6 +78,19 @@ function __set_up_opam --on-variable PATH
 
         alias ocaml='rlwrap ocaml'
         alias ml='ocaml'
+
+        function opam \
+                --wraps opam \
+                --description 'Unset OCaml-related environment variables before running opam'
+
+            # `env -u` isn't in POSIX, but is on macOS & Debian & NixOS.
+            # https://pubs.opengroup.org/onlinepubs/9699919799/utilities/env.html
+            env \
+                -u DUNE_CACHE \
+                -u DUNE_PROFILE \
+                -u OCAMLRUNPARAM \
+                opam $argv
+        end
     end
 end
 __set_up_opam
