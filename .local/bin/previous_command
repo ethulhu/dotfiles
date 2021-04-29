@@ -1,0 +1,59 @@
+#!/usr/bin/env python3
+"""Find the path of the previous binary in PATH with the same name as the one passed in."""
+
+import sys
+import os
+import argparse
+
+from typing import Iterable
+
+THIS = os.path.basename(__file__)
+
+
+def die(msg: str):
+    print(msg, file=sys.stderr)
+    sys.exit(1)
+
+
+def find_matching_executable(name: str) -> Iterable[str]:
+    dirs = (p for p in os.getenv('PATH', default=os.defpath).split(':') if p)
+    for dir in dirs:
+        try:
+            with os.scandir(dir) as files:
+                for f in files:
+                    if f.name == name and f.is_file:
+                        # if os.access(f.path, os.X_OK):
+                        yield f.path
+        except FileNotFoundError:
+            pass
+
+
+def absolute_path(raw: str) -> str:
+    if not os.path.isabs(raw):
+        raise ValueError('must be an absolute path')
+    return raw
+
+
+def main(argv):
+    del argv
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('binary', type=absolute_path,
+                        help='Absolute path to binary')
+
+    args = parser.parse_args()
+
+    name = os.path.basename(args.binary)
+    haystack = find_matching_executable(name)
+    for binary in haystack:
+        if binary == args.binary:
+            try:
+                print(next(haystack))
+                sys.exit(0)
+            except StopIteration:
+                die(f'{THIS}: Needle is bottom of haystack: {args.binary}')
+
+    die(f'{THIS}: Could not find needle: {args.binary}')
+
+
+if __name__ == '__main__':
+    main(sys.argv)
