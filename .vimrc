@@ -78,6 +78,7 @@ augroup set-filetype
 
 	autocmd BufRead,BufNewFile */.ssh/config*     setlocal filetype=sshconfig
 	autocmd BufRead,BufNewFile .Brewfile,Brewfile setlocal filetype=ruby
+	autocmd BufRead,BufNewFile Jenkinsfile        setlocal filetype=groovy
 	autocmd BufRead,BufNewFile dune,dune-project,dune-workspace,dune-workspace.* setlocal filetype=dune
 augroup end
 
@@ -95,6 +96,7 @@ augroup settings-by-filetype
 	autocmd!
 	autocmd FileType fish      :call s:TabsAreSpaces(4)
 	autocmd FileType gitcommit :call s:TabsAreSpaces(2)
+	autocmd FileType groovy    :call s:TabsAreSpaces(2)
 	autocmd FileType html      :call s:TabsAreSpaces(2)
 	autocmd FileType nix       :call s:TabsAreSpaces(2)
 	autocmd FileType ocaml     :call s:TabsAreSpaces(2)
