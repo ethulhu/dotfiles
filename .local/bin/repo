@@ -38,13 +38,13 @@ run_subcommand() {
   shift
   case "${subcommand}" in
     help)
-      help $@
+      help "$@"
       ;;
 
     *)
       local maybe_cmd="${this}-${subcommand}"
       if command -v "${maybe_cmd}" >/dev/null; then
-        ${maybe_cmd} $@
+        ${maybe_cmd} "$@"
       else
         echo "${this}: Unknown subcommand: ${subcommand}"
         exit 1
@@ -115,4 +115,4 @@ if [ $# -eq 0 ]; then
   exit 1
 fi
 
-run_subcommand $@
+run_subcommand "$@"
