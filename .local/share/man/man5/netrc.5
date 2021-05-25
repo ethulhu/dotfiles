@@ -1,0 +1,23 @@
+.TH MAKEFILE 5 "May 2021" "Dotfiles" "Eth's Dotfiles Manual"
+.SH NAME
+netrc \- a summary of the netrc file format
+.SH EXAMPLE
+.SS Simple
+.RS
+.nf
+machine example.com
+login eth
+password hunter2
+.fi
+.RE
+.SS Whitespace
+.PP
+Some clients (but not all) can accept quoted passwords with spaces:
+.PP
+.RS
+.nf
+machine example.com
+login eth
+password "hunter2 aligator7"
+.fi
+.RE
