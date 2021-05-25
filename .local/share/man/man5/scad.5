@@ -1,0 +1,306 @@
+.TH MARKDOWN 5 "May 2021" "Dotfiles" "Eth's Dotfiles Manual"
+.SH NAME
+scad \- a syntax reference for OpenSCAD files
+
+.SH DESCRIPTION
+.SS Syntax
+.PP
+.TS
+l l
+---
+l l.
+Term	Meaning
+\fIvar\fR = \fIvalue\fR;	assignment
+\fIvar\fR = \fIcond\fR ? \fIvalue\fR : \fIvalue\fR;	ternary assignment
+\fIvar\fR = function (\fIx\fR) ...;	function literal / closure
+module \fIname\fR(...) { ... }	define an object or, using \fBchildren()\fR, a transformer on objects
+function \fIname\fR(...) = ...	define a function over values
+include <\fIname\fR.scad>	raw textual include
+use <\fIname\fR.scad>	import modules & functions, but don't execute bare statements
+.TE
+.nf
+
+.fi
+
+.SS Lists
+.PP
+.TS
+l l
+---
+l l.
+Term	Meaning
+\fIlist\fR = [..., ..., ...];	create a list
+\fIvar\fR = \fIlist\fR[2];	index a list (from 0)
+\fIvar\fR = \fIlist\fR.z;	dot notation indexing (x/y/z)
+.TE
+
+.SS List Comprehensions
+.PP
+.TS
+l l
+---
+l l.
+Term	Meaning
+[ for (\fIi\fR = \fIrange|list\fR) \fIexpr\fR ]	generate
+[ for (\fIinit\fR; \fIcondition\fR; \fInext\fR) \fIexpr\fR ]	generate
+[ for (\fIi\fR = ...) each \fIi\fR ]	flatten
+[ for (\fIi\fR = ...) if (\fIcond\fR) \fIexpr\fR ]	condition
+[ for (\fIi\fR = ...) if (\fIcond\fR) \fIexpr\fR else \fIexpr\fR ]	condition
+[ for (\fIi\fR = ...) let (\fIa\fR = ..., ...) \fIexpr\fR ]	assignment
+.TE
+
+.SS Flow Control
+.PP
+.nf
+if (\fIcond\fR) { ... }
+let (\fIvar\fR = \fIvalue\fR, ...) \fIexpr\fR
+for (\fIi\fR = [\fIstart\fR : \fIend\fR]) { ... }
+for (\fIi\fR = [\fIstart\fR : \fIstep\fR : \fIend\fR]) { ... }
+for (\fIi\fR = \fIlist\fR) { ... }
+for (\fIi\fR = ..., \fIj\fR = ..., ...) { ... }
+intersection_for(...) { ... }
+.fi
+
+.SS Constants
+.PP
+.TS
+l l
+---
+l l.
+Term	Meaning
+undef	undefined value
+PI	mathematical constant pi (~3.14159)
+.TE
+
+.SS Operators
+.PP
+.TS
+l l
+---
+l l.
+Term	Meaning
+\fIn\fR + \fIm\fR	addition
+\fIn\fR - \fIm\fR	subtraction
+\fIn\fR * \fIm\fR	multiplication
+\fIn\fR / \fIm\fR	division
+
+\fIn\fR % \fIm\fR	modulo
+\fIn\fR ^ \fIm\fR	exponentiation
+
+\fIn\fR < \fIm\fR	less than
+\fIn\fR <= \fIm\fR	less or equal
+\fIb\fR == \fIc\fR	equal
+\fIb\fR != \fIc\fR	not equal
+\fIn\fR >= \fIm\fR	greater or equal
+\fIn\fR > \fIm\fR	greater than
+
+\fIb\fR && \fIc\fR	logical AND
+\fIb\fR || \fIc\fR	logical OR
+!\fIb\fR	logical NOT
+.TE
+
+.SS 2D
+.PP
+.nf
+circle(\fIradius\fR | d = \fIdiameter\fR)
+polygon([\fIpoint\fR, ...])
+polygon([\fIpoint\fR, ...], [\fIpath\fR, ...])
+projection() \fI3d_object_expr\fR
+square(\fIsize\fR, \fIcenter\fR)
+square([\fIwidth\fR, \fIheight\fR], \fIcenter\fR)
+import("\fIname\fR.\fIext\fR")
+.fi
+
+.SS 2D Text
+.PP
+.nf
+text(\fItext\fR, \fIsize\fR, \fIfont\fR,
+     \fIhalign\fR, \fIvalign\fR, \fIspacing\fR,
+     \fIdirection\fR, \fIlanguage\fR, \fIscript\fR)
+.fi
+.TS
+l l l
+-----
+l l l.
+Parameter	Type	Meaning
+text	string	text to generate
+size	number	default \fB10\fR
+font	string	name of font via fontconfig (NOT path to .ttf)
+halign	string	\fBleft\fR | center | right
+valign	string	top | center | \fBbaseline\fR | bottom
+spacing	number	character spacing, default \fB1\fR
+direction	string	\fBltr\fR | rtl | ttb (top-to-bottom) | btt (bottom-to-top)
+language	string	default \fBen\fR
+script	string	default \fBlatin\fR
+.TE
+
+.SS 3D
+.PP
+.nf
+cube(\fIsize\fR, \fIcenter\fR)
+cube([\fIwidth\fR, \fIdepth\fR, \fIheight\fR], \fIcenter\fR)
+cylinder(h = \fIheight\fR, r = \fIradius\fR | d = \fIdiameter\fR, \fIcenter\fR)
+cylinder(h = \fIheight\fR, r1 = \fIradius\fR | d1 = \fIdiameter\fR, r2 = \fIradius\fR | d2 = \fIdiameter\fR, \fIcenter\fR)
+linear_extrude(height = \fIheight\fR, center = \fItrue|false\fR, convexity = \fIn\fR, twist = \fIn\fR, slices = \fIn\fR)
+polyhedron(points = [[\fIx\fR, \fIy\fR, \fIz\fR], ...], faces = [[[\fIx\fR, \fIy\fR, \fIz\fR], ...], ...], convexity = \fIn\fR)
+polyhedron(points = [[\fIx\fR, \fIy\fR, \fIz\fR], ...], triangles = [[[\fIx\fR, \fIy\fR, \fIz\fR], \fIpoint\fR, \fIpoint\fR], ...], convexity = \fIn\fR)
+rotate_extrude(angle = \fIn\fR, convexity = \fIn\fR)
+sphere(\fIradius\fR | d = \fIdiameter\fR)
+surface(file = "\fIname\fR.\fIext\fR", center = \fItrue|false\fR, convexity = \fIn\fR)
+import("\fIname\fR.\fIext\fR")
+.fi
+
+.SS Transformations
+.PP
+.nf
+color("#\fIhexvalue\fR")
+color("\fIcolorname\fR", alpha = \fI0.0-1.0\fR)
+color([\fIr\fR, \fIg\fR, \fIb\fR, \fIa\fR])
+hull()
+minkowski()
+mirror([\fIx\fR, \fIy\fR, \fIz\fR])
+multmatrix(\fIm\fR)
+offset(r = \fIradius\fR | delta = \fIoffset\fR, chamfer = \fItrue|false\fR)
+resize([\fIx\fR, \fIy\fR, \fIz\fR], auto = \fItrue|false\fR)
+resize([\fIx\fR, \fIy\fR, \fIz\fR], auto = [\fItrue\fR, \fItrue\fR, \fIfalse\fR])
+rotate(a = \fIangle\fR, [\fIx\fR, \fIy\fR, \fIz\fR])
+rotate(a = \fIangle\fR, v = [\fIaxis_x\fR, \fIaxis_y\fR, \fIaxis_z\fR])
+scale([\fIx\fR, \fIy\fR, \fIz\fR])
+translate([\fIx\fR, \fIy\fR, \fIz\fR])
+.fi
+
+.SS Functions
+.PP
+.TS
+l l
+---
+l l.
+Term	Meaning
+chr(\fIint|range\fR, ...)	convert integers or ranges of integers to characters
+concat(\fIvalue\fR, ...)	concatinate elements or lists (does not flatten)
+lookup(\fIkey\fR, [[\fIk\fR,\fIv\fR], ...])	lookup a value in a table, linearly interpolate if there is no exact match
+ord(\fIstr\fR)	convert the first character of a string to a Unicode codepoint
+parent_module(\fIindex\fR)	returns the \fIindex\fRth parent of the calling module (from 0)
+str(\fIvalue\fR, ...)	convert all arguments to strings and concatinate
+version()	OpenSCAD version as a 3-vector, [yyyy, mm, dd]
+version_num()	OpenSCAD version as a number, yyyymmdd
+.TE
+
+.SS Search
+.PP
+.TS
+l l
+---
+l l.
+Term	Meaning
+search(\fIneedle\fR, \fIvector_haystack\fR, num_returns_per_match = \fIn\fR)	find element
+search([\fIstring_needle\fR], \fIstring_haystack\fR, num_returns_per_match = \fIn\fR)	find substring
+search([\fIneedle1\fR, ...], \fIvector_haystack\fR, num_returns_per_match = \fIn\fR)	find multiple elements
+search([[\fIneedle1\fR, ...]], \fIvector_haystack\fR, num_returns_per_match = \fIn\fR)	find complete vector
+.TE
+
+.SS Boolean operations
+.PP
+.nf
+union()
+difference()
+intersection()
+.fi
+
+.SS Mathematical
+.PP
+.TS
+l l
+---
+l l.
+Term	Meaning
+abs(\fIn\fR)	absolute numerical value
+sign(\fIn\fR)	a unit value of the sign (e.g. -5 = -1, 0 = 0, 12 = 1)
+sin(\fIn\fR)	sine
+cos(\fIn\fR)	cosine
+tan(\fIn\fR)	tangent
+acos(\fIn\fR)	inverse cosine
+asin(\fIn\fR)	inverse sine
+atan(\fIn\fR)	inverse tan
+atan2(\fIx\fR, \fIy\fR)	angle between the x-axis and the vector [\fIx\fR, \fIy\fR]
+floor(\fIn\fR)	round down to nearest integer
+round(\fIn\fR)	round to nearest integer
+ceil(\fIn\fR)	round up to nearest integer
+ln(\fIn\fR)	natural logarithm
+len(\fIvector_or_string\fR)	string or vector length
+log(\fIn\fR)	logarithm to base 10
+pow(\fIbase\fR, \fIexponent\fR)	\fIbase\fR ^ \fIexponent\fR
+sqrt(\fIn\fR)	square root
+exp(\fIn\fR)	e ^ \fIn\fR
+rands(\fImin\fR, \fImax\fR, \fIn\fR, \fIseed\fR)	return \fIn\fR random numbers between \fImin\fR and \fImax\fR, with optional \fIseed\fR
+min([\fIn\fR, ...])	minimum of the given vector
+min(\fIn\fR, ...)	minimum of the given parameters
+max([\fIn\fR, ...])	maximum of the given vector
+max(\fIn\fR, ...)	maximum of the given parameters
+norm(\fIvector\fR)	the Euclidian norm (spatial length) of a vector
+cross(\fIvector\fR, \fIvector\fR)	the cross-product of 2 vectors
+.TE
+.nf
+.fi
+
+.SS Type test functions
+.PP
+.nf
+is_undef
+is_bool
+is_num
+is_string
+is_list
+is_function
+.fi
+
+.SS Other
+.PP
+.TS
+l l
+---
+l l.
+Term	Meaning
+echo(...)	convert arguments with \fBstr()\fR, and print to compilation subwindow
+assert(\fIcond\fR, \fImessage\fR)	fail if not \fIcond\fR, with optional \fImessage\fR
+render(\fIconvexity\fR) \fIexpr\fR	force a full render, even in preview mode
+children()	all children of a transformer module, like HTML5 \fB<slot>\fR
+children(\fIindex\fR)	the \fIindex\fRth child of a transformer module (from 0)
+children([\fIindex\fR, ...])	multiple children of a transformer module
+children([\fIstart\fR : \fIend\fR])	range over the children of a transformer module
+children([\fIstart\fR : \fIstep\fR : \fIend\fR])	range over the children of a transformer module
+.TE
+
+.SS Modifier Characters
+.PP
+.TS
+l l
+---
+l l.
+Term	Meaning
+*	disable
+!	show only
+#	highlight / debug
+%	transparent / background
+.TE
+
+.SS Special Variables
+.PP
+.TS
+l l
+---
+l l.
+Term	Meaning
+$fa	minimum angle
+$fs	minimum size
+$fn	number of fragments
+$t	animation step
+$vpr	viewport rotation angles in degrees
+$vpt	viewport translation
+$vpd	viewport camera distance
+$children	number of module children
+$preview	true in F5 preview, false for F6
+.TE
+
+.SH LINKS
+https://openscad.org/cheatsheet/
