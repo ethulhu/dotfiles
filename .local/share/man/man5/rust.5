@@ -1,0 +1,157 @@
+.TH RUST 5 "June 2021" "Dotfiles" "Eth's Dotfiles Manual"
+.SH NAME
+rust \- useful Rust idioms
+
+.SH USEFUL TRAITS
+.SS To String
+.PP
+Conversion to string is implied by implementing the \fBfmt::Display\fR trait:
+.PP
+.RS
+.nf
+use std::fmt;
+
+struct Foo {
+  is_foo: bool,
+}
+
+impl fmt::Display for Foo {
+  fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
+    match self.is_foo {
+      true => write!(w, "foo"),
+      false => write!(w, "not foo"),
+    }
+  }
+}
+
+let f = Foo { is_foo: false };
+let s = f.to_string();
+.fi
+.RE
+
+.SS From String
+.PP
+Conversion from string is done by implementing the \fBFromStr\fR trait:
+.PP
+.RS
+.nf
+struct Foo {
+  is_foo: bool,
+}
+
+impl FromStr for Foo {
+  type Err = FooErr;
+
+  fn from_string(s: &str) -> Result<Self, Self::Err> {
+    match s {
+      "foo" => Ok(Foo { is_foo: true }),
+      "foo!" => Err(FooErr),
+      _ => Ok(Foo { is_foo: false }),
+    }
+  }
+}
+
+let f: Foo = "foo".parse()?;
+.fi
+.RE
+
+.SS Conversion without error
+.PP
+Conversions between abitrary types that cannot cause errors uses the \fBFrom\fR trait:
+.PP
+.RS
+.nf
+impl From<Foo> for Vec<u8> {
+  fn from(foo: Foo) -> Self {
+    ...
+  }
+}
+
+let f = Foo { is_foo: false };
+let v1: Vec<u8> = Vec<u8>::from(f);
+let v2: Vec<u8> = f.into();
+.fi
+.RE
+
+.SS Conversion with error
+.PP
+Conversions between abitrary types that can cause errors uses the \fBTryFrom\fR trait:
+.PP
+.RS
+.nf
+impl TryFrom<Vec<u8>> for Foo {
+  type Error = ...;
+
+  fn try_from(v: Vec<u8>) -> Result<Self, Self::Error> {
+    ...
+  }
+}
+
+let v = vec![0, 1, 2];
+let f1 = Foo::try_from(v)?;
+let f2 = v.try_into()?;
+.fi
+.RE
+
+.SS Default
+.PP
+The \fBDefault\fR trait creates a \fB::default()\fR method, and also enables e.g. \fBOption::unwrap_or_default()\fR:
+.PP
+.RS
+.nf
+struct Foo {
+  foo: String
+}
+
+// Custom Default implementation.
+impl Default for Foo {
+  fn default() -> Self {
+    Foo { foo: "hello" }
+  }
+}
+
+// Because all the members of Bar implement Default,
+// we can automatically derive a Default implementation.
+#[derive(Default)]
+struct Bar {
+  foo: Foo,
+  bar: String,
+}
+
+let f = Foo::default();
+.fi
+.RE
+
+.SH CLOSURES
+.SS Sharing state
+.PP
+From \fIhttps://rust-unofficial.github.io/patterns/idioms/pass-var-to-closure.html\fR:
+.PP
+.RS
+.nf
+use std::rc::Rc;
+
+let num1 = Rc::new(1);
+let num2 = Rc::new(2);
+let num3 = Rc::new(3);
+let closure = {
+    // `num1` is moved
+    let num2 = num2.clone();  // `num2` is cloned
+    let num3 = num3.as_ref();  // `num3` is borrowed
+    move || {
+        *num1 + *num2 + *num3;
+    }
+};
+.fi
+.RE
+
+.SH LINKS
+.TP
+The Rust programming language
+.I https://doc.rust-lang.org/book/
+.TP
+Rust by example
+.I https://doc.rust-lang.org/rust-by-example/
+.TP
+Rust design patterns
+.I https://rust-unofficial.github.io/patterns/
