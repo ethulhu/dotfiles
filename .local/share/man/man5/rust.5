@@ -145,6 +145,109 @@ let closure = {
 .fi
 .RE
 
+.SH TESTS
+.SS In-line unit tests
+.PP
+Tests can be done in the same file as the code they are testing:
+.PP
+.RS
+.nf
+#[cfg(tests)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn a_test_that_panics() {
+        assert_eq!(2 + 2, 4);
+        assert_ne!(2 + 2, 5);
+
+        assert!("foo".is_empty());
+
+        let foo = "foo";
+        assert!(
+            foo.is_empty(),
+            "is not empty: {}",
+            foo,
+        );
+    }
+
+    #[test]
+    fn a_test_that_results() -> Result<(), String> {
+        if 2 + 2 == 4 {
+            Ok(())
+        } else {
+            Err("o no!".into())
+        }
+    }
+}
+.fi
+.RE
+
+.SS Documentation tests
+.PP
+Tests can also be run from documentation examples. The code block is run in an implicit \fBfn main()\fR with an \fBextern crate {crate_name}\fR:
+.PP
+.RS
+.nf
+/// This returns 3.
+///
+/// ```
+/// let result = my_crate::returns_three();
+/// assert_eq!(result, 3);
+/// ```
+fn returns_three() -> i32 {
+    3
+}
+.fi
+.RE
+
+.SH PRAGMAS
+.SS Ignoring warnings
+.PP
+Warnings can be ignored using \fB#[allow(\fI...\fB)]\fR:
+.PP
+.RS
+.nf
+#[allow(dead_code)]
+fn unused_function() {
+    unimplemented!(":(");
+}
+.fi
+.RE
+
+.SH MACROS
+.SS Trailing commas
+.PP
+The following is a trick to allow both trailing and non-trailing commas in a macro:
+.PP
+.RS
+.nf
+macro_rules! foo {
+    // Redirect to the other expansion.
+    ( $a:ident, $( $key:ident <- $value:literal, ) + ) => {
+        foo!($a, $($key <- $value), + )
+    };
+
+    // Actual macro.
+    ( $a:ident, $( $key:ident <- $value:literal ), * ) => {
+        . . .
+    };
+}
+
+foo!(
+  hey,
+  this <- works,
+  like <- this
+);
+
+foo!(
+  this,
+  also <- works,
+  as <- well,
+);
+.fi
+.RE
+
 .SH LINKS
 .TP
 The Rust programming language
