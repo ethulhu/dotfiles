@@ -12,16 +12,16 @@ Conversion to string is implied by implementing the \fBfmt::Display\fR trait:
 use std::fmt;
 
 struct Foo {
-  is_foo: bool,
+    is_foo: bool,
 }
 
 impl fmt::Display for Foo {
-  fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
-    match self.is_foo {
-      true => write!(w, "foo"),
-      false => write!(w, "not foo"),
+    fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
+        match self.is_foo {
+            true => write!(w, "foo"),
+            false => write!(w, "not foo"),
+        }
     }
-  }
 }
 
 let f = Foo { is_foo: false };
@@ -36,19 +36,19 @@ Conversion from string is done by implementing the \fBFromStr\fR trait:
 .RS
 .nf
 struct Foo {
-  is_foo: bool,
+    is_foo: bool,
 }
 
 impl FromStr for Foo {
-  type Err = FooErr;
+    type Err = FooErr;
 
-  fn from_string(s: &str) -> Result<Self, Self::Err> {
-    match s {
-      "foo" => Ok(Foo { is_foo: true }),
-      "foo!" => Err(FooErr),
-      _ => Ok(Foo { is_foo: false }),
+    fn from_string(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "foo" => Ok(Foo { is_foo: true }),
+            "foo!" => Err(FooErr),
+            _ => Ok(Foo { is_foo: false }),
+        }
     }
-  }
 }
 
 let f: Foo = "foo".parse()?;
@@ -62,9 +62,9 @@ Conversions between abitrary types that cannot cause errors uses the \fBFrom\fR 
 .RS
 .nf
 impl From<Foo> for Vec<u8> {
-  fn from(foo: Foo) -> Self {
-    ...
-  }
+    fn from(foo: Foo) -> Self {
+        ...
+    }
 }
 
 let f = Foo { is_foo: false };
@@ -80,11 +80,11 @@ Conversions between abitrary types that can cause errors uses the \fBTryFrom\fR 
 .RS
 .nf
 impl TryFrom<Vec<u8>> for Foo {
-  type Error = ...;
+    type Error = ...;
 
-  fn try_from(v: Vec<u8>) -> Result<Self, Self::Error> {
-    ...
-  }
+    fn try_from(v: Vec<u8>) -> Result<Self, Self::Error> {
+        ...
+    }
 }
 
 let v = vec![0, 1, 2];
@@ -100,22 +100,22 @@ The \fBDefault\fR trait creates a \fB::default()\fR method, and also enables e.g
 .RS
 .nf
 struct Foo {
-  foo: String
+    foo: String
 }
 
 // Custom Default implementation.
 impl Default for Foo {
-  fn default() -> Self {
-    Foo { foo: "hello" }
-  }
+    fn default() -> Self {
+        Foo { foo: "hello" }
+    }
 }
 
 // Because all the members of Bar implement Default,
 // we can automatically derive a Default implementation.
 #[derive(Default)]
 struct Bar {
-  foo: Foo,
-  bar: String,
+    foo: Foo,
+    bar: String,
 }
 
 let f = Foo::default();
