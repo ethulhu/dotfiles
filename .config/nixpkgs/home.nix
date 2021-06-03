@@ -3,16 +3,8 @@
 let
   inherit (pkgs) lib;
 
-  unstableTarball = fetchTarball
-    "https://github.com/NixOS/nixpkgs-channels/archive/nixpkgs-unstable.tar.gz";
-
   mozilla = import (fetchTarball
     "https://github.com/mozilla/nixpkgs-mozilla/archive/master.tar.gz");
-
-  unstable = self: super: {
-    pre-commit = (import unstableTarball { }).pre-commit;
-    ripcord = (import unstableTarball { }).ripcord;
-  };
 
   devPkgs = with pkgs; [
     clang
@@ -43,7 +35,7 @@ let
   ];
 
 in {
-  nixpkgs.overlays = [ mozilla unstable ];
+  nixpkgs.overlays = [ mozilla ];
 
   home.stateVersion = "20.03";
 
