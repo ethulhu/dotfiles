@@ -33,8 +33,10 @@ let
     chromium
     feh
     libreoffice
+    font-awesome
     mupdf
     renpy
+    powerline-fonts
     ripcord
     vlc
     wl-clipboard
@@ -81,6 +83,44 @@ in {
 
   programs.mpv = { enable = true; };
 
+  # This is needed for i3status-rust,
+  # for pkgs.powerline-fonts and pkgs.fonts-awesome.
+  fonts.fontconfig.enable = true;
+
+  programs.i3status-rust = {
+    enable = true;
+    bars = {
+      default = {
+        icons = "awesome5";
+        theme = "gruvbox-dark";
+        blocks = [
+          {
+            block = "net";
+            device = "wlp2s0";
+            format = "{signal_strength}|{ssid}|{ip}";
+            interval = 5;
+          }
+          { block = "sound"; }
+          {
+            block = "cpu";
+            interval = 1;
+            format = "{barchart} {utilization}%";
+          }
+          {
+            block = "battery";
+            interval = 10;
+            format = "{percentage}% {time}";
+          }
+          {
+            block = "time";
+            interval = 60;
+            format = "%a %d/%m %R";
+          }
+        ];
+      };
+    };
+  };
+
   wayland.windowManager.sway = {
     enable = true;
     config = {
@@ -125,7 +165,7 @@ in {
           };
         };
         statusCommand =
-          "i3status-rs /home/eth/.config/i3status-rust/config.toml";
+          "${config.programs.i3status-rust.package}/bin/i3status-rs ~/.config/i3status-rust/config-default.toml";
       }];
       startup = [{
         command = ''
