@@ -78,9 +78,4 @@ in {
   };
 
   programs.mpv = { enable = true; };
-
-  programs.ssh = {
-    enable = true;
-    forwardAgent = true;
-  };
 }
