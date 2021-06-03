@@ -7,7 +7,6 @@ let
     "https://github.com/mozilla/nixpkgs-mozilla/archive/master.tar.gz");
 
   devPkgs = with pkgs; [
-    clang
     entr
     gitAndTools.tig
     goimports
@@ -16,18 +15,22 @@ let
     jq
     latest.rustChannels.stable.rust
     nix-prefetch-git
+    nixfmt
+    p7zip
     pre-commit
     python3
     screen
+    unrar
   ];
 
   guiPkgs = with pkgs; [
+    brightnessctl
     chromium
+    eidolon
     feh
-    libreoffice
     font-awesome
     mupdf
-    renpy
+    pavucontrol
     powerline-fonts
     ripcord
     vlc
@@ -42,7 +45,6 @@ in {
   home.packages = with pkgs;
     [
       ag
-      appimage-run
       direnv
       dnsutils
       file
