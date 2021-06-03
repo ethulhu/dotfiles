@@ -106,11 +106,12 @@ augroup settings-by-filetype
 	autocmd FileType text      setlocal breakindent lbr
 	autocmd FileType markdown  setlocal breakindent lbr
 
-	autocmd FileType litmus     setlocal commentstring=(*%s*)
 	autocmd FileType fish       setlocal commentstring=#\ %s
+	autocmd FileType litmus     setlocal commentstring=(*%s*)
 	autocmd FileType nix        setlocal commentstring=#\ %s
 	autocmd FileType scad       setlocal commentstring=//\ %s
 	autocmd FileType swift      setlocal commentstring=//\ %s
+	autocmd FileType toml       setlocal commentstring=#\ %s
 	autocmd FileType xdefaults  setlocal commentstring=!\ %s
 augroup end
 
