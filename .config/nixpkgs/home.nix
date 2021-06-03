@@ -98,15 +98,20 @@ in {
       keybindings = let
         inherit (config.wayland.windowManager.sway.config)
           menu modifier terminal;
+        brightnessctl = "${pkgs.brightnessctl}/bin/brightnessctl";
       in lib.mkOptionDefault {
         "${modifier}+Return" = "exec ${terminal}";
         "${modifier}+Shift+c" = "kill";
-        "${modifier}+Shift+q" =
-          "exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -b 'Yes, exit sway' 'swaymsg exit'";
+        "${modifier}+Shift+q" = ''
+          exec swaynag \
+              --type warning \
+              --message 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' \
+              --button 'Yes, exit sway' 'swaymsg exit'
+        '';
         "${modifier}+Shift+r" = "reload";
         "${modifier}+p" = "exec ${menu}";
-        XF86MonBrightnessDown = "exec brightnessctl set 5%-";
-        XF86MonBrightnessUp = "exec brightnessctl set +5%";
+        XF86MonBrightnessDown = "exec ${brightnessctl} set 5%-";
+        XF86MonBrightnessUp = "exec ${brightnessctl} set +5%";
       };
       bars = [{
         position = "top";
