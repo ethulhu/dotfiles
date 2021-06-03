@@ -1,16 +1,15 @@
 { pkgs, ... }:
 
 let
-  unstableTarball =
-    fetchTarball
-      https://github.com/NixOS/nixpkgs-channels/archive/nixpkgs-unstable.tar.gz;
+  unstableTarball = fetchTarball
+    "https://github.com/NixOS/nixpkgs-channels/archive/nixpkgs-unstable.tar.gz";
 
   mozilla = import (fetchTarball
-    https://github.com/mozilla/nixpkgs-mozilla/archive/master.tar.gz);
+    "https://github.com/mozilla/nixpkgs-mozilla/archive/master.tar.gz");
 
   unstable = self: super: {
-    pre-commit = (import unstableTarball {}).pre-commit;
-    ripcord = (import unstableTarball {}).ripcord;
+    pre-commit = (import unstableTarball { }).pre-commit;
+    ripcord = (import unstableTarball { }).ripcord;
   };
 
   devPkgs = with pkgs; [
@@ -40,53 +39,45 @@ let
   ];
 
 in {
-  nixpkgs.overlays = [
-    mozilla
-    unstable
-  ];
+  nixpkgs.overlays = [ mozilla unstable ];
 
   home.stateVersion = "20.03";
 
-  home.packages = with pkgs; [
-    ag
-    appimage-run
-    direnv
-    dnsutils
-    file
-    go
-    htop
-    iotop
-    killall
-    moreutils
-    mosh
-    mosquitto
-    mu
-    newsboat
-    nixops
-    reuse
-    rlwrap
-    scim
-    tmux
-    unzip
-    wget
-    whois
-    zip
-  ] ++ devPkgs ++ guiPkgs;
+  home.packages = with pkgs;
+    [
+      ag
+      appimage-run
+      direnv
+      dnsutils
+      file
+      go
+      htop
+      iotop
+      killall
+      moreutils
+      mosh
+      mosquitto
+      mu
+      newsboat
+      nixops
+      reuse
+      rlwrap
+      scim
+      tmux
+      unzip
+      wget
+      whois
+      zip
+    ] ++ devPkgs ++ guiPkgs;
 
-  programs.firefox = {
-    enable = true;
-  };
+  programs.firefox = { enable = true; };
 
   programs.alacritty = {
     enable = true;
-    settings = {
-      env.TERM = "xterm-256color";
-    };
+    settings = { env.TERM = "xterm-256color"; };
   };
 
-  programs.mpv = {
-    enable = true;
-  };
+  programs.mpv = { enable = true; };
 
   programs.ssh = {
     enable = true;
