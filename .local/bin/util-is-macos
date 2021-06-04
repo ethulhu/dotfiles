@@ -1,0 +1,34 @@
+#!/bin/sh
+
+set -eu
+
+readonly description='Is the host running macOS?'
+readonly this="$(basename "${0}")"
+
+usage() {
+  echo 'Usage:'
+  echo "    ${this}"
+  echo
+  echo 'Description:'
+  echo "    ${description}"
+}
+
+case "$*" in
+  --help|-h)
+    usage
+    exit
+    ;;
+
+  --description)
+    echo "${description}"
+    exit
+    ;;
+esac
+
+if [ $# -ne 0 ]; then
+  usage
+  exit 1
+fi
+
+
+test "$(uname -s)" = Darwin
