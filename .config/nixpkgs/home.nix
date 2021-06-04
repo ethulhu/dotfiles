@@ -51,7 +51,11 @@ in {
 
   eth = {
     gui = {
-      enable = true;
+      enable = select.byHostname {
+        __default__ = false;
+        chibi = true;
+        kittencake = true;
+      };
       browser = "firefox";
       terminal = select.byHostname {
         chibi = "${pkgs.alacritty}/bin/alacritty";

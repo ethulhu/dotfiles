@@ -1,5 +1,5 @@
 let
-  inherit (builtins) abort getAttr hasAttr head match readFile;
+  inherit (builtins) getAttr hasAttr head match readFile throw;
 
   trimSpace = s:
     let m = match "[[:space:]]*([^[:space:]]+)[[:space:]]*" s;
@@ -13,6 +13,6 @@ in {
   byHostname = set:
     let
       default =
-        getAttrOrDefault "_default" set (abort "missing _default value");
+        getAttrOrDefault "__default__" set (throw "missing __default__ value");
     in getAttrOrDefault hostname set default;
 }
