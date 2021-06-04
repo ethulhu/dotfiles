@@ -146,13 +146,28 @@ in {
         "${modifier}+Shift+q" = ''
           exec swaynag \
               --type warning \
-              --message 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' \
-              --button 'Yes, exit sway' 'swaymsg exit'
+              --message 'Exit sway? This will end your Wayland session.' \
+              --button 'Yes, exit sway' 'swaymsg exit' \
+              --dismiss-button 'Cancel'
         '';
         "${modifier}+Shift+r" = "reload";
         "${modifier}+p" = "exec ${menu}";
         XF86MonBrightnessDown = "exec ${brightnessctl} set 5%-";
         XF86MonBrightnessUp = "exec ${brightnessctl} set +5%";
+
+        # NB: This requires setting:
+        #
+        #   services.logind.extraConfig = "HandlePowerKey=ignore";
+        #
+        # in /etc/nixos/configuration.nix.
+        # TODO: Use systemd-inhibit instead.
+        XF86PowerOff = ''
+          exec swaynag \
+              --type warning \
+              --message 'Shutdown?' \
+              --button 'Yes, shutdown' 'exec systemctl poweroff' \
+              --dismiss-button 'Cancel'
+        '';
       };
       bars = [{
         position = "top";
