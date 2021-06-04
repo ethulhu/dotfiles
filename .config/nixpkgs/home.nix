@@ -5,41 +5,8 @@ let
 
   select = import ./select.nix;
 
-  mozilla = import (fetchTarball
-    "https://github.com/mozilla/nixpkgs-mozilla/archive/master.tar.gz");
-
 in {
-  imports = [ ./home.defaults.nix ./home.gui.nix ];
-
-  eth = {
-    defaults = {
-      terminal = select.byHostname {
-        chibi = "${pkgs.alacritty}/bin/alacritty";
-        kittencake = "${pkgs.rxvt-unicode}/bin/urxvt";
-      };
-      browser = "firefox";
-    };
-    gui = {
-      enable = true;
-      extraPackages = with pkgs; [
-        appimage-run
-        brightnessctl
-        firefox
-        chromium
-        eidolon
-        feh
-        libreoffice
-        mpv
-        mupdf
-        ripcord
-        vlc
-      ];
-    };
-  };
-
-  nixpkgs.overlays = [ mozilla ];
-
-  home.stateVersion = "20.03";
+  imports = [ ./home.gui.nix ];
 
   home.packages = with pkgs; [
     ag
@@ -56,7 +23,6 @@ in {
     iotop
     jq
     killall
-    latest.rustChannels.stable.rust
     moreutils
     mosh
     mosquitto
@@ -72,6 +38,7 @@ in {
     reuse
     ripgrep
     rlwrap
+    rustc
     scim
     screen
     tmux
@@ -81,4 +48,30 @@ in {
     whois
     zip
   ];
+
+  eth = {
+    gui = {
+      enable = true;
+      browser = "firefox";
+      terminal = select.byHostname {
+        chibi = "${pkgs.alacritty}/bin/alacritty";
+        kittencake = "${pkgs.rxvt-unicode}/bin/urxvt";
+      };
+      extraPackages = with pkgs; [
+        appimage-run
+        brightnessctl
+        firefox
+        chromium
+        eidolon
+        feh
+        libreoffice
+        mpv
+        mupdf
+        ripcord
+        vlc
+      ];
+    };
+  };
+
+  home.stateVersion = "20.03";
 }

@@ -1,8 +1,7 @@
 { config, lib, pkgs, ... }:
 let
-  inherit (config.eth.defaults) browser terminal;
   inherit (lib) mkEnableOption mkIf mkOption mkOptionDefault;
-  inherit (lib.types) listOf package;
+  inherit (lib.types) enum listOf package str;
 
   select = import ./select.nix;
 
@@ -34,7 +33,7 @@ let
     };
 
     commands = let
-      inherit (config.wayland.windowManager.sway.config) menu modifier;
+      inherit (config.wayland.windowManager.sway.config) menu;
 
       brightnessctl = "${pkgs.brightnessctl}/bin/brightnessctl";
     in {
@@ -42,7 +41,7 @@ let
       brightness_up = "exec ${brightnessctl} set 5%+";
       brightness_down = "exec ${brightnessctl} set 5%-";
 
-      launch_terminal = "exec ${terminal}";
+      launch_terminal = "exec ${cfg.terminal}";
       launch_menu = "exec ${menu}";
 
       reload_sway = "reload";
@@ -70,6 +69,16 @@ in {
     enable = mkEnableOption
       "Whether to enable the Window Manager & associated tooling";
 
+    browser = mkOption {
+      type = enum [ "firefox" ];
+      description = "Default browser.";
+    };
+
+    terminal = mkOption {
+      type = str;
+      description = "Default browser.";
+    };
+
     extraPackages = mkOption {
       type = listOf package;
       default = [ ];
@@ -82,8 +91,7 @@ in {
     home.packages = with pkgs;
       [ font-awesome powerline-fonts wl-clipboard ] ++ cfg.extraPackages;
 
-    # This is needed for i3status-rust,
-    # for pkgs.powerline-fonts and pkgs.fonts-awesome.
+    # This is needed for i3status-rust, for powerline-fonts and fonts-awesome.
     fonts.fontconfig.enable = true;
 
     services.redshift = {
@@ -117,7 +125,7 @@ in {
         termName = "xterm-256color";
         perl-ext-common = "default,matcher,clipboard";
         underlineURLs = "True";
-        url-launcher = browser;
+        url-launcher = cfg.browser;
 
         # special
         foreground = "#93a1a1";
@@ -204,7 +212,7 @@ in {
       enable = true;
       config = {
         modifier = "Mod4";
-        terminal = terminal;
+        terminal = cfg.terminal;
         output = sway.output;
         input = sway.input;
         keybindings = mkOptionDefault {
