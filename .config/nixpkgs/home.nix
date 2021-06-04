@@ -14,6 +14,23 @@ let
     youtube-dl
   ];
 
+  developmentPackages = with pkgs; [
+    go
+    goimports
+    jq
+    mosquitto
+    mu
+    newsboat
+    nixops
+    p7zip
+    pre-commit
+    rustc
+    scim
+    unrar
+    unzip
+    zip
+  ];
+
 in {
   imports = [ ./home.gui.nix ];
 
@@ -24,42 +41,28 @@ in {
       entr
       file
       gitAndTools.tig
-      go
-      goimports
       html-tidy
       htop
       iotop
-      jq
       killall
       moreutils
       mosh
-      mosquitto
-      mu
-      newsboat
       nix-prefetch-git
       nixfmt
-      nixops
-      p7zip
-      pre-commit
       python3
       python38Packages.autopep8
       reuse
       ripgrep
       rlwrap
-      rustc
-      scim
       screen
       tmux
-      unrar
-      unzip
       wget
       whois
-      zip
     ] ++ (select.byHostname {
       __default__ = [ ];
-      chibi = mediaPackages;
-      kittencake = mediaPackages;
-      valkyrie = mediaPackages;
+      chibi = developmentPackages ++ mediaPackages;
+      kittencake = developmentPackages ++ mediaPackages;
+      valkyrie = developmentPackages ++ mediaPackages;
     });
 
   eth = {
