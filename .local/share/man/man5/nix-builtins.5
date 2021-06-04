@@ -1,0 +1,386 @@
+.TH NIX-BUILTINS 5 "June 2021" "Dotfiles" "Eth's Dotfiles Manual"
+.SH NAME
+nix-builtins \- a summary of the Nix builtin functions
+
+.SH BUILTIN FUNCTIONS
+
+.TP
+builtins.abort \fIs\fR
+Abort execution, and print error message \fIs\fR.
+
+.TP
+builtins.add \fIn1\fR \fIn2\fR
+Add \fIn1\fR to \fIn2\fR.
+
+.TP
+builtins.all \fIf\fR \fIlist\fR
+Returns whether \fIf\fR returns true for all elements in \fIlist\fR.
+
+.TP
+builtins.any \fIf\fR \fIlist\fR
+Returns whether \fIf\fR returns true for any element in \fIlist\fR.
+
+.TP
+builtins.attrNames \fIset\fR
+Return the names of \fIset\fR, sorted alphabetically.
+
+.TP
+builtins.attrValues \fIset\fR
+Return the values of \fIset\fR, sorted by attribute name.
+
+.TP
+builtins.baseNameOf \fIs\fR
+Return the filename part of \fIs\fR, a la \fBbasename\fR.
+
+.TP
+builtins.bitAnd \fIi1\fR \fIi2\fR
+Return the bitwise AND of integers \fIi1\fR and \fIi2\fR.
+
+.TP
+builtins.bitOr \fIi1\fR \fIi2\fR
+Return the bitwise OR of integers \fIi1\fR and \fIi2\fR.
+
+.TP
+builtins.bitXor \fIi1\fR \fIi2\fR
+Return the bitwise XOR of integers \fIi1\fR and \fIi2\fR.
+
+.TP
+builtins.compareVersions \fIs1\fR \fIs2\fR
+Return -1 if \fIs1\fR is older than \fIs2\fR, 1 if \fIs1\fR is newer than \fIs2\fR, and 0 if they are the same.
+
+.TP
+builtins.concatLists \fIlists\fR
+Concat a list of \fIlists\fR.
+
+.TP
+builtins.concatStringsSep \fs\fR \fIlist\fR
+Concat a \fIlist\fR of strings by \fIs\fR.
+
+.TP
+builtins.currentSystem
+The current platform, e.g. "aarch64-linux" or "x86_64-darwin".
+
+.TP
+builtins.deepSeq \fIe1\fR \fIe2\fR
+Recursively evaluate \fIe1\fR, then return \fIe2\fR.
+
+.TP
+builtins.derivation \fIattrs\fR
+Returns the Derivation of attribute set \fIattrs\fR.
+
+.TP
+builtins.dirOf \fIs\fR
+Return the directory part of \fIs\fR, a la \fBdirname\fR.
+
+.TP
+builtins.div \fIn1\fR \fIn2\fR
+Divide \fIn1\fR by \fIn2\fR.
+
+.TP
+builtins.elem \fIe\fR \fIlist\fR
+Return whether \fIe\fR is in \fIlist\fR.
+
+.TP
+builtins.elemAt \fIlist\fR \fIn\fR
+Return the element of \fIlist\fR at index \fIn\fR.
+
+.TP
+builtins.fetchurl \fIurl\fR
+Download \fIurl\fR and return the path.
+
+.TP
+builtins.fetchTarball \fIurl\fR
+Download \fIurl\fR, extract it, and return the path.
+
+.TP
+builtins.fetchTarball { \fIurl\fR, \fIsha256\fR }
+Download \fIurl\fR, extract it, and return the path, aborting if \fIsha256\fR does not match.
+
+.TP
+builtins.fetchGit { \fIurl\fR, \fIname\fR, \fIrev\fR, \fIref\fR }
+.TS
+l l
+---
+l l.
+Name	Meaning
+url	Required. The URL of the Git repo.
+name	Optional. The name of the repo when added to the Nix Store.
+rev	Optional, default is the tip of \fIref\fR. The Git revision to fetch.
+sha256	Optional, default \fBHEAD\fR. The Git ref to fetch.
+.TE
+
+.TP
+builtins.filter \fIf\fR \fIlist\fR
+Filter \fIlist\fR by \fIf\fR.
+
+.TP
+builtins.filterSource \fIfilterFn\fR \fIpath\fR
+Return the contents of directory \fIpath\fR that match \fIfilterFn\fR, where \fIfilterFn\fR is of type \fB(path, type) -> bool\fR, where \fBtype\fR is one of: "regular", "directory", "symlink", or "unknown".
+
+.TP
+builtins.foldl’ \fIf\fR \fIe\fR \fIlist\fR
+Reduce \fIlist\fR by applying \fIf\fR from left to right, with initial value \fIe\fR.
+
+.TP
+builtins.functionArgs \fIf\fR
+Return the set arguments of \fIf\fR (e.g. { a, b ? 1 }: ...) as a set of \fBname\fR to whether the argument has a default value (e.g. { a = false; b = true; }).
+
+.TP
+builtins.fromJSON \fIs\fR
+Convert a JSON string \fIs\fR to a Nix expression object.
+
+.TP
+builtins.genList \fIgeneratorFn\fR \fIlength\fR
+Generate a list of \fIlength\fR elements, where \fIgeneratorFn\fR of type \fBindex -> expression\fR.
+
+.TP
+builtins.getAttr \fIs\fR \fIset\fR
+Returns the attribute \fIs\fR from \fIset\fR, aborting if it doesn't exist.
+
+.TP
+builtins.getEnv \fIs\fR
+Returns the environment variable \fIs\fR, or "" if it is not set.
+
+.TP
+builtins.hasAttr \fIs\fR \fIset\fR
+Returns whether \fIset\fR has an attribute \fIs\fR.
+
+.TP
+builtins.hashFile \fIhashType\fR \fIpath\fR
+Return a base-16 string of the hash of the contents of \fIpath\fR, where \fIhashType\fR is one of: "md5", "sha1", "sha256", or "sha512".
+
+.TP
+builtins.hashString \fIhashType\fR \fIs\fR
+Return a base-16 string of the hash of \fIs\fR, where \fIhashType\fR is one of: "md5", "sha1", "sha256", or "sha512".
+
+.TP
+builtins.head \fIlist\fR
+Return the first element of \fIlist\fR, aborting if there isn't one.
+
+.TP
+builtins.import \fIpath\fR
+Load the Nix expression at \fIpath\fR.
+
+.TP
+builtins.intersectAttrs \fIset1\fR \fIset2\fR
+Return a set with the attributes of \fIset2\fR that also exist in \fIset1\fR.
+
+.TP
+builtins.isAttrs \fIe\fR
+Returns whether \fIe\fR is an attribute set.
+
+.TP
+builtins.isBool \fIe\fR
+Returns whether \fIe\fR is a bool.
+
+.TP
+builtins.isFloat \fIe\fR
+Returns whether \fIe\fR is a float.
+
+.TP
+builtins.isFunction \fIe\fR
+Returns whether \fIe\fR is a function.
+
+.TP
+builtins.isInt \fIe\fR
+Returns whether \fIe\fR is a int.
+
+.TP
+builtins.isList \fIe\fR
+Returns whether \fIe\fR is a list.
+
+.TP
+builtins.isPath \fIe\fR
+Returns whether \fIe\fR is a path.
+
+.TP
+builtins.isString \fIe\fR
+Returns whether \fIe\fR is a string.
+
+.TP
+builtins.length \fIlist\fR
+Return the length of \fIlist\fR.
+
+.TP
+builtins.lessThan \fIn1\fR \fIn2\fR
+Return whether \fIn1\fR is less than \fIn2\fR.
+
+.TP
+builtins.listToAttrs \fIlist\fR
+Convert a list of sets with keys \fBname\fR and \fBvalue\fR to a set.
+
+.TP
+builtins.map \fIf\fR \fIlist\fR
+Apply \fIf\fR to every element of \fIlist\fR.
+
+.TP
+builtins.match \fIregex\fR \fIs\fR
+.TS
+l l
+---
+l l.
+Example	Output
+builtins.match "foo" "bar"	null
+builtins.match "foo" "fooo"	null  # exact match required!
+builtins.match "foo" "foo"	[ ]
+builtins.match "a(b)(c)" "abc"	[ "b" "c" ]
+builtins.match "([^c])+c" "abc"	[ "a" ]  # only returns first repeated match!
+.TE
+
+.TP
+builtins.mul \fIn1\fR \fIn2\fR
+Multiple \fIn1\fR by \fIn2\fR.
+
+.TP
+builtins.parseDrvName \fIs\fR
+Split a derivation name \fIs\fR (e.g. "foo-1.1") into a set of \fBname\fR and \fBversion\fR (e.g. { name = "foo"; version = "1.1"; }).
+
+    Split the string s into a package name and version. The package name is everything up to but not including the first dash followed by a digit, and the version is everything following that dash. The result is returned in a set { name, version }. Thus, builtins.parseDrvName "nix-0.12pre12876" returns { name = "nix"; version = "0.12pre12876"; }.
+
+.TP
+builtins.path { \fIpath\fR, \fIname\fR, \fIfilter\fIR, \fIrecursive\fR, \fIsha256\fR }
+.TS
+l l
+---
+l l.
+Name	Meaning
+path	Required. The path to add to the Nix Store.
+name	Optional. The name of the path when added to the Store.
+filter	Optional. A function as used by \fBbuiltins.filterSource\fR.
+recursive	Optional, default \fBtrue\fR. When \fBfalse\fR, \fIpath\fR must be a regular file.
+sha256	Optional. A known hash of \fIpath\fR. Will abort if it doesn't match.
+.TE
+
+.TP
+builtins.pathExists \fIpath\fR
+Return whether \fIpath\fR exists or not.
+
+.TP
+builtins.placeholder \fIoutput\fR
+Return a placeholder string for the specified \fIoutput\fR (e.g. "out", "dev") that will be substituted for the corresponding path at build time. Useful for configure steps, e.g. "PREFIX=${placeholder "out"}/etc".
+
+.TP
+builtins.readDir \fIpath\fR
+Return the children of directory \fIpath\fR as a set of \fBname\fR to \fBtype\fR, where type is one of: "regular", "directory", "symlink", or "unknown".
+
+.TP
+builtins.readFile \fIpath\fR
+Return the contents of \fIpath\fR as a string.
+
+.TP
+builtins.removeAttrs \fIset\fR \fIlist\fR
+Remove all attributes in \fIlist\fR in \fIset\fR.
+
+.TP
+builtins.replaceStrings \fIfromList\fR \fItoList\fR \fIs\fR
+For string \fIs\fR, replace all elements in \fIfromList\fR with the corresponding element in \fItoList\fR.
+
+.TP
+builtins.seq \fIe1\fR \fIe2\fR
+Evaluate \fIe1\fR, then return \fIe2\fR.
+
+.TP
+builtins.sort \fIcompareFn\fR \fIlist\fR
+Return \fIlist\fR as sorted by \fIcompareFn\fR.
+
+.TP
+builtins.split \fIregex\fR \fIs\fR
+Return a list of non-matched strings interleaved with lists of matches of \fIregex\fR in \fIs\fR.
+.TS
+l l
+---
+l l.
+Example	Output
+builtins.split "," "a,b,c"	[ "a" [ ] "b" [ ] "c" ]
+builtins.split "([ac])" "abc"	[ "" [ "a" ] "b" [ "c" ] "" ]
+builtins.split "(a)|(c)" "abc"	[ "" [ "a" null ] "b" [ null "c" ] "" ]
+.TE
+
+.TP
+builtins.splitVersion \fIs\fR
+Split a version string \fIs\fR into parts.
+
+.TP
+builtins.stringLength \fIs\fR
+Return the length of \fIs\fR.
+
+.TP
+builtins.sub \fIn1\fR \fIn2\fR
+Subtract \fIn2\fR from \fIn1\fR.
+
+.TP
+builtins.substring \fIstart\fR \fIlen\fR \fIs\fR
+Return \fIlen\fR characters from \fIs\fR, starting from \fIstart\fR (0-indexed).
+
+.TP
+builtins.tail \fIlist\fR
+Return the last element of \fIlist\fR, aborting if there isn't one.
+
+.TP
+builtins.throw \fIs\fR
+Throw error message \fIs\fR and abort evaluation.
+
+.TP
+builtins.toFile \fIname\fR \fIs\fR
+Store \fIstr\fR in the Nix store with suffix \fIname\fR, and return the path.
+
+.TP
+builtins.toJSON \fIe\fR
+Return a JSON representation of \fIe\fR as a string.
+
+.TP
+builtins.toString \fIe\fR
+.TS
+l l l
+-----
+l l l.
+Input type	Example	Output
+string	"foo"	"foo"
+path	/foo/bar	"/foo/bar"
+set	{ __toString = self: x; x = "foo"; };	foo
+integer	3	"3"
+list	["foo" "bar"]	"foo bar"
+bool	true	"1"
+bool	false	""
+null	null	""
+.TE
+
+.TP
+builtins.toXML \fIe\fR
+Return an XML representation of \fIe\fR as a string, intended to be further transformed by XSLT. For example:
+.PP
+.RS
+.nf
+builtins.toXML [{ foo = "bar"; fooPath = /foo/bar; }] == ''
+  <expr>
+    <list>
+      <attrs>
+        <attr name="foo">
+          <string value="bar"/ >
+        </attr>
+        <attr name="fooPath">
+          <path value="/foo/bar"/ >
+        </attr>
+      </attrs>
+    </list>
+  </expr>
+\&'';
+.fi
+.RE
+
+.TP
+builtins.trace \fIe1\fR \fIe2\fR
+Evaluate \fIe1\fR and return \fIe2\fR.
+
+.TP
+builtins.tryEval \fIe\fR
+Try to shallowly evaluate e. Return a set containing the attributes success (true if e evaluated successfully, false if an error was thrown) and value, equalling e if successful and false otherwise. Note that this doesn't evaluate e deeply, so let e = { x = throw ""; }; in (builtins.tryEval e).success will be true. Using builtins.deepSeq one can get the expected result: let e = { x = throw ""; }; in (builtins.tryEval (builtins.deepSeq e e)).success will be false.
+
+.TP
+builtins.typeOf \fIe\fR
+Return the type of \fIe\fR, one of: "int", "bool", "string", "path", "null", "set", "list", "lambda", or "float".
+
+.SH LINKS
+.TP
+The Nix builtins section of the Nix Manual
+.I https://nixos.org/manual/nix/stable/#ssec-builtins
