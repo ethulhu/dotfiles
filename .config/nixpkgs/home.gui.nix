@@ -257,15 +257,21 @@ in {
           statusCommand =
             "${config.programs.i3status-rust.package}/bin/i3status-rs ~/.config/i3status-rust/config-default.toml";
         }];
-        startup = [{
-          command = ''
-            swayidle -w \
-                     timeout 300 'swaylock -f -c 000000' \
-                     timeout 600 'swaymsg "output * dpms off"' \
-                          resume 'swaymsg "output * dpms on"' \
-                     before-sleep 'swaylock -f -c 000000'
-          '';
-        }];
+        startup = [
+          {
+            command = ''
+              swayidle -w \
+                       timeout 300 'swaylock -f -c 000000' \
+                       timeout 600 'swaymsg "output * dpms off"' \
+                            resume 'swaymsg "output * dpms on"' \
+                       before-sleep 'swaylock -f -c 000000'
+            '';
+          }
+          {
+            command = "${pkgs.xorg.xrdb}/bin/xrdb -merge $HOME/.Xresources";
+            always = true;
+          }
+        ];
       };
     };
   };
