@@ -2,6 +2,9 @@
 
 let
   inherit (pkgs) lib;
+  inherit (builtins) readFile;
+
+  hostname = readFile /etc/hostname;
 
   mozilla = import (fetchTarball
     "https://github.com/mozilla/nixpkgs-mozilla/archive/master.tar.gz");
@@ -126,16 +129,26 @@ in {
     enable = true;
     config = {
       modifier = "Mod4";
-      terminal = "alacritty";
-      output = { "eDP-1" = { transform = "90"; }; };
-      input = {
-        "type:keyboard" = {
+      terminal = if hostname == "chibi" then "alacritty" else "urxvt";
+      output = let
+        chibi = { "eDP-1" = { transform = "90"; }; };
+        kittencake = { };
+      in if hostname == "chibi" then chibi else kittencake;
+      input = let
+        keyboard = {
           xkb_layout = "us";
           xkb_variant = "colemak";
           xkb_options = "caps:escape";
         };
-        "type:touch" = { calibration_matrix = "0 1 0 -1 0 1"; };
-      };
+        kittencake = {
+          "type:keyboard" = keyboard;
+          "type:touchpad" = { natural_scroll = "enabled"; };
+        };
+        chibi = {
+          "type:keyboard" = keyboard;
+          "type:touch" = { calibration_matrix = "0 1 0 -1 0 1"; };
+        };
+      in if hostname == "chibi" then chibi else kittencake;
       keybindings = let
         inherit (config.wayland.windowManager.sway.config)
           menu modifier terminal;
