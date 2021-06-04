@@ -1,10 +1,13 @@
 { pkgs, config, ... }:
 
 let
+  inherit (builtins) head match readFile;
   inherit (pkgs) lib;
-  inherit (builtins) readFile;
 
-  hostname = readFile /etc/hostname;
+  trimSpace = s:
+    let m = match "[[:space:]]*([^[:space:]]+)[[:space:]]*" s;
+    in (head m);
+  hostname = trimSpace (readFile /etc/hostname);
 
   mozilla = import (fetchTarball
     "https://github.com/mozilla/nixpkgs-mozilla/archive/master.tar.gz");
