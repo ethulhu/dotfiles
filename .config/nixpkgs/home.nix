@@ -5,49 +5,62 @@ let
 
   select = import ./select.nix;
 
+  mediaPackages = with pkgs; [
+    exiftool
+    ffmpeg
+    id3v2
+    imagemagick
+    mkvtoolnix-cli
+    youtube-dl
+  ];
+
 in {
   imports = [ ./home.gui.nix ];
 
-  home.packages = with pkgs; [
-    ag
-    direnv
-    dnsutils
-    entr
-    file
-    gitAndTools.tig
-    go
-    goimports
-    html-tidy
-    htop
-    imagemagick
-    iotop
-    jq
-    killall
-    moreutils
-    mosh
-    mosquitto
-    mu
-    newsboat
-    nix-prefetch-git
-    nixfmt
-    nixops
-    p7zip
-    pre-commit
-    python3
-    python38Packages.autopep8
-    reuse
-    ripgrep
-    rlwrap
-    rustc
-    scim
-    screen
-    tmux
-    unrar
-    unzip
-    wget
-    whois
-    zip
-  ];
+  home.packages = with pkgs;
+    [
+      direnv
+      dnsutils
+      entr
+      file
+      gitAndTools.tig
+      go
+      goimports
+      html-tidy
+      htop
+      iotop
+      jq
+      killall
+      moreutils
+      mosh
+      mosquitto
+      mu
+      newsboat
+      nix-prefetch-git
+      nixfmt
+      nixops
+      p7zip
+      pre-commit
+      python3
+      python38Packages.autopep8
+      reuse
+      ripgrep
+      rlwrap
+      rustc
+      scim
+      screen
+      tmux
+      unrar
+      unzip
+      wget
+      whois
+      zip
+    ] ++ (select.byHostname {
+      __default__ = [ ];
+      chibi = mediaPackages;
+      kittencake = mediaPackages;
+      valkyrie = mediaPackages;
+    });
 
   eth = {
     gui = {
