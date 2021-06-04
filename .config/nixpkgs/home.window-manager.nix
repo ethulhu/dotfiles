@@ -7,6 +7,68 @@ let
     let m = match "[[:space:]]*([^[:space:]]+)[[:space:]]*" s;
     in (head m);
   hostname = trimSpace (readFile /etc/hostname);
+
+  sway = {
+    inherit (config.wayland.windowManager.sway.config) modifier;
+
+    terminal = {
+      chibi = "alacritty";
+      kittencake = "urxvt";
+    };
+
+    input = let
+      keyboard = {
+        xkb_layout = "us";
+        xkb_variant = "colemak";
+        xkb_options = "caps:escape";
+      };
+    in {
+      kittencake = {
+        "type:keyboard" = keyboard;
+        "type:touchpad" = { natural_scroll = "enabled"; };
+      };
+      chibi = {
+        "type:keyboard" = keyboard;
+        "type:touch" = { calibration_matrix = "0 1 0 -1 0 1"; };
+      };
+    };
+
+    output = {
+      chibi = { "eDP-1" = { transform = "90"; }; };
+      kittencake = { };
+    };
+
+    commands = let
+      inherit (config.wayland.windowManager.sway.config) menu modifier terminal;
+      brightnessctl = "${pkgs.brightnessctl}/bin/brightnessctl";
+    in {
+
+      brightness_up = "exec ${brightnessctl} set 5%+";
+      brightness_down = "exec ${brightnessctl} set 5%-";
+
+      launch_terminal = "exec ${terminal}";
+      launch_menu = "exec ${menu}";
+
+      reload_sway = "reload";
+      kill_window = "kill";
+
+      confirm_logout = ''
+        exec swaynag \
+            --type warning \
+            --message 'Exit sway? This will end your Wayland session.' \
+            --button 'Yes, exit sway' 'swaymsg exit' \
+            --dismiss-button 'Cancel'
+      '';
+      confirm_shutdown = ''
+        exec swaynag \
+            --type warning \
+            --message 'Shutdown?' \
+            --button 'Yes, shutdown' 'exec systemctl poweroff' \
+            --dismiss-button 'Cancel'
+      '';
+    };
+  };
+
 in {
 
   home.packages = with pkgs; [ font-awesome powerline-fonts ];
@@ -59,44 +121,17 @@ in {
     enable = true;
     config = {
       modifier = "Mod4";
-      terminal = if hostname == "chibi" then "alacritty" else "urxvt";
-      output = let
-        chibi = { "eDP-1" = { transform = "90"; }; };
-        kittencake = { };
-      in if hostname == "chibi" then chibi else kittencake;
-      input = let
-        keyboard = {
-          xkb_layout = "us";
-          xkb_variant = "colemak";
-          xkb_options = "caps:escape";
-        };
-        kittencake = {
-          "type:keyboard" = keyboard;
-          "type:touchpad" = { natural_scroll = "enabled"; };
-        };
-        chibi = {
-          "type:keyboard" = keyboard;
-          "type:touch" = { calibration_matrix = "0 1 0 -1 0 1"; };
-        };
-      in if hostname == "chibi" then chibi else kittencake;
-      keybindings = let
-        inherit (config.wayland.windowManager.sway.config)
-          menu modifier terminal;
-        brightnessctl = "${pkgs.brightnessctl}/bin/brightnessctl";
-      in lib.mkOptionDefault {
-        "${modifier}+Return" = "exec ${terminal}";
-        "${modifier}+Shift+c" = "kill";
-        "${modifier}+Shift+q" = ''
-          exec swaynag \
-              --type warning \
-              --message 'Exit sway? This will end your Wayland session.' \
-              --button 'Yes, exit sway' 'swaymsg exit' \
-              --dismiss-button 'Cancel'
-        '';
-        "${modifier}+Shift+r" = "reload";
-        "${modifier}+p" = "exec ${menu}";
-        XF86MonBrightnessDown = "exec ${brightnessctl} set 5%-";
-        XF86MonBrightnessUp = "exec ${brightnessctl} set +5%";
+      terminal = sway.terminal.${hostname};
+      output = sway.output.${hostname};
+      input = sway.input.${hostname};
+      keybindings = lib.mkOptionDefault {
+        "${sway.modifier}+Return" = sway.commands.launch_terminal;
+        "${sway.modifier}+Shift+c" = sway.commands.kill_window;
+        "${sway.modifier}+Shift+q" = sway.commands.confirm_logout;
+        "${sway.modifier}+Shift+r" = sway.commands.reload_sway;
+        "${sway.modifier}+p" = sway.commands.launch_menu;
+        XF86MonBrightnessUp = sway.commands.brightness_up;
+        XF86MonBrightnessDown = sway.commands.brightness_down;
 
         # NB: This requires setting:
         #
@@ -104,13 +139,7 @@ in {
         #
         # in /etc/nixos/configuration.nix.
         # TODO: Use systemd-inhibit instead.
-        XF86PowerOff = ''
-          exec swaynag \
-              --type warning \
-              --message 'Shutdown?' \
-              --button 'Yes, shutdown' 'exec systemctl poweroff' \
-              --dismiss-button 'Cancel'
-        '';
+        XF86PowerOff = sway.commands.confirm_shutdown;
       };
       bars = [{
         position = "top";
