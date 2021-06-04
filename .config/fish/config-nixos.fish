@@ -25,7 +25,7 @@ function __fish_command_not_found_handler --on-event fish_command_not_found --ar
         case 1
             switch (read --prompt-str="It is provided by package $packages; add it to PATH? [y/N] " --nchars=1)
                 case y
-                    package install $package
+                    package install $packages
                     commandline --replace "$argv"
             end
 
