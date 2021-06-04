@@ -108,17 +108,23 @@ in {
           {
             block = "cpu";
             interval = 1;
-            format = "{barchart} {utilization}%";
+            format = "{barchart} {utilization}";
           }
           {
             block = "battery";
             interval = 10;
-            format = "{percentage}% {time}";
+            format = "{percentage} {time}";
           }
           {
             block = "time";
             interval = 60;
-            format = "%a %d/%m %R";
+            format = let
+              weekday = "%a";
+              week_number = "%V";
+              short_month = "%b";
+              month_day = "%m";
+              hours_minutes = "%R";
+            in "${weekday} wk ${week_number}, ${short_month} ${month_day} ${hours_minutes}";
           }
         ];
       };
