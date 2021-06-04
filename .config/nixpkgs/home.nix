@@ -19,6 +19,7 @@ let
     p7zip
     pre-commit
     python3
+    python38Packages.autopep8
     screen
     unrar
   ];
@@ -28,8 +29,8 @@ let
     chromium
     eidolon
     feh
+    libreoffice
     mupdf
-    pavucontrol
     ripcord
     vlc
     wl-clipboard
@@ -45,6 +46,7 @@ in {
   home.packages = with pkgs;
     [
       ag
+      appimage-run
       direnv
       dnsutils
       file
@@ -59,6 +61,7 @@ in {
       newsboat
       nixops
       reuse
+      ripgrep
       rlwrap
       scim
       tmux
