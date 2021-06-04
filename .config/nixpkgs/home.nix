@@ -78,6 +78,64 @@ in {
     settings = { env.TERM = "xterm-256color"; };
   };
 
+  # https://addy-dclxvi.github.io/post/configuring-urxvt/.
+  programs.urxvt = {
+    enable = true;
+    fonts = [ "xft:monospace:size=10" ];
+    scroll.bar.enable = true;
+    keybindings = {
+      "Shift-Control-C" = "eval:selection_to_clipboard";
+      "Shift-Control-V" = "eval:paste_clipboard";
+      "Shift-M-C" = "perl:clipboard:copy";
+      "Shift-M-V" = "perl:clipboard:paste";
+    };
+    extraConfig = {
+      "clipboard.autocopy" = "True";
+      "matcher.button" = "1";
+      termName = "xterm-256color";
+      perl-ext-common = "default,matcher,clipboard";
+      underlineURLs = "True";
+      url-launcher = "firefox";
+
+      # special
+      foreground = "#93a1a1";
+      background = "#141c21";
+      cursorColor = "#afbfbf";
+
+      # black
+      color0 = "#263640";
+      color8 = "#4a697d";
+
+      # red
+      color1 = "#d12f2c";
+      color9 = "#fa3935";
+
+      # green
+      color2 = "#819400";
+      color10 = "#a4bd00";
+
+      # yellow
+      color3 = "#b08500";
+      color11 = "#d9a400";
+
+      # blue
+      color4 = "#2587cc";
+      color12 = "#2ca2f5";
+
+      # magenta
+      color5 = "#696ebf";
+      color13 = "#8086e8";
+
+      # cyan
+      color6 = "#289c93";
+      color14 = "#33c5ba";
+
+      # white
+      color7 = "#bfbaac";
+      color15 = "#fdf6e3";
+    };
+  };
+
   programs.mpv = { enable = true; };
 
   services.redshift = {
