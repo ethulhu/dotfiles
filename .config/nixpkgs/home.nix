@@ -77,6 +77,13 @@ in {
 
   programs.mpv = { enable = true; };
 
+  services.redshift = {
+    enable = true;
+    package = pkgs.redshift-wlr;
+    latitude = 51.5;
+    longitude = -0.1;
+  };
+
   # This is needed for i3status-rust,
   # for pkgs.powerline-fonts and pkgs.fonts-awesome.
   fonts.fontconfig.enable = true;
