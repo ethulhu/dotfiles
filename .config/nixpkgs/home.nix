@@ -25,6 +25,7 @@ let
     p7zip
     pre-commit
     rustc
+    rustc.doc
     scim
     unrar
     unzip
@@ -40,6 +41,7 @@ in {
       dnsutils
       entr
       file
+      git
       gitAndTools.tig
       html-tidy
       htop
