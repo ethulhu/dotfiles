@@ -1,6 +1,7 @@
 { pkgs, config, ... }:
 
 let
+  inherit (builtins) getEnv;
   inherit (pkgs) lib;
 
   select = import ./select.nix;
@@ -33,7 +34,7 @@ let
   ];
 
 in {
-  imports = [ ./home.gui.nix ];
+  imports = [ ./home.gui.nix ./home.wallpapers.nix ];
 
   home.packages = with pkgs;
     [
@@ -78,6 +79,11 @@ in {
       terminal = select.byHostname {
         chibi = "${pkgs.alacritty}/bin/alacritty";
         kittencake = "${pkgs.rxvt-unicode}/bin/urxvt";
+      };
+      wallpapers = {
+        enable = true;
+        directory = "${getEnv "HOME"}/walls";
+        refreshPeriod = "15s";
       };
       extraPackages = with pkgs; [
         appimage-run
