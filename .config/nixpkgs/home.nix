@@ -2,7 +2,6 @@
 
 let
   inherit (builtins) getEnv;
-  inherit (pkgs) lib;
 
   select = import ./select.nix;
 
@@ -34,7 +33,9 @@ let
   ];
 
 in {
-  imports = [ ./home.gui.nix ./home.wallpapers.nix ];
+  imports = [ ./modules/default.nix ];
+
+  nixpkgs.overlays = [ (self: super: { eth = { inherit select; }; }) ];
 
   home.packages = with pkgs;
     [

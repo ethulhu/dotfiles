@@ -2,8 +2,7 @@
 let
   inherit (lib) mkEnableOption mkIf mkOption mkOptionDefault;
   inherit (lib.types) enum listOf package str;
-
-  select = import ./select.nix;
+  inherit (pkgs.eth) select;
 
   cfg = config.eth.gui;
 
