@@ -47,6 +47,8 @@ let
       reload_sway = "reload";
       kill_window = "kill";
 
+      take_screenshot = "exec ${pkgs.grim}/bin/grim";
+
       confirm_logout = ''
         exec swaynag \
             --type warning \
@@ -61,6 +63,8 @@ let
             --button 'Yes, shutdown' 'exec systemctl poweroff' \
             --dismiss-button 'Cancel'
       '';
+
+      reload_xrdb = "${pkgs.xorg.xrdb}/bin/xrdb -merge $HOME/.Xresources";
     };
   };
 
@@ -76,7 +80,7 @@ in {
 
     terminal = mkOption {
       type = str;
-      description = "Default browser.";
+      description = "Default terminal emulator.";
     };
 
     extraPackages = mkOption {
@@ -217,6 +221,7 @@ in {
         input = sway.input;
         keybindings = mkOptionDefault {
           "${sway.modifier}+Return" = sway.commands.launch_terminal;
+          "${sway.modifier}+Shift+3" = sway.commands.take_screenshot;
           "${sway.modifier}+Shift+c" = sway.commands.kill_window;
           "${sway.modifier}+Shift+q" = sway.commands.confirm_logout;
           "${sway.modifier}+Shift+r" = sway.commands.reload_sway;
@@ -268,7 +273,7 @@ in {
             '';
           }
           {
-            command = "${pkgs.xorg.xrdb}/bin/xrdb -merge $HOME/.Xresources";
+            command = sway.commands.reload_xrdb;
             always = true;
           }
         ];
