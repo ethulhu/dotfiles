@@ -1,6 +1,6 @@
 # NixOS-specific configuration.
 
-set --prepend PATH ~/.local/bin/linux
+set --prepend fish_user_paths ~/.local/bin/linux
 
 set --prepend fish_function_path ~/.config/fish/functions/nixos
 set --prepend fish_complete_path ~/.config/fish/completions/nixos
