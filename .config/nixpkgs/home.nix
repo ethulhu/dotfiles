@@ -89,14 +89,15 @@ in {
       extraPackages = with pkgs; [
         appimage-run
         brightnessctl
-        firefox
         chromium
         eidolon
         feh
+        firefox
         libreoffice
         mpv
         mupdf
         ripcord
+        vivaldi-widevine # Required DRM plugin for Chromium.
         vlc
       ];
     };
