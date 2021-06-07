@@ -41,6 +41,7 @@ map ; :
 " Make `Y` behave like `D`.
 map Y y$
 
+
 " Yank / Paste / Delete, but with the system clipboard.
 map <leader>y "+y
 map <leader>p "+p
@@ -48,6 +49,33 @@ map <leader>d "+d
 map <leader>Y "+Y
 map <leader>P "+P
 map <leader>D "+D
+
+let s:is_wayland = has_key(environ(), 'WAYLAND_DISPLAY')
+if !has('clipboard') && s:is_wayland
+	" To copy to the Clipboard on Wayland, we:
+	" - Remap the missing '+' register to 'w'.
+	" - Create a function that invokes `wl-copy` for register 'w'.
+	" - Run that function every TextYankPost event.
+	nnoremap "+ "w
+	vnoremap "+ "w
+	function s:WaylandYank(regname)
+		if v:event['regname'] ==# a:regname
+			call system('wl-copy', getreg(a:regname))
+		endif
+	endfunction
+	augroup wayland-clipboard
+		autocmd!
+		autocmd TextYankPost * silent call s:WaylandYank('w')
+	augroup end
+
+	" To paste from the Wayland clipboard, we:
+	" - Set the value of register 'w' to the output of `wl-paste`,
+	"   removing all newlines.
+	" - Paste the contents of register 'w' as normal.
+	nnoremap "+p :let @w=substitute(system('wl-paste --no-newline'), '\r', '', 'g')<CR>"wp
+	nnoremap "+P :let @w=substitute(system('wl-paste --no-newline'), '\r', '', 'g')<CR>"wP
+endif
+
 
 " Say the current selection aloud.
 map S :w !say<CR>
