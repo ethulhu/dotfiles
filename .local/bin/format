@@ -24,6 +24,8 @@ FORMATTERS = {
 
 
 def main():
+    this = os.path.basename(__file__)
+
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--filetype', type=str, required=True)
     parser.add_argument('--filename', type=str, required=False)
@@ -36,7 +38,14 @@ def main():
         if args.filename and args.filetype in ('c', 'cpp'):
             formatter.append(f'-assume-filename={args.filename}')
 
-        os.execvp(formatter[0], formatter)
+        try:
+            os.execvp(formatter[0], formatter)
+        except FileNotFoundError as e:
+            print(f'{this}: Formatter `{formatter[0]}` not found', file=sys.stderr)
+            sys.exit(1)
+        except Exception as e:
+            print(f'{this}: Could not run formatter `{" ".join(formatter)}`: {e}', file=sys.stderr)
+            sys.exit(1)
 
     else:
         # Remove trailing whitespace as a fallback.
