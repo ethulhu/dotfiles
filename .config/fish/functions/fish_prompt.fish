@@ -23,7 +23,10 @@ function $function_name --description 'Write out the prompt'
         set prompt_hostname '@' (set_color $fish_color_host_remote) $hostname (set_color normal)
     end
 
-    set --local prompt_repo_name (string replace --regex --filter "$HOME/src/([^/]*).*" ' [$1]' $PWD; or true)
+    set --local prompt_repo_name (git rev-parse --show-toplevel ^/dev/null)
+    if [ "$prompt_repo_name" != '' ]
+       set prompt_repo_name ' ['(basename $prompt_repo_name)']'
+    end
 
     echo -n -s \
         $prompt_user $prompt_hostname ' ' \
