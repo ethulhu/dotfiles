@@ -61,13 +61,7 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
-    assertions = [{
-      assertion = config.eth.gui.enable;
-      message =
-        "Must enable GUI (eth.gui.enable) to enable wallpapers (eth.gui.wallpapers.enable).";
-    }];
-
+  config = mkIf (config.eth.gui.enable && cfg.enable) {
     systemd.user.services.rotate-wallpaper = {
       Unit = {
         Description = "Set wallpaper";
