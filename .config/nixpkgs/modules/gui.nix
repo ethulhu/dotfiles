@@ -40,6 +40,10 @@ let
       brightness_up = "exec ${brightnessctl} set 5%+";
       brightness_down = "exec ${brightnessctl} set 5%-";
 
+      volume_up = "exec ${pkgs.alsaUtils}/bin/amixer -q set Master 5%+ unmute";
+      volume_down = "exec ${pkgs.alsaUtils}/bin/amixer -q set Master 5%- unmute";
+      mute = "exec ${pkgs.alsaUtils}/bin/amixer -q set Master toggle";
+
       launch_terminal = "exec ${cfg.terminal}";
       launch_menu = "exec ${menu}";
 
@@ -225,8 +229,13 @@ in {
           "${sway.modifier}+Shift+q" = sway.commands.confirm_logout;
           "${sway.modifier}+Shift+r" = sway.commands.reload_sway;
           "${sway.modifier}+p" = sway.commands.launch_menu;
+
           XF86MonBrightnessUp = sway.commands.brightness_up;
           XF86MonBrightnessDown = sway.commands.brightness_down;
+
+          XF86AudioRaiseVolume = sway.commands.volume_up;
+          XF86AudioLowerVolume = sway.commands.volume_down;
+          XF86AudioMute = sway.commands.mute;
 
           # NB: This requires setting:
           #
