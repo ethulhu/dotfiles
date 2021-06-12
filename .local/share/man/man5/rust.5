@@ -204,10 +204,12 @@ fn returns_three() -> i32 {
 .SH PRAGMAS
 .SS Ignoring warnings
 .PP
-Warnings can be ignored using \fB#[allow(\fI...\fB)]\fR:
+Warnings can be ignored using \fB#[allow(\fI...\fB)]\fR for functions, or \fB#![allow(\fI...\fB)]\fR for files:
 .PP
 .RS
 .nf
+#![allow(unused_variables)]
+
 #[allow(dead_code)]
 fn unused_function() {
     unimplemented!(":(");
