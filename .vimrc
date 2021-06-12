@@ -297,3 +297,8 @@ command! -range Comment   <line1>,<line2>call s:Comment()
 command! -range Uncomment <line1>,<line2>call s:Uncomment()
 map <leader>cc :Comment<CR>
 map <leader>cu :Uncomment<CR>
+
+
+" Abbreviations, arrows, etc.
+ab larr ←
+ab rarr →
