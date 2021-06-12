@@ -23,6 +23,7 @@ let
     newsboat
     nixops
     p7zip
+    plan9port
     pre-commit
     rustc
     rustc.doc
