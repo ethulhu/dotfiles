@@ -1,10 +1,21 @@
 { config, lib, pkgs, ... }:
 let
+  inherit (builtins) listToAttrs map;
   inherit (lib) mkEnableOption mkIf mkOption mkOptionDefault;
   inherit (lib.types) enum listOf package str;
   inherit (pkgs.eth) select;
 
   cfg = config.eth.gui;
+
+  xdgMime = mimes: app:
+    listToAttrs (map (mime: {
+      name = mime;
+      value = app;
+    }) mimes);
+
+  mimes = {
+    browser = [ "text/html" "x-scheme-handler/http" "x-scheme-handler/https" ];
+  };
 
   sway = {
     inherit (config.wayland.windowManager.sway.config) modifier;
@@ -77,7 +88,7 @@ in {
       "Whether to enable the Window Manager & associated tooling";
 
     browser = mkOption {
-      type = enum [ "firefox" ];
+      type = enum [ "firefox" "luakit" ];
       description = "Default browser.";
     };
 
@@ -108,6 +119,14 @@ in {
       longitude = -0.1;
     };
 
+    xdg = {
+      mimeApps = {
+        enable = true;
+        associations.added = xdgMime mimes.browser "${cfg.browser}.desktop";
+        defaultApplications = xdgMime mimes.browser "${cfg.browser}.desktop";
+      };
+    };
+
     # Terminal emuators.
 
     programs.alacritty = {
@@ -132,7 +151,7 @@ in {
         termName = "xterm-256color";
         perl-ext-common = "default,matcher,clipboard";
         underlineURLs = "True";
-        url-launcher = cfg.browser;
+        url-launcher = "xdg-open";
 
         # special
         foreground = "#93a1a1";

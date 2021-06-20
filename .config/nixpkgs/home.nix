@@ -76,7 +76,7 @@ in {
         chibi = true;
         kittencake = true;
       };
-      browser = "firefox";
+      browser = "luakit";
       terminal = select.byHostname {
         chibi = "${pkgs.alacritty}/bin/alacritty";
         kittencake = "${pkgs.rxvt-unicode}/bin/urxvt";
@@ -94,6 +94,8 @@ in {
         feh
         firefox
         libreoffice
+        luaformatter
+        luakit
         mpv
         mupdf
         ripcord
