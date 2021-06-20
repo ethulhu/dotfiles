@@ -69,6 +69,9 @@ in {
       valkyrie = developmentPackages ++ mediaPackages;
     });
 
+  # Enable the lorri nix-env / direnv daemon.
+  services.lorri.enable = true;
+
   eth = {
     gui = {
       enable = select.byHostname {
