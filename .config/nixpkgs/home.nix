@@ -21,7 +21,6 @@ let
     mosquitto
     mu
     newsboat
-    nixops
     p7zip
     plan9port
     pre-commit
