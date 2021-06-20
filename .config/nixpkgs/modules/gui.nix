@@ -243,7 +243,7 @@ in {
         input = sway.input;
         keybindings = mkOptionDefault {
           "${sway.modifier}+Return" = sway.commands.launch_terminal;
-          "${sway.modifier}+Shift+3" = sway.commands.take_screenshot;
+          "${sway.modifier}+Alt+3" = sway.commands.take_screenshot;
           "${sway.modifier}+Shift+c" = sway.commands.kill_window;
           "${sway.modifier}+Shift+q" = sway.commands.confirm_logout;
           "${sway.modifier}+Shift+r" = sway.commands.reload_sway;
