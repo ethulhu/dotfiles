@@ -103,6 +103,7 @@ augroup set-filetype
 	autocmd BufRead,BufNewFile *.scad   setlocal filetype=scad
 	autocmd BufRead,BufNewFile *.svg    setlocal filetype=xml
 	autocmd BufRead,BufNewFile *.swift  setlocal filetype=swift
+	autocmd BufRead,BufNewFile *.toml   setlocal filetype=toml
 
 	autocmd BufRead,BufNewFile */.ssh/config*     setlocal filetype=sshconfig
 	autocmd BufRead,BufNewFile .Brewfile,Brewfile setlocal filetype=ruby
@@ -130,6 +131,7 @@ augroup settings-by-filetype
 	autocmd FileType ocaml     :call s:TabsAreSpaces(2)
 	autocmd FileType scad      :call s:TabsAreSpaces(4)
 	autocmd FileType sh        :call s:TabsAreSpaces(2)
+	autocmd FileType toml      :call s:TabsAreSpaces(2)
 
 	autocmd FileType text      setlocal breakindent lbr
 	autocmd FileType markdown  setlocal breakindent lbr
