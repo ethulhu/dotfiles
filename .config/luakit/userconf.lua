@@ -7,6 +7,15 @@ select.label_maker = function()
     return trim(sort(reverse(chars)))
 end
 
+-- Follow hint size.
+
+local follow = require "follow"
+
+follow.stylesheet = follow.stylesheet .. [[
+#luakit_select_overlay .hint_label {
+  font-size: 12px;
+}
+]]
 
 -- Keybindings.
 
@@ -14,8 +23,10 @@ local modes = require "modes"
 
 modes.add_binds("normal", {
     {
-        ",y", "Yank selection to clipboard",
-        function() luakit.selection.clipboard = luakit.selection.primary end
+        ",y", "Yank selection to clipboard", function(w)
+            luakit.selection.clipboard = luakit.selection.primary
+            w:notify("Yanked selection to clipboard")
+        end
     }
 })
 
