@@ -53,7 +53,7 @@ builtins.concatLists \fIlists\fR
 Concat a list of \fIlists\fR.
 
 .TP
-builtins.concatStringsSep \fs\fR \fIlist\fR
+builtins.concatStringsSep \fIs\fR \fIlist\fR
 Concat a \fIlist\fR of strings by \fIs\fR.
 
 .TP
@@ -106,7 +106,7 @@ Name	Meaning
 url	Required. The URL of the Git repo.
 name	Optional. The name of the repo when added to the Nix Store.
 rev	Optional, default is the tip of \fIref\fR. The Git revision to fetch.
-sha256	Optional, default \fBHEAD\fR. The Git ref to fetch.
+ref	Optional, default \fBHEAD\fR. The Git ref to fetch.
 .TE
 
 .TP
