@@ -225,7 +225,7 @@ in {
                 weekday = "%a";
                 week_number = "%V";
                 short_month = "%b";
-                month_day = "%m";
+                month_day = "%d";
                 hours_minutes = "%R";
               in "${weekday} wk ${week_number}, ${short_month} ${month_day} ${hours_minutes}";
             }
