@@ -1,8 +1,9 @@
 { config, lib, pkgs, ... }:
 let
   inherit (builtins) listToAttrs map;
-  inherit (lib) mkEnableOption mkIf mkOption mkOptionDefault;
+  inherit (lib) mkEnableOption mkIf mkOption mkOptionDefault optionalString;
   inherit (lib.types) enum listOf package str;
+  inherit (pkgs) writeShellScript;
   inherit (pkgs.eth) select;
 
   cfg = config.eth.gui;
@@ -42,6 +43,31 @@ let
       kittencake = { };
     };
 
+    menu = "${writeShellScript "dmenu" ''
+      set -e
+
+      readonly colors_sh="$HOME/.cache/wal/colors.sh"
+
+      if [ -f "$colors_sh" ]; then
+        source "$colors_sh"
+        dmenu() {
+          ${pkgs.dmenu}/bin/dmenu \
+            -nb "$color0" \
+            -nf "$color15" \
+            -sb "$color1" \
+            -sf "$color15"
+        }
+      else
+        dmenu() {
+          ${pkgs.dmenu}/bin/dmenu
+        }
+      fi
+
+      ${pkgs.dmenu}/bin/dmenu_path \
+        | dmenu \
+        | ${pkgs.findutils}/bin/xargs swaymsg exec --
+    ''}";
+
     commands = let
       inherit (config.wayland.windowManager.sway.config) menu;
 
@@ -52,7 +78,8 @@ let
       brightness_down = "exec ${brightnessctl} set 5%-";
 
       volume_up = "exec ${pkgs.alsaUtils}/bin/amixer -q set Master 5%+ unmute";
-      volume_down = "exec ${pkgs.alsaUtils}/bin/amixer -q set Master 5%- unmute";
+      volume_down =
+        "exec ${pkgs.alsaUtils}/bin/amixer -q set Master 5%- unmute";
       mute = "exec ${pkgs.alsaUtils}/bin/amixer -q set Master toggle";
 
       launch_terminal = "exec ${cfg.terminal}";
@@ -80,6 +107,38 @@ let
 
       reload_xrdb = "${pkgs.xorg.xrdb}/bin/xrdb -merge $HOME/.Xresources";
     };
+
+    pywalTheme = let
+      bar = bar: attr:
+        { border, background, text }:
+        "bar ${bar} colors ${attr} ${border} ${background} ${text}";
+      client = class:
+        { border, background, text, indicator ? "", childBorder ? "" }:
+        "client.${class} ${border} ${background} ${text} ${indicator} ${childBorder}";
+    in ''
+      include "$HOME/.cache/wal/colors-sway"
+      output * background $wallpaper fill
+      ${client "focused" {
+        border = "$color0";
+        background = "$background";
+        text = "$foreground";
+        indicator = "$color7";
+        childBorder = "$color2";
+      }}
+      bar main colors background $background
+      bar main colors statusline $foreground
+      bar main colors separator $foreground
+      ${bar "main" "focused_workspace" {
+        border = "$color0";
+        background = "$color2";
+        text = "$color7";
+      }}
+      ${bar "main" "active_workspace" {
+        border = "$color0";
+        background = "$color2";
+        text = "$color7";
+      }}
+    '';
   };
 
 in {
@@ -127,71 +186,6 @@ in {
       };
     };
 
-    # Terminal emuators.
-
-    programs.alacritty = {
-      enable = true;
-      settings = { env.TERM = "xterm-256color"; };
-    };
-
-    # https://addy-dclxvi.github.io/post/configuring-urxvt/.
-    programs.urxvt = {
-      enable = true;
-      fonts = [ "xft:monospace:size=10" ];
-      scroll.bar.enable = true;
-      keybindings = {
-        "Shift-Control-C" = "eval:selection_to_clipboard";
-        "Shift-Control-V" = "eval:paste_clipboard";
-        "Shift-M-C" = "perl:clipboard:copy";
-        "Shift-M-V" = "perl:clipboard:paste";
-      };
-      extraConfig = {
-        "clipboard.autocopy" = "True";
-        "matcher.button" = "1";
-        termName = "xterm-256color";
-        perl-ext-common = "default,matcher,clipboard";
-        underlineURLs = "True";
-        url-launcher = "xdg-open";
-
-        # special
-        foreground = "#93a1a1";
-        background = "#141c21";
-        cursorColor = "#afbfbf";
-
-        # black
-        color0 = "#263640";
-        color8 = "#4a697d";
-
-        # red
-        color1 = "#d12f2c";
-        color9 = "#fa3935";
-
-        # green
-        color2 = "#819400";
-        color10 = "#a4bd00";
-
-        # yellow
-        color3 = "#b08500";
-        color11 = "#d9a400";
-
-        # blue
-        color4 = "#2587cc";
-        color12 = "#2ca2f5";
-
-        # magenta
-        color5 = "#696ebf";
-        color13 = "#8086e8";
-
-        # cyan
-        color6 = "#289c93";
-        color14 = "#33c5ba";
-
-        # white
-        color7 = "#bfbaac";
-        color15 = "#fdf6e3";
-      };
-    };
-
     # Window manager.
 
     programs.i3status-rust = {
@@ -236,9 +230,13 @@ in {
 
     wayland.windowManager.sway = {
       enable = true;
+      extraConfig = ''
+        ${optionalString cfg.wallpapers.enable sway.pywalTheme}
+      '';
       config = {
         modifier = "Mod4";
         terminal = cfg.terminal;
+        menu = sway.menu;
         output = sway.output;
         input = sway.input;
         keybindings = mkOptionDefault {
@@ -265,27 +263,8 @@ in {
           XF86PowerOff = sway.commands.confirm_shutdown;
         };
         bars = [{
+          id = "main";
           position = "top";
-          colors = {
-            background = "#3c3836";
-            separator = "#666666";
-            statusline = "#ebdbb2";
-            focusedWorkspace = {
-              background = "#458588";
-              border = "#458588";
-              text = "#ebdbb2";
-            };
-            activeWorkspace = {
-              background = "#83a598";
-              border = "#83a598";
-              text = "#ebdbb2";
-            };
-            inactiveWorkspace = {
-              background = "#504945";
-              border = "#504945";
-              text = "#ebdbb2";
-            };
-          };
           statusCommand =
             "${config.programs.i3status-rust.package}/bin/i3status-rs ~/.config/i3status-rust/config-default.toml";
         }];
