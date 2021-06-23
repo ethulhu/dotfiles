@@ -22,6 +22,7 @@ in {
       enable = true;
       fonts = [ "xft:monospace:size=10" ];
       scroll.bar.enable = true;
+      iso14755 = false;
       keybindings = {
         "Shift-Control-C" = "eval:selection_to_clipboard";
         "Shift-Control-V" = "eval:paste_clipboard";
@@ -29,6 +30,7 @@ in {
         "Shift-M-V" = "perl:clipboard:paste";
       };
       extraConfig = {
+        iso14755_52 = false;
         "clipboard.autocopy" = "True";
         "matcher.button" = "1";
         termName = "xterm-256color";
