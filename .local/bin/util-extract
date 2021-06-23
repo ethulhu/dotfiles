@@ -47,8 +47,10 @@ case "${archive}" in
   *.tbz2)     tar -jxvf "${archive}"    ;;
   *.tgz)      tar -xvf "${archive}"     ;;
   *.zip)      unzip "${archive}"        ;;
+
   *.tar.bz2)  tar -jxvf "${archive}"    ;;
   *.tar.gz)   tar -zxvf "${archive}"    ;;
+  *.tar.xz)   tar -Jxvf "${archive}"    ;;
 
   *.gz)       gunzip "${archive}"       ;;
   *.bz2)      bunzip2 "${archive}"      ;;
