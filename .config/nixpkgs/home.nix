@@ -87,7 +87,7 @@ in {
       wallpapers = {
         enable = true;
         directory = "${getEnv "HOME"}/walls";
-        refreshPeriod = "15s";
+        refreshPeriod = "1h";
       };
       extraPackages = with pkgs; [
         appimage-run
