@@ -2,7 +2,7 @@
 let
   inherit (builtins) listToAttrs map;
   inherit (lib) mkEnableOption mkIf mkOption mkOptionDefault optionalString;
-  inherit (lib.types) enum listOf package str;
+  inherit (lib.types) enum float listOf package str;
   inherit (pkgs) writeShellScript;
   inherit (pkgs.eth) select;
 
@@ -128,15 +128,25 @@ let
       bar main colors background $background
       bar main colors statusline $foreground
       bar main colors separator $foreground
-      ${bar "main" "focused_workspace" {
-        border = "$color0";
-        background = "$color2";
-        text = "$color7";
-      }}
       ${bar "main" "active_workspace" {
         border = "$color0";
         background = "$color2";
-        text = "$color7";
+        text = "$background";
+      }}
+      ${bar "main" "focused_workspace" {
+        border = "$color0";
+        background = "$color2";
+        text = "$background";
+      }}
+      ${bar "main" "inactive_workspace" {
+        border = "$color0";
+        background = "$background";
+        text = "$foreground";
+      }}
+      ${bar "main" "urgent_workspace" {
+        border = "$color0";
+        background = "$color7";
+        text = "$background";
       }}
     '';
   };
@@ -154,6 +164,15 @@ in {
     terminal = mkOption {
       type = str;
       description = "Default terminal emulator.";
+    };
+
+    latitude = mkOption {
+      type = float;
+      description = "Latitude, between -90.0 & 90.0";
+    };
+    longitude = mkOption {
+      type = float;
+      description = "Longitude, between -180.0 & 180.0";
     };
 
     extraPackages = mkOption {
@@ -174,8 +193,8 @@ in {
     services.redshift = {
       enable = true;
       package = pkgs.redshift-wlr;
-      latitude = 51.5;
-      longitude = -0.1;
+      latitude = cfg.latitude;
+      longitude = cfg.longitude;
     };
 
     xdg = {

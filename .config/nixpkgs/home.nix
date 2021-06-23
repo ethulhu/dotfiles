@@ -32,6 +32,11 @@ let
     zip
   ];
 
+  london = {
+    latitude = 51.5;
+    longitude = -0.1;
+  };
+
 in {
   imports = [ ./modules/default.nix ];
 
@@ -84,6 +89,8 @@ in {
         chibi = "${pkgs.alacritty}/bin/alacritty";
         kittencake = "${pkgs.rxvt-unicode}/bin/urxvt";
       };
+      latitude = london.latitude;
+      longitude = london.longitude;
       wallpapers = {
         enable = true;
         directory = "${getEnv "HOME"}/walls";
