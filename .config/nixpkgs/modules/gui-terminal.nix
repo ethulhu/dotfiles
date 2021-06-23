@@ -40,6 +40,7 @@ in {
 
     xresources.extraConfig = optionalString wallpapersCfg.enable ''
       #include "${getEnv "HOME"}/.cache/wal/colors.Xresources"
+      #include "${getEnv "HOME"}/.cache/wal/colors-urxvt.Xresources"
     '';
   };
 }

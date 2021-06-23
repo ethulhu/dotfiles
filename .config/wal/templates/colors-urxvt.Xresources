@@ -1,0 +1,20 @@
+URxvt.foreground:  {foreground}
+URxvt.background:  {background}
+URxvt.cursorColor: {cursor}
+
+URxvt.color0:   {color0}
+URxvt.color1:   {color1}
+URxvt.color2:   {color2}
+URxvt.color3:   {color3}
+URxvt.color4:   {color4}
+URxvt.color5:   {color5}
+URxvt.color6:   {color6}
+URxvt.color7:   {color7}
+URxvt.color8:   {color8}
+URxvt.color9:   {color9}
+URxvt.color10:  {color10}
+URxvt.color11:  {color11}
+URxvt.color12:  {color12}
+URxvt.color13:  {color13}
+URxvt.color14:  {color14}
+URxvt.color15:  {color15}
