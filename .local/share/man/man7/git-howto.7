@@ -1,0 +1,76 @@
+.TH GIT-HOWTO 7 "June 2021" "Dotfiles" "Eth's Dotfiles Manual"
+.SH NAME
+git-howto \- a curated howto for Git
+
+.SH Useful incantations
+
+.TP
+Apply one or more patches
+.nf
+git am \fIpath/to.patch\fR
+.fi
+
+.TP
+Change commit metadata
+.nf
+git commit --amend --author \fIauthor\fR --no-edit
+git commit --amend --date \fIdate\fR --no-edit
+.fi
+
+.TP
+Check out a branch, tracking a remote
+.nf
+git checkout --track \fIremote\fR/\fIbranch\fR
+.fi
+
+.TP
+Delete a remote branch
+.nf
+git push \fIremote\fR --delete \fIbranch\fR
+.fi
+
+.TP
+Export a range of patches
+.nf
+git format-patch \fIfrom\fR..\fIto\fR
+git format-patch master..feature
+.fi
+
+.TP
+List branches with tracking info
+.nf
+git branch -vv
+.fi
+
+.TP
+Remove untracked files
+.nf
+git clean --interactive
+git clean --dry-run
+git clean --force
+.fi
+
+.TP
+Rename a branch
+.nf
+git branch --move \fIold-name\fR \fInew-name\fR
+.fi
+
+.TP
+Show the contents of a file at a given commit
+.nf
+git show \fIrev\fR:\fIpath/to/file\fR
+.fi
+
+.TP
+Split a commit in two
+.nf
+git rebase -i \fIrev\fR
+# mark the commit as `edit`.
+git reset HEAD^
+git add \fI...\fR
+git commit
+git add \fI...\fR
+git commit
+git rebase --continue
+.fi
