@@ -1,0 +1,81 @@
+.TH INLINE-ASSEMBLER 5 "June 2021" "Dotfiles" "Eth's Dotfiles Manual"
+.SH NAME
+inline-assembler \- a short howto on inline assembler in C
+.SH DESCRIPTION
+.PP
+Inline assembler in C is of the form:
+.PP
+.RS
+.nf
+asm [\fIvolatile\fR] [\fIgoto\fR] (
+    \fIassembly code\fR
+    : \fIoutput operands\fR
+    : \fIinput operands\fR
+    : \fIclobbers\fR
+    : \fIgoto labels\fR
+);
+.fi
+.RE
+.PP
+There are two optonal keywords, \fBvolatile\fR and \fBgoto\fR:
+.TS
+l l.
+volatile	The assembly may have side effects.
+goto	The assembly may jump to one of the listed goto labels
+.TE
+.SS Operands
+.PP
+Operands are of the form, for example:
+.PP
+.RS
+.nf
+: "r" (x), "=r" (b)
+.fi
+.RE
+.TS
+l l
+---
+l l.
+Code	Meaning
+r	This is a register.
+=r	This register contains output.
++r	This register is in both input & output.
+&r	This register is output \fIonly\fR.
+%r	"Operands may be commutative."
+.TE
+.SS Clobbers
+.PP
+Clobbers are of the form, for example:
+.PP
+.RS
+.nf
+: "w0", "cc", "memory"
+.fi
+.RE
+.PP
+Clobbers are a list of affected registers, plus 2 special values, \fBcc\fR and \fBmemory\fR:
+.PP
+.TS
+l l.
+cc	Affects flags registers.
+memory	Affects arbitrary memory.
+.TE
+.SH EXAMPLE
+.PP
+An example that stores a 32-bit integer \fB1\fR at the location pointed to by the C program variable \fBx\fR:
+.PP
+.RS
+.nf
+asm volatile (
+    "mov w0, #1 \n"
+    "str w0, [%0]"
+    :
+    : "r" (x)
+    : "w0", "cc", "memory"
+);
+.fi
+.RE
+.SH LINKS
+.TP
+How to read ARM64 assembly language
+.I https://wolchok.org/posts/how-to-read-arm64-assembly-language/
