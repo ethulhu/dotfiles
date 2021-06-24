@@ -29,6 +29,17 @@ $(^F)	The basenames of all the prerequisites.
 $(?D)	The dirnames of all the prerequisites newer than the target.
 $(?F)	The basenames of all the prerequisites newer than the target.
 .TE
+.SS Functions
+.TS
+l l l
+-----
+l l l.
+Function	Example	Output
+$(wildcard \fIglob\fR)	$(wildcard *.c)
+$(patsubst \fIfrom\fR,\fIto\fR,\fIlist\fR)	$(patsubst %.c,%.o,$(SRCS))
+$(shell \fIcommand ...\fR)	$(shell find . -iname '*.c')
+$(foreach \fIvar\fR,\fIlist\fR,\fItext\fR)	$(foreach t,$(tests),./$(t) &&) true	./foo && ./bar && true
+.TE
 .SS Phony targets
 .PP
 There is a magic target called \fB.PHONY\fR, which marks targets as not being files, such as \fBall\fR or \fBclean\fR.
@@ -47,10 +58,10 @@ This document is written for GNU Make, so not everything will work in e.g. BSD M
 CC     = gcc
 CFLAGS = -I.
 
-foo: foo.o bar.o 
+foo: foo.o bar.o
 	$(CC) -o $@ $^
 
-%.o: %.c 
+%.o: %.c
 	$(CC) -c -o $@ $< $(CFLAGS)
 .fi
 .\"
