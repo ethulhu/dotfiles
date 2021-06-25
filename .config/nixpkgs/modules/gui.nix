@@ -27,13 +27,16 @@ let
         xkb_variant = "colemak";
         xkb_options = "caps:escape";
       };
+      mouse = { natural_scroll = "enabled"; };
     in select.byHostname {
       kittencake = {
         "type:keyboard" = keyboard;
+        "type:pointer" = mouse;
         "type:touchpad" = { natural_scroll = "enabled"; };
       };
       chibi = {
         "type:keyboard" = keyboard;
+        "type:pointer" = mouse;
         "type:touch" = { calibration_matrix = "0 1 0 -1 0 1"; };
       };
     };
