@@ -24,7 +24,7 @@ set --global --path fish_user_paths \
 
 # Set up OCaml if `opam` has been added to the PATH.
 function __set_up_opam --on-variable PATH
-    if command --quiet opam; and command opam var prefix >/dev/null ^/dev/null
+    if command --quiet opam; and command opam var prefix >/dev/null 2>/dev/null
         if set --query __opam_set_up
             return
         end
