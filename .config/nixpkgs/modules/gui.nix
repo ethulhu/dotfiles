@@ -269,6 +269,16 @@ in {
           "${sway.modifier}+Shift+r" = sway.commands.reload_sway;
           "${sway.modifier}+p" = sway.commands.launch_menu;
 
+          "${sway.modifier}+Shift+Left" = "move workspace to output left";
+          "${sway.modifier}+Shift+Right" = "move workspace to output right";
+          "${sway.modifier}+Shift+Up" = "move workspace to output up";
+          "${sway.modifier}+Shift+Down" = "move workspace to output down";
+
+          "${sway.modifier}+Shift+h" = "move workspace to output left";
+          "${sway.modifier}+Shift+l" = "move workspace to output right";
+          "${sway.modifier}+Shift+k" = "move workspace to output up";
+          "${sway.modifier}+Shift+j" = "move workspace to output down";
+
           XF86MonBrightnessUp = sway.commands.brightness_up;
           XF86MonBrightnessDown = sway.commands.brightness_down;
 
