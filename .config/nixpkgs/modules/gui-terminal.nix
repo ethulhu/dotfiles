@@ -30,10 +30,13 @@ in {
         "Shift-M-V" = "perl:clipboard:paste";
       };
       extraConfig = {
-        iso14755_52 = false;
+        termName = "xterm-256color";
+        urgentOnBell = true;
+
+        # Clipboard stuff.
         "clipboard.autocopy" = "True";
         "matcher.button" = "1";
-        termName = "xterm-256color";
+        iso14755_52 = false;
         perl-ext-common = "default,matcher,clipboard";
         underlineURLs = "True";
         url-launcher = "xdg-open";
