@@ -111,6 +111,7 @@ in {
         ripcord
         vivaldi-widevine # Required DRM plugin for Chromium.
         vlc
+        wev
       ];
     };
   };
