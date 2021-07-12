@@ -3,7 +3,7 @@ let
   inherit (builtins) listToAttrs map;
   inherit (lib) mkEnableOption mkIf mkOption mkOptionDefault optionalString;
   inherit (lib.types) enum float listOf package str;
-  inherit (pkgs) writeShellScript;
+  inherit (pkgs) writeShellScript writeText;
   inherit (pkgs.eth) select;
 
   cfg = config.eth.gui;
@@ -28,8 +28,21 @@ let
         xkb_options = "caps:escape";
       };
       mouse = { natural_scroll = "enabled"; };
+
+      # A custom keymap to remap the X201's |\ key to `~, like a Mac.
+      thinkpad_keyboard = writeText "thinkpad_colemak.xkb" ''
+        xkb_keymap {
+          xkb_keycodes  { include "evdev+aliases(qwerty)" };
+          xkb_types     { include "complete" };
+          xkb_compat    { include "complete" };
+          xkb_symbols   { include "pc+us(colemak)+inet(evdev)+capslock(escape)"
+            replace key <LSGT> { [ grave, asciitilde ] };
+          };
+        };
+      '';
     in select.byHostname {
       kittencake = {
+        "1:1:AT_Translated_Set_2_keyboard".xkb_file = "${thinkpad_keyboard}";
         "type:keyboard" = keyboard;
         "type:pointer" = mouse;
         "type:touchpad" = { natural_scroll = "enabled"; };
