@@ -28,6 +28,7 @@ brew "mu"
 brew "ninja"
 brew "node"
 brew "optipng"
+brew "pandoc"
 brew "pre-commit"
 brew "pylint"
 brew "ripgrep"
@@ -37,7 +38,3 @@ brew "tig"
 brew "tmux"
 brew "w3m"
 brew "wget"
-
-# These packages don't currently install on AArch64 macOS:
-#
-# brew "pandoc"
