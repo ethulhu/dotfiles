@@ -1,0 +1,134 @@
+#!/usr/bin/env python3
+"""Manipulate MP3 files in a filesystem-ish manner."""
+
+from argparse import ArgumentParser, Namespace
+from os.path import basename, join
+from shutil import move
+from subprocess import check_call, check_output
+from sys import exit, stderr, stdin  # pylint:disable=redefined-builtin
+from tempfile import TemporaryDirectory
+from typing import Any, Dict
+import json
+
+
+def read_metadata(file: str) -> Dict[str, Any]:
+    """Get the metadata for a given file."""
+    ffprobe_output = check_output([
+        'ffprobe',
+        '-loglevel', 'panic',
+        '-show_format',
+        '-print_format', 'json',
+        file,
+    ])
+
+    json_output = json.loads(ffprobe_output)
+
+    if 'format' not in json_output:
+        raise Exception('o no')
+
+    return json_output['format']
+
+
+def metadata_by_path(metadata: Dict[str, Any], path: str) -> Any:
+    """Get the item from a nested dictionary for a given path."""
+    chosen = metadata
+    parts = path.strip('/').split('/')
+    for part in parts:
+        chosen = chosen[part]
+    return chosen
+
+
+def ls(args: Namespace):  # pylint:disable=invalid-name
+    """A command that lists properties, under root or another property."""
+    metadata = read_metadata(args.file)
+
+    def print_dir(directory: Dict[str, Any]):
+        for (key, value) in directory.items():
+            if args.trailing_type and isinstance(value, dict):
+                print(f'{key}/')
+            else:
+                print(key)
+
+    if args.path:
+        chosen = metadata_by_path(metadata, args.path)
+        if isinstance(chosen, dict):
+            print_dir(chosen)
+        else:
+            print(basename(args.path))
+    else:
+        print_dir(metadata)
+
+
+def read(args: Namespace):
+    """A command that reads a named property to stdout."""
+    metadata = read_metadata(args.file)
+
+    chosen = metadata_by_path(metadata, args.path)
+    if isinstance(chosen, dict):
+        raise Exception('this is a directory')
+    print(chosen)
+
+
+def write(args: Namespace):
+    """A command that edits a named property from stdin."""
+
+    parts = args.path.lstrip('/').split('/')
+    if parts[0] != 'tags' or len(parts) != 2 or parts[1].endswith('/'):
+        raise Exception('can only edit tags, e.g. `/tags/title`')
+    tag = parts[1]
+
+    value = args.value if args.value else stdin.read().strip()
+
+    with TemporaryDirectory() as temp_dir:
+        temp = join(temp_dir, basename(args.file))
+
+        check_call([
+            'ffmpeg',
+            '-loglevel', 'panic',
+            '-i', args.file,
+            '-map', '0',
+            '-codec', 'copy',
+            '-write_id3v2', '1',
+            '-metadata', f'{tag}={value}',
+            '-y', temp,
+        ])
+        move(temp, args.file)
+
+
+def main():
+    """The main function."""
+    parser = ArgumentParser(description=__doc__)
+    parser.add_argument('file', type=str, help='path to mp3 file')
+
+    subparsers = parser.add_subparsers()
+
+    ls_parser = subparsers.add_parser('ls', help='list properties')
+    ls_parser.add_argument('path', type=str, help='path to property',
+                           nargs='?', default=None)
+    ls_parser.add_argument('-F', dest='trailing_type',
+                           action='store_true', help='show trailing type information')
+    ls_parser.set_defaults(func=ls)
+
+    read_parser = subparsers.add_parser('read', help='read a property')
+    read_parser.add_argument('path', type=str, help='path to property')
+    read_parser.set_defaults(func=read)
+
+    write_parser = subparsers.add_parser(
+        'write', help='edit a property')
+    write_parser.add_argument('path', type=str, help='path to property')
+    write_parser.add_argument('value', type=str,
+                              nargs='?', default=None,
+                              help='new value (omit to pipe via stdin)')
+    write_parser.set_defaults(func=write)
+
+    args = parser.parse_args()
+    try:
+        args.func(args)
+    except Exception as err:  # pylint:disable=broad-except
+        this = basename(__file__)
+        print(f'{this}: {err}', file=stderr)
+        exit(1)
+
+
+if __name__ == '__main__':
+    main()
