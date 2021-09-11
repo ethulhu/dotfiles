@@ -15,7 +15,7 @@ def read_metadata(file: str) -> Dict[str, Any]:
     """Get the metadata for a given file."""
     ffprobe_output = check_output([
         'ffprobe',
-        '-loglevel', 'panic',
+        '-loglevel', 'error',
         '-show_format',
         '-print_format', 'json',
         file,
@@ -84,7 +84,7 @@ def write(args: Namespace):
 
         check_call([
             'ffmpeg',
-            '-loglevel', 'panic',
+            '-loglevel', 'error',
             '-i', args.file,
             '-map', '0',
             '-codec', 'copy',
