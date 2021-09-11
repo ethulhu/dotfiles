@@ -3,9 +3,9 @@
 
 from argparse import ArgumentParser, Namespace
 from os.path import basename, join
-from shutil import move
+from shutil import copyfileobj, move
 from subprocess import check_call, check_output
-from sys import exit, stderr, stdin  # pylint:disable=redefined-builtin
+from sys import exit, stderr, stdin, stdout  # pylint:disable=redefined-builtin
 from tempfile import TemporaryDirectory
 from typing import Any, Dict
 import json
@@ -17,6 +17,7 @@ def read_metadata(file: str) -> Dict[str, Any]:
         'ffprobe',
         '-loglevel', 'error',
         '-show_format',
+        '-show_streams',
         '-print_format', 'json',
         file,
     ])
@@ -26,7 +27,13 @@ def read_metadata(file: str) -> Dict[str, Any]:
     if 'format' not in json_output:
         raise Exception('o no')
 
-    return json_output['format']
+    metadata = json_output['format']
+
+    if 'streams' in json_output and any(
+            True for s in json_output['streams'] if s['codec_type'] == 'video'):
+        metadata['cover.png'] = ''
+
+    return metadata
 
 
 def metadata_by_path(metadata: Dict[str, Any], path: str) -> Any:
@@ -63,10 +70,27 @@ def read(args: Namespace):
     """A command that reads a named property to stdout."""
     metadata = read_metadata(args.file)
 
-    chosen = metadata_by_path(metadata, args.path)
-    if isinstance(chosen, dict):
-        raise Exception('this is a directory')
-    print(chosen)
+    if args.path.lstrip('/') == 'cover.png':
+        if 'cover.png' not in metadata:
+            raise Exception('file does not have cover art')
+
+        with TemporaryDirectory() as temp_dir:
+            temp = join(temp_dir, 'cover.png')
+            check_call([
+                'ffmpeg',
+                '-loglevel', 'error',
+                '-i', args.file,
+                '-an',
+                '-vcodec', 'copy',
+                '-y', temp,
+            ])
+            with open(temp, 'rb') as cover:
+                copyfileobj(cover, stdout.buffer)
+    else:
+        chosen = metadata_by_path(metadata, args.path)
+        if isinstance(chosen, dict):
+            raise Exception('this is a directory')
+        print(chosen)
 
 
 def write(args: Namespace):
