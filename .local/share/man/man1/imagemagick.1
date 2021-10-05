@@ -1,0 +1,46 @@
+.TH IMAGEMAGICK 1 "October 2021" "Dotfiles" "Eth's Dotfiles Manual"
+.SH NAME
+imagemagick \- a cheatsheat for ImageMagick
+
+.SH Examples
+.SS Place an image in the center of a white background
+.PP
+.RS
+.nf
+convert in.png
+    -gravity     center
+    -background  white
+    -extent      250x250
+        out.png
+.fi
+.RE
+.SS Replace blue with black
+.PP
+.RS
+.nf
+convert in.png
+    -fuzz    50%
+    -fill    black
+    -opaque  blue
+        out.png
+.fi
+.RE
+.SS Convert to monochrome with a customizable threshold
+.PP
+.RS
+.nf
+convert in.png
+    -threshold   '85%'
+    -monochrome
+        out.png
+.fi
+.RE
+.SS Transform all pixel colors by some function
+.PP
+.RS
+.nf
+convert in.png
+    -fx  '0.3*r+0.6*g+0.1*b'
+        out.png
+.fi
+.RE
