@@ -56,7 +56,12 @@ let
 
     output = select.byHostname {
       chibi = { "eDP-1" = { transform = "90"; }; };
-      kittencake = { };
+      kittencake = {
+        "Lenovo Group Limited 0x4011 0x00000000" = { position = "0 250"; };
+        "Samsung Electric Company SyncMaster 9CQ857691B" = {
+          position = "1280 0";
+        };
+      };
     };
 
     menu = "${writeShellScript "dmenu" ''
@@ -201,7 +206,8 @@ in {
   config = mkIf cfg.enable {
 
     home.packages = with pkgs;
-      [ font-awesome powerline-fonts wl-clipboard ] ++ cfg.extraPackages;
+      [ font-awesome powerline-fonts wdisplays wl-clipboard ]
+      ++ cfg.extraPackages;
 
     # This is needed for i3status-rust, for powerline-fonts and fonts-awesome.
     fonts.fontconfig.enable = true;
