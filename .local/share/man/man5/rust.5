@@ -18,8 +18,8 @@ struct Foo {
 impl fmt::Display for Foo {
     fn fmt(&self, fmt: &mut fmt::Formatter) -> fmt::Result {
         match self.is_foo {
-            true => write!(w, "foo"),
-            false => write!(w, "not foo"),
+            true => write!(fmt, "foo"),
+            false => write!(fmt, "not foo"),
         }
     }
 }
@@ -42,7 +42,7 @@ struct Foo {
 impl FromStr for Foo {
     type Err = FooErr;
 
-    fn from_string(s: &str) -> Result<Self, Self::Err> {
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
             "foo" => Ok(Foo { is_foo: true }),
             "foo!" => Err(FooErr),
