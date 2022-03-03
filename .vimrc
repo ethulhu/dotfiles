@@ -29,6 +29,13 @@ set wildmode=longest,list,full
 set wildmenu
 
 
+" Netrw file browser.
+" https://shapeshed.com/vim-netrw/
+" 3 == Tree view
+let g:netrw_liststyle = 3
+let g:netrw_banner = 0
+
+
 " I find `,` easier to press than `\`.
 let mapleader = ','
 
