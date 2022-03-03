@@ -25,6 +25,7 @@
 	unstage = reset HEAD
 
 	# typos.
+	ad = add
 	ads = add
 	ceckout = checkout
 	checkoutt = checkout
