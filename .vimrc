@@ -104,13 +104,15 @@ match ExtraWhitespace /\s\+$\| \+\ze\t/
 
 augroup set-filetype
 	autocmd!
-	autocmd BufRead,BufNewFile *.fish   setlocal filetype=fish
-	autocmd BufRead,BufNewFile *.litmus setlocal filetype=litmus
-	autocmd BufRead,BufNewFile *.nix    setlocal filetype=nix
-	autocmd BufRead,BufNewFile *.scad   setlocal filetype=scad
-	autocmd BufRead,BufNewFile *.svg    setlocal filetype=xml
-	autocmd BufRead,BufNewFile *.swift  setlocal filetype=swift
-	autocmd BufRead,BufNewFile *.toml   setlocal filetype=toml
+	autocmd BufRead,BufNewFile *.fish       setlocal filetype=fish
+	autocmd BufRead,BufNewFile *.jsonnet    setlocal filetype=jsonnet
+	autocmd BufRead,BufNewFile *.libsonnet  setlocal filetype=jsonnet
+	autocmd BufRead,BufNewFile *.litmus     setlocal filetype=litmus
+	autocmd BufRead,BufNewFile *.nix        setlocal filetype=nix
+	autocmd BufRead,BufNewFile *.scad       setlocal filetype=scad
+	autocmd BufRead,BufNewFile *.svg        setlocal filetype=xml
+	autocmd BufRead,BufNewFile *.swift      setlocal filetype=swift
+	autocmd BufRead,BufNewFile *.toml       setlocal filetype=toml
 
 	autocmd BufRead,BufNewFile */.ssh/config*     setlocal filetype=sshconfig
 	autocmd BufRead,BufNewFile .Brewfile,Brewfile setlocal filetype=ruby
@@ -130,20 +132,22 @@ function s:TabsAreSpaces(width)
 endfunction
 augroup settings-by-filetype
 	autocmd!
-	autocmd FileType fish      :call s:TabsAreSpaces(4)
-	autocmd FileType gitcommit :call s:TabsAreSpaces(2)
-	autocmd FileType groovy    :call s:TabsAreSpaces(2)
-	autocmd FileType html      :call s:TabsAreSpaces(2)
-	autocmd FileType nix       :call s:TabsAreSpaces(2)
-	autocmd FileType ocaml     :call s:TabsAreSpaces(2)
-	autocmd FileType scad      :call s:TabsAreSpaces(4)
-	autocmd FileType sh        :call s:TabsAreSpaces(2)
-	autocmd FileType toml      :call s:TabsAreSpaces(2)
+	autocmd FileType fish       :call s:TabsAreSpaces(4)
+	autocmd FileType gitcommit  :call s:TabsAreSpaces(2)
+	autocmd FileType groovy     :call s:TabsAreSpaces(2)
+	autocmd FileType html       :call s:TabsAreSpaces(2)
+	autocmd FileType jsonnet    :call s:TabsAreSpaces(2)
+	autocmd FileType nix        :call s:TabsAreSpaces(2)
+	autocmd FileType ocaml      :call s:TabsAreSpaces(2)
+	autocmd FileType scad       :call s:TabsAreSpaces(4)
+	autocmd FileType sh         :call s:TabsAreSpaces(2)
+	autocmd FileType toml       :call s:TabsAreSpaces(2)
 
 	autocmd FileType text      setlocal breakindent lbr
 	autocmd FileType markdown  setlocal breakindent lbr
 
 	autocmd FileType fish       setlocal commentstring=#\ %s
+	autocmd FileType jsonnet    setlocal commentstring=//\ %s
 	autocmd FileType litmus     setlocal commentstring=(*%s*)
 	autocmd FileType nix        setlocal commentstring=#\ %s
 	autocmd FileType scad       setlocal commentstring=//\ %s
