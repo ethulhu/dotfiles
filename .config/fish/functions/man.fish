@@ -39,8 +39,8 @@ function $function_name --wraps man --argument-names query
                 end | nl
                 set idx (read --nchars 1 --prompt-str 'which manpage? ')
 
-                if not [ 1 -le $idx -a $idx -le (count $candidates) ]
-                    echo (status function)": invalid index: $idx"
+                if not string match --quiet --regex '[[:digit:]]' $idx; or not [ 1 -le $idx -a $idx -le (count $candidates) ]
+                    echo (status function)": invalid index: '$idx'"
                     return 1
                 end
             end
