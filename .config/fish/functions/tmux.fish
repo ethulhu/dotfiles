@@ -20,10 +20,10 @@ function $function_name --wraps tmux
                 return 0
             else if [ $idx = n ]
                 command tmux
-            else if [ $idx -le (count $sessions) ]
+            else if string match --quiet --regex '[[:digit:]]' $idx; and [ $idx -le (count $sessions) ]
                 command tmux attach -t $sessions[$idx]
             else
-                echo (status function)": invalid index: $idx"
+                echo (status function)": invalid index: '$idx'"
                 return 1
             end
         end
