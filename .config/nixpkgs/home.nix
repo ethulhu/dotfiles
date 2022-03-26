@@ -77,6 +77,9 @@ in {
   # Enable the lorri nix-env / direnv daemon.
   services.lorri.enable = true;
 
+  # Mount USB disks under /run/media.
+  services.udiskie.enable = true;
+
   eth = {
     gui = {
       enable = select.byHostname {
