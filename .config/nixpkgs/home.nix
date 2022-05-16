@@ -71,6 +71,7 @@ in {
       __default__ = [ ];
       chibi = developmentPackages ++ mediaPackages;
       kittencake = developmentPackages ++ mediaPackages;
+      nora = with pkgs; [ newsboat ];
       valkyrie = developmentPackages ++ mediaPackages;
     });
 
