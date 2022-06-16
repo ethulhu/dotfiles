@@ -1,0 +1,34 @@
+#!/bin/sh
+
+set -eu
+
+readonly description='Is there a Yubikey attached?'
+readonly this="$(basename "${0}")"
+
+usage() {
+  echo 'Usage:'
+  echo "    ${this}"
+  echo
+  echo 'Description:'
+  echo "    ${description}"
+}
+
+case "$*" in
+  --help|-h)
+    usage
+    exit
+    ;;
+
+  --description)
+    echo "${description}"
+    exit
+    ;;
+esac
+
+if [ $# -ne 0 ]; then
+  usage
+  exit 1
+fi
+
+
+gpg --card-status >/dev/null 2>/dev/null
