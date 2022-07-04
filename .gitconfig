@@ -29,6 +29,7 @@
 	ads = add
 	ceckout = checkout
 	checkoutt = checkout
+	cmmit = commit
 	comit = commit
 	commi = commit
 	commid = commit
