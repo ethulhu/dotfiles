@@ -1,0 +1,47 @@
+#!/bin/sh
+
+set -eu
+
+# Constants.
+readonly cache_dir="${HOME}/.cache/rfc"
+
+readonly description='Download and read RFCs.'
+readonly this="$(basename "${0}")"
+
+usage() {
+  echo 'Usage:'
+  echo "    ${this} <rfc-number>"
+  echo
+  echo 'Description:'
+  echo "    ${description}"
+}
+
+case "$*" in
+  --help|-h)
+    usage
+    exit
+    ;;
+
+  --description)
+    echo "${description}"
+    exit
+    ;;
+esac
+
+if [ $# -ne 1 ]; then
+  usage
+  exit 1
+fi
+
+
+readonly rfc_number="${1}"
+readonly rfc_file="rfc${rfc_number}.txt"
+readonly cached_rfc_file="${cache_dir}/${rfc_file}"
+
+mkdir -p "${cache_dir}"
+
+if [ ! -f "${cached_rfc_file}" ]; then
+  curl -L "https://www.rfc-editor.org/rfc/${rfc_file}" -o "${cached_rfc_file}"
+fi
+
+less "${cached_rfc_file}"
