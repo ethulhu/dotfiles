@@ -16,7 +16,7 @@ let
 
   developmentPackages = with pkgs; [
     go
-    goimports
+    gotools
     jq
     mosquitto
     mu
@@ -26,7 +26,7 @@ let
     pre-commit
     rustc
     rustc.doc
-    scim
+    sc-im
     unrar
     unzip
     zip
@@ -79,7 +79,11 @@ in {
   services.lorri.enable = true;
 
   # Mount USB disks under /run/media.
-  services.udiskie.enable = true;
+  services.udiskie.enable = select.byHostname {
+    __default__ = false;
+    chibi = true;
+    kittencake = true;
+  };
 
   eth = {
     gui = {
